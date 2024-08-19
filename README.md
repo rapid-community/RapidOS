@@ -44,6 +44,13 @@ All these options can be selected within the playbook under custom features!
 
 **RapidOS** is currently available for download. Our system is based on **[AME Wizard](https://ameliorated.io/)**, a powerful tool that allows you to apply custom playbooks to your Windows installation. A playbook consists of scripts and configurations that modify your system according to your preferences. With **RapidOS**, you can transform your Windows experience in just a few easy steps. You can find the system release on [GitHub](https://github.com/rapid-community/RapidOS/releases). 🚀
 
+## <a name="want to deploy">🔨 Want to Deploy?</a>
+
+If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work. In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`. Our playbooks consist of `.xml`, `.yml`, and `.ps1` files. You'll need a text editor like Sublime Text or VS Code to work with them:
+
+![Sublime](https://img.shields.io/badge/-VS%20Code-black?style=for-the-badge&logo=visual-studio-code&logoColor=white&color=007ACC)
+![VS Code](https://img.shields.io/badge/-pnpm-black?style=for-the-badge&logoColor=white&logo=pnpm&color=B76507)
+
 ## <a name="how to contact us">📧 How to Contact Us?</a>
 
 If you have any questions, feedback, or suggestions, please feel free to join our [Discord server](https://dsc.gg/rapid-community) to chat with other RapidOS users and developers.
