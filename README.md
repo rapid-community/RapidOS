@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/rapid-community/RapidOS"><img src="https://drive.google.com/file/d/10Lq_JUJElNypx2_R_ESMCuq3JxubknMX/view?usp=drivesdk" alt="RapidOS logo" height="60"/></a></p>
+<p align="center"><a href="https://github.com/rapid-community/RapidOS"><img src="https://i.imgur.com/Ebt3CLB.png" alt="RapidOS logo" height="60"/></a></p>
 <h1 align="center">RapidOS</h1>
 <p align="center">Turning dreams into reality</p>
 
