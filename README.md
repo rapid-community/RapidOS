@@ -52,7 +52,6 @@ If you have any questions, feedback, or suggestions, please feel free to join ou
 
 RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
-## Join the RapidOS Community Today! 
-:earth_americas: :star2:
+##b:earth_americas: Join the RapidOS Community Today!
 
-RapidOS is more than just a project. It is a vision, a passion, and a community. Join us today and unlock a new level of Windows experience with RapidOS!
+RapidOS is more than just a project. It is a vision, a passion, and a community. Join us today and unlock a new level of Windows experience with RapidOS! :star2:
