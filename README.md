@@ -24,15 +24,15 @@ In short, RapidOS enhances your Windows experience by focusing on privacy, speed
 
 ## <a name="versions of rapidos">:gear: Versions of RapidOS</a>
 
-### Stable RapidOS :lock:
+### :lock: Stable RapidOS
 - **Description**: Standard Windows with minor performance tweaks for daily use.
 - **Features**: Reliable, secure, and easy to use.
 
-### Speed RapidOS :racing_car:
+### :racing_car: Speed RapidOS
 - **Description**: High-performance and stable system for power users.
 - **Features**: Optimized for speed while maintaining stability.
 
-### Extreme RapidOS :video_game:
+### :video_game: Extreme RapidOS
 - **Description**: Maximum performance optimized for gaming and intensive tasks, with reduced stability.
 - **Features**: Best for gaming, less stable than other versions.
 
@@ -52,6 +52,6 @@ If you have any questions, feedback, or suggestions, please feel free to join ou
 
 RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
-##b:earth_americas: Join the RapidOS Community Today!
+##:earth_americas: Join the RapidOS Community Today!
 
 RapidOS is more than just a project. It is a vision, a passion, and a community. Join us today and unlock a new level of Windows experience with RapidOS! :star2:
