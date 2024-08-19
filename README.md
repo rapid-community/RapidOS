@@ -4,7 +4,7 @@
 
 *RapidOS is an open-source project that aims to revolutionize the Windows experience. With RapidOS, you can enjoy a powerful, streamlined, and user-centric system that puts you in control.* :zap:
 
-## Why RapidOS? :question:
+## <a name="why rapidos">:question: Why RapidOS?</a>
 
 RapidOS gives you a unique Windows experience with several key benefits:
 
@@ -22,7 +22,7 @@ RapidOS gives you a unique Windows experience with several key benefits:
 
 In short, RapidOS enhances your Windows experience by focusing on privacy, speed, simplicity, community, creativity and support.
 
-## Versions of RapidOS :gear:
+## <a name="versions of rapidos">:gear: Versions of RapidOS</a>
 
 ### Stable RapidOS :lock:
 - **Description**: Standard Windows with minor performance tweaks for daily use.
@@ -40,17 +40,19 @@ All these options can be selected within the playbook under custom features!
 
 ***Note**: Our playbook is currently in beta and we use the stable version by default, after the full release we will give you the opportunity to use all these versions.*
 
-## How to Get Started? :rocket:
+## <a name="how to get started">🔨 How to Get Started?</a>
+
 **RapidOS** is currently available for download. Our system is based on **[AME Wizard](https://ameliorated.io/)**, a powerful tool that allows you to apply custom playbooks to your Windows installation. A playbook consists of scripts and configurations that modify your system according to your preferences. With **RapidOS**, you can transform your Windows experience in just a few easy steps. You can find the system release on [GitHub](https://github.com/rapid-community/RapidOS/releases). 🚀
 
-## How to Contact Us? :email:
+## <a name="how to contact us">📧 How to Contact Us?</a>
 
 If you have any questions, feedback, or suggestions, please feel free to join our [Discord server](https://dsc.gg/rapid-community) to chat with other RapidOS users and developers.
 
-## License :page_facing_up:
+## <a name="license">:page_facing_up: Licence</a>
 
 RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
-## Join the RapidOS Community Today! :earth_americas: :star2:
+## Join the RapidOS Community Today! 
+:earth_americas: :star2:
 
 RapidOS is more than just a project. It is a vision, a passion, and a community. Join us today and unlock a new level of Windows experience with RapidOS!
