@@ -2,7 +2,7 @@
 <h1 align="center">RapidOS</h1>
 <p align="center">Turning dreams into reality</p>
 
-RapidOS is an open-source project that aims to revolutionize the Windows experience. With RapidOS, you can enjoy a powerful, streamlined, and user-centric system that puts you in control. :zap:
+*RapidOS is an open-source project that aims to revolutionize the Windows experience. With RapidOS, you can enjoy a powerful, streamlined, and user-centric system that puts you in control.* :zap:
 
 ## Why RapidOS? :question:
 
