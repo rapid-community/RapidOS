@@ -1,0 +1,9 @@
+---
+title: Configure Host to Block Telemetry
+description: >
+  This modification prevents microsoft telemetry from collecting and sending telemetry data using hosts, enhancing user privacy.
+actions:
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument disable-telemetry-using-hosts'
+      exeDir: true
+      weight: 300

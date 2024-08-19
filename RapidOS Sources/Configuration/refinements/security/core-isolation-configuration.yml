@@ -1,0 +1,15 @@
+---
+title: Core Isolation Configuration
+description: >
+  These commands control Windows Virtualization-based Security (VBS) settings.
+  Enabling Core Isolation uses virtualization to protect the system from attacks,
+  while disabling it turns off this security feature.
+privilege: TrustedInstaller
+actions:
+  # Enable Core Isolation
+  - !run: {exe: 'bcdedit', args: '/set hypervisorlaunchtype auto', option: 'enable-core-isolation'}
+  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity', value: 'Enabled', type: REG_DWORD, data: '1', option: 'enable-core-isolation'}
+
+  # Disable Core Isolation
+  - !run: {exe: 'bcdedit', args: '/set hypervisorlaunchtype off', option: 'disable-core-isolation'}
+  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity', value: 'Enabled', type: REG_DWORD, data: '0', option: 'disable-core-isolation'}

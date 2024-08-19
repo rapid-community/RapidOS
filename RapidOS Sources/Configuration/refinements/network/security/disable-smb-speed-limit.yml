@@ -1,0 +1,12 @@
+---
+title: Disable SMB Speed Limit(Trottling)
+description: >
+  Disables the bandwidth throttling for the SMB (Server Message Block) protocol,
+  allowing for increased data transfer speeds and improved network performance when using SMB.
+actions:
+  # Disable SMB Trottling
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters'
+      value: 'DisableBandwidthThrottling'
+      type: REG_DWORD
+      data: '1'

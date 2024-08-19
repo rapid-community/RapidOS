@@ -1,0 +1,13 @@
+---
+title: Uninstall OneDrive
+description: >
+  Removes OneDrive and all residual files.
+privilege: TrustedInstaller
+actions:
+  - !writeStatus: {status: 'Removing OneDrive'}
+  - !powerShell:
+      command: '.\OneDrive-Uninstaller.ps1'
+      exeDir: true
+      option: 'remove-onedrive'
+      weight: 300
+  - !appx: {name: '*Microsoft.OneDriveSync*', type: family, option: 'remove-onedrive'}

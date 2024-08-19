@@ -1,0 +1,17 @@
+title: Desktop Configuration
+description: >
+  Configures desktop settings for improved user experience.
+actions:
+  # Disable Wallpaper Compression
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'JPEGImportQuality'
+      type: REG_DWORD
+      data: '100'
+
+  # Disable Shortcut icon
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons'
+      value: '29'
+      type: REG_SZ
+      data: '%WinDir%\RapidScripts\shortcut.ico'

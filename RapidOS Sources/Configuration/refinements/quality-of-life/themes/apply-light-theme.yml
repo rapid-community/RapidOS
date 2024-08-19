@@ -1,0 +1,32 @@
+---
+title: Install Light Theme
+description: >
+  Apply a light theme to your system for a brighter, more vibrant appearance.
+actions:
+  # Installing Light theme
+  - !writeStatus: {status: 'Installing Light theme'}
+
+  # Setting up theme as default in system
+  - !registryValue: {path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes', value: 'CurrentTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\HighContrast', value: 'CurrentTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+  
+  # Lock Screen wallpaper settings
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization', value: 'LockScreenImage', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+ 
+  # Refreshing system parameters
+  - !run: {exe: 'rundll32.exe', args: 'user32.dll,UpdatePerUserSystemParameters'}
+
+  # Applying Light Theme
+  - !cmd:
+      command: 'start "" "%WinDir%\RapidScripts\Themes\rapid-light.theme"'
+      wait: true
+      runas: currentUserElevated
+
+  # Wait before proceeding
+  - !run: {exe: 'timeout', args: '/t 5 /nobreak'}
+  
+  # Closing system settings and control panel after applying Light Theme
+  - !taskKill: {name: 'SystemSettings', ignoreErrors: true}
+  - !taskKill: {name: 'control', ignoreErrors: true}

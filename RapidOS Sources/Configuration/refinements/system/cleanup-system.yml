@@ -1,0 +1,13 @@
+---
+title: Windows Cleanup
+description: >
+  Powershell file that cleans up Windows.
+actions:
+  - !writeStatus: {status: "Cleanup started"}
+      
+  - !powerShell:
+      command: '.\System-Cleanup.ps1'
+      exeDir: true
+      wait: true
+      runas: currentUserElevated
+      weight: 300

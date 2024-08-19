@@ -1,0 +1,11 @@
+---
+title: Fault Tolerant Heap
+description: >
+  This file disables the FTH (Fault Tolerant Heap) feature, enhancing application stability by bypassing automatic compatibility fixes related to memory management.
+actions:
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\FTH'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\FTH\State'}

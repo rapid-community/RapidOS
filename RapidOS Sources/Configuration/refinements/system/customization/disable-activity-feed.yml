@@ -1,0 +1,6 @@
+---
+title: Activity Feed
+description: >
+  These registry parameters disables the activity feed feature in Windows 10. The activity feed is a timeline of your recent activities on your device, such as apps, files, websites, and contacts.
+actions:
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System', value: 'EnableActivityFeed', type: REG_DWORD, data: '0'}

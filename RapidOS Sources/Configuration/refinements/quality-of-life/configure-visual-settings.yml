@@ -1,0 +1,76 @@
+title: Configure Windows Visual Settings
+description: >
+  This script configures various registry settings to adjust visual effects and system performance in Windows.
+actions:
+  # Configure registry settings to adjust visual effects and system performance
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'TaskbarAnimations'
+      type: REG_DWORD
+      data: '1'
+      
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\DWM'
+      value: 'AlwaysHibernateThumbnails'
+      type: REG_DWORD
+      data: '0'
+
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'MinAnimate'
+      type: REG_SZ
+      data: '0'
+
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'IconsOnly'
+      type: REG_DWORD
+      data: '0'
+
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'ListviewShadow'
+      type: REG_DWORD
+      data: '1'
+
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'ListviewAlphaSelect'
+      type: REG_DWORD
+      data: '0'
+
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'DragFullWindows'
+      type: REG_SZ
+      data: '1'
+
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\DWM'
+      value: 'EnableAeroPeek'
+      type: REG_DWORD
+      data: '0'
+
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'FontSmoothing'
+      type: REG_SZ
+      data: '2'
+
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'UserPreferencesMask'
+      type: REG_BINARY
+      data: '9012038010000000'
+
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer'
+      value: 'ShellState'
+      type: REG_BINARY
+      data: '240000003EA8000000000000000000000000000001000000130000000000000073000000'
+
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects'
+      value: 'VisualFXSetting'
+      type: REG_DWORD
+      data: '3'

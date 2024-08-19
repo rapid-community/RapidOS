@@ -1,0 +1,26 @@
+---
+title: Mouse Settings
+description: >
+  Settings that customize the behavior of the mouse cursor, offering control over speed, responsiveness,
+  magnetism effects, and smoothness of movement based on user preferences and requirements.
+actions: 
+  # Mouse settings
+  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseSpeed', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseHoverTime', type: REG_SZ, data: '30'}
+  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseThreshold1', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseThreshold2', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseSensitivity', type: REG_DWORD, data: '0'}
+  # - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'SmoothMouseYCurve', type: REG_BINARY, data: '00000000000000000000000000000000000000000000000000000000000000000000000000000000'}
+  # - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'SmoothMouseXCurve', type: REG_BINARY, data: '00000000000000000000000000000000000000000000000000000000000000000000000000000000'}
+
+  # Cursor Magnetism settings
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism', value: 'DistanceThresholdInDIPS', type: REG_DWORD, data: '28'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism', value: 'MagnetismDelayInMilliseconds', type: REG_DWORD, data: '32'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism', value: 'MagnetismUpdateIntervalInMilliseconds', type: REG_DWORD, data: '10'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism', value: 'AttractionRectInsetInDIPS', type: REG_DWORD, data: '5'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism', value: 'VelocityInDIPSPerSecond', type: REG_DWORD, data: '168'}
+
+  # Cursor Speed settings
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed', value: 'IRRemoteNavigationDelta', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed', value: 'CursorSensitivity', type: REG_DWORD, data: '2710'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorSpeed', value: 'CursorUpdateInterval', type: REG_DWORD, data: '1'}

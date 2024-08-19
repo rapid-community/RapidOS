@@ -1,0 +1,10 @@
+---
+title: Optimize Internet Parameters
+description: >
+  This script optimizes internet connection settings to improve stability.
+  The optimization includes adjusting various network parameters for better speed.
+actions:
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument optimize_internet'
+      exeDir: true
+      weight: 100

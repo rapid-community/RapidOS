@@ -1,0 +1,9 @@
+---
+title: Remove Installation Assistant
+description: >
+  This script removes the installation assistant from the system.
+actions:
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument remove_installation_assistant'
+      exeDir: true
+      weight: 300

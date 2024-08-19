@@ -1,0 +1,11 @@
+---
+title: System Restore
+description: >
+  These registry parameters disable the system restore feature. The system restore feature allows you to create and use restore points to undo changes to your system settings, files, or programs.
+privilege: TrustedInstaller
+actions:
+  # Disables system restore
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows NT\SystemRestore', value: 'DisableSR', type: REG_DWORD, data: '1'}
+
+  # Removes all system restore points
+  - !cmd: {command: 'vssadmin delete shadows /all /quiet > nul 2>&1'}

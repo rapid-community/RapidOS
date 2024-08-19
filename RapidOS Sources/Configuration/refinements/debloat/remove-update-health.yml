@@ -1,0 +1,15 @@
+---
+title: Uninstall Update Health
+description: >
+  Removes Update Health tool.
+actions:
+  # Delete registry keys related to Update Health
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\UpdateHealthTools'}
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl'}
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\CloudManagedUpdate'}
+
+  # Delete Update Health-related directories
+  - !file: {path: 'C:\Program Files\Microsoft Update Health Tools'}
+
+  # Delete Update Health-related directories
+  - !file: {path: 'C:\Program Files\PCHealthCheck'}

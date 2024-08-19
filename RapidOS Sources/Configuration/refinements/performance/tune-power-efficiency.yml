@@ -1,0 +1,29 @@
+---
+title: Power Settings
+description: >
+  This configuration file modifies your system's power settings
+  to improve overall performance and responsiveness
+  and registers the .pow extension.
+actions:
+  - !writeStatus: {status: 'Power modification started'}
+  
+  # Run custom power configuration script
+  - !powerShell:
+      command: '.\Power-Optimizer.ps1 -MyArgument enable_power_saving'
+      exeDir: true
+      option: 'enable-power-saving'
+      weight: 300
+      
+  - !powerShell:
+      command: '.\Power-Optimizer.ps1 -MyArgument disable_power_saving'
+      exeDir: true
+      option: 'disable-power-saving'
+      weight: 300
+
+  # Register .pow file extension
+  - !registryValue: {path: 'HKCR\.pow', value: '', type: REG_SZ, data: 'Power Plan'}
+  - !registryValue: {path: 'HKCR\.pow', value: 'FriendlyTypeName', type: REG_SZ, data: 'Power Plan'}
+  - !registryValue: {path: 'HKCR\.pow\DefaultIcon', value: '', type: REG_EXPAND_SZ, data: 'C:\Windows\System32\powercfg.cpl,-202'}
+  - !registryValue: {path: 'HKCR\.pow\shell\Import\command', value: '', type: REG_SZ, data: 'powercfg /import "%1"'}
+  
+  - !run: {exe: 'timeout', args: '/t 3 /nobreak'}

@@ -1,0 +1,6 @@
+---
+title: Remove Cast Device
+description: The provided command modifies the Windows Registry to remove the "Cast to device" option from the context menu.
+privilege: TrustedInstaller
+actions:
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked', value: '{7AD84985-87B4-4a16-BE58-8B72A5B390F7}', type: REG_SZ, data: ''}

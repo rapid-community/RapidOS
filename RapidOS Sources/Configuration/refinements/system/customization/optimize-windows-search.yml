@@ -1,0 +1,44 @@
+---
+title: Windows Search
+description: >
+  These registry tweaks customize various aspects of Windows Search functionality. They disable cloud search, location-based search,
+  Bing integration in the Start Menu, automatic update of speech data, web search, SafeSearch setting, and information sharing in Search.
+actions:
+  # Disable Cortana
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'AllowCortana', type: REG_DWORD, data: '0'}
+
+  # Disable Cloud Search
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'AllowCloudSearch', type: REG_DWORD, data: '0'}
+
+  # Disable search with using location
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'AllowSearchToUseLocation', type: REG_DWORD, data: '0'}
+
+  # Disable Bing Integration in the Start Menu
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Search', value: 'CortanaConsent', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Search', value: 'BingSearchEnabled', type: REG_DWORD, data: '0'}
+
+  # Disable Automatic Update of Speech Data
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Speech_OneCore\Preferences', value: 'ModelDownloadAllowed', type: REG_DWORD, data: '0'}
+
+
+  # Do not search the web or display web results in Search
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'ConnectedSearchUseWeb', type: REG_DWORD, data: '0'}
+
+  # Do not search the web or display web results in Search over metered connections
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'ConnectedSearchUseWebOverMeteredConnections', type: REG_DWORD, data: '0'}
+
+  # Do not allow web search
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'DisableWebSearch', type: REG_DWORD, data: '1'}
+
+  # Do not set the SafeSearch setting for Search
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'ConnectedSearchSafeSearch', type: REG_DWORD, data: '3'}
+
+  # Do not set information is shared in Search
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'ConnectedSearchPrivacy', type: REG_DWORD, data: '3'}
+
+
+  # Respect Power Settings when Indexing
+  - !registryValue: {path: 'HKLM\Software\Microsoft\Windows Search\Gather\Windows\SystemIndex', value: 'RespectPowerModes', type: REG_DWORD, data: '1'}
+
+  # Prevent indexing when running on battery power to conserve energy
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search', value: 'PreventIndexOnBattery', type: REG_DWORD, data: '1'}

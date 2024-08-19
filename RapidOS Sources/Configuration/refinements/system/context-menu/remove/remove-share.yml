@@ -1,0 +1,6 @@
+---
+title: Remove Share
+description: The provided command modifies the Windows Registry to remove the "Share" option from the context menu.
+privilege: TrustedInstaller
+actions:
+ - !registryKey: {path: 'HKCR\*\shellex\ContextMenuHandlers\ModernSharing'}

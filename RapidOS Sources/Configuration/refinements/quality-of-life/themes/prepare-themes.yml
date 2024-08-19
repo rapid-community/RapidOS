@@ -1,0 +1,18 @@
+---
+title: Prepare Themes
+description: >
+  Prepairing themes in registry for their proper functionality.
+actions:
+  # - !taskKill: {name: 'explorer', ignoreErrors: true}
+  # Activate more themes
+  - !registryValue: {path: 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\current\device\Education', value: 'EnableEduThemes', type: REG_DWORD, data: '1', option: 'keep-def-theme'}
+  
+  # Setting up themes as default in personalization
+  - !registryValue: {path: 'HKCU\Control Panel\Desktop', value: 'TranscodedImageCache', operation: delete, options: ['apply-dark-theme', 'apply-light-theme']}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers', value: 'BackgroundHistoryPath0', data: '%SystemRoot%\Web\Wallpaper\Windows\rapid-dark.png'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers', value: 'BackgroundHistoryPath1', data: '%SystemRoot%\Web\Wallpaper\Windows\rapid-light.png'}
+  
+  - !registryValue: {path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallThemeDark', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-dark.theme'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallThemeLight', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallThemeDark', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-dark.theme'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallThemeLight', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}

@@ -1,0 +1,7 @@
+---
+title: Remove Troubleshooting Compatibility
+description: The provided commands modify the Windows Registry to remove the "Troubleshooting compatibility" option from the context menu.
+privilege: TrustedInstaller
+actions:
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked', value: '{1d27f844-3a1f-4410-85ac-14651078412d}', type: REG_SZ, data: ''}
+ - !registryValue: {path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked', value: '{1d27f844-3a1f-4410-85ac-14651078412d}', type: REG_SZ, data: ''}

@@ -1,0 +1,26 @@
+---
+title: Notification Settings Configuration
+description: >
+  Configures notification settings for improved user experience.
+privilege: TrustedInstaller
+actions:
+  # Disable showing balloon notifications as toasts
+  - !registryValue:
+      path: 'HKCU\Software\Policies\Microsoft\Windows\Explorer'
+      value: 'EnableLegacyBalloonNotifications'
+      type: REG_DWORD
+      data: '1'
+
+  # Disable feature advertisement balloon notifications
+  - !registryValue:
+      path: 'HKCU\Software\Policies\Microsoft\Windows\Explorer'
+      value: 'NoBalloonFeatureAdvertisements'
+      type: REG_DWORD
+      data: '1'
+
+  # Disable notifications for network usage
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications'
+      value: 'NoCloudApplicationNotification'
+      type: REG_DWORD
+      data: '1'

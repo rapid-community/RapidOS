@@ -1,0 +1,13 @@
+---
+title: TCP1323Opts
+description: >
+  The "TCP1323Opts" enhances TCP performance by enabling Window Scale and Timestamp options.
+  Changing it allows larger window sizes and accurate timestamping. This tweak improves data
+  transfer rates and network responsiveness, especially in high-bandwidth, high-latency networks.
+actions:
+  # Change TCP1323Opts to 1 GB IRPs (default - 0 GB)
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
+      value: 'TCP1323Opts'
+      type: REG_DWORD
+      data: '1'

@@ -1,0 +1,7 @@
+---
+title: Add .bat in context menu
+description: >
+  The provided commands modify the Windows Registry to add custom context menu items for '.bat' (batch) files.
+actions:
+  - !registryValue: {path: 'HKCR\.bat\ShellNew', value: 'ItemName', type: REG_EXPAND_SZ, data: '@C:\Windows\System32\acppage.dll,-6002'}
+  - !registryValue: {path: 'HKCR\.bat\ShellNew', value: 'NullFile', type: REG_SZ, data: ''}

@@ -1,0 +1,13 @@
+---
+title: Rapid Gaming Warning
+description: >
+  Execute file that displays a message about the instability of Rapid Extreme.
+actions:
+  - !writeStatus: {status: 'Attention!', option: 'rapid-gaming'}
+
+  - !cmd:
+      exeDir: true
+      command: 'start RapidResources\extreme\extreme.exe'
+      option: 'rapid-gaming'
+
+  - !run: {exe: 'timeout', args: '/t 10 /nobreak'}

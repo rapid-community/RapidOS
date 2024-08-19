@@ -1,0 +1,8 @@
+---
+title: Disable Telemetry Collection
+description: >
+  Modifies registry settings to block telemetry services by redirecting their executables to taskkill.exe. This prevents CompatTelRunner.exe and DeviceCensus.exe from running.
+actions:
+  # Disable telemetry parameters
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\CompatTelRunner.exe', value: '%windir%\System32\taskkill.exe', type: REG_DWORD, data: '2'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DeviceCensus.exe', value: '%windir%\System32\taskkill.exe', type: REG_DWORD, data: '2'}

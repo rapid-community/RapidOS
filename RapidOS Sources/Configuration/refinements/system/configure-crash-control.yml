@@ -1,0 +1,10 @@
+---
+title: Crash Control
+description: >
+  The Crash Control registry settings govern the system's response to critical errors and crashes, but this script disable this.
+actions:
+  - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control\CrashControl', value: 'AutoReboot', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control\CrashControl', value: 'CrashDumpEnabled', type: REG_DWORD, data: '3'}
+  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Control\CrashControl', value: 'LogEvent', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Control\CrashControl', value: 'DisplayParameters', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Control\CrashControl\StorageTelemetry', value: 'DeviceDumpEnabled', type: REG_DWORD, data: '0'}

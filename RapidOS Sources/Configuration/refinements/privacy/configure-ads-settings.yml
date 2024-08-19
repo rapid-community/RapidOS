@@ -1,0 +1,6 @@
+---
+title: Ads in Settings
+description: >
+  This script removes ads from settings, enhancing user experience and minimizing distractions.
+actions:
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-338393Enabled', type: REG_DWORD, data: '0'}

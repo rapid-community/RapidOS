@@ -1,0 +1,61 @@
+---
+title: Resource Policy
+description: >
+  Registry modifications that enforce a strict prioritization and resource allocation scheme, effectively limiting CPU usage, and setting process priorities.
+  These changes influence system performance and task execution.
+actions:
+  # Control CPU hard cap percentage and scheduling type
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\HardCap0', value: 'CapPercentage', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\HardCap0', value: 'SchedulingType', type: REG_DWORD, data: '0'}
+  
+  # Control CPU paused hard cap percentage and scheduling type
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\Paused', value: 'CapPercentage', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\Paused', value: 'SchedulingType', type: REG_DWORD, data: '0'}
+  
+  # Control CPU soft cap full percentage and scheduling type
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\SoftCapFull', value: 'CapPercentage', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\SoftCapFull', value: 'SchedulingType', type: REG_DWORD, data: '0'}
+  
+  # Control CPU soft cap low percentage and scheduling type
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\SoftCapLow', value: 'CapPercentage', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\CPU\SoftCapLow', value: 'SchedulingType', type: REG_DWORD, data: '0'}
+  
+  # Control various flags for resource policies
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\BackgroundDefault', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\Frozen', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\FrozenDNCS', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\FrozenDNK', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\FrozenPPLE', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\Paused', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\PausedDNK', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\Pausing', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\PrelaunchForeground', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Flags\ThrottleGPUInterference', value: 'IsLowPriority', type: REG_DWORD, data: '0'}
+  
+  # Control the importance of processes
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Critical', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Critical', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\CriticalNoUi', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\EmptyHostPPLE', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\EmptyHostPPLE', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\High', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\High', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Low', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Low', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Lowest', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Lowest', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}  
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Medium', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\Medium', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\MediumHigh', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\MediumHigh', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\StartHost', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\StartHost', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\VeryHigh', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\VeryHigh', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\VeryLow', value: 'BasePriority', type: REG_DWORD, data: '82'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Importance\VeryLow', value: 'OverTargetPriority', type: REG_DWORD, data: '50'}
+  
+  # Control IO and memory policies
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\IO\NoCap', value: 'IOBandwidth', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Memory\NoCap', value: 'CommitLimit', type: REG_DWORD, data: '4294967295'}
+  - !registryValue: {path: 'HKLM\SYSTEM\ResourcePolicyStore\ResourceSets\Policies\Memory\NoCap', value: 'CommitTarget', type: REG_DWORD, data: '4294967295'}

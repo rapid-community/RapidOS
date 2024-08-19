@@ -1,0 +1,15 @@
+---
+title: Uninstall Microsoft Edge
+description: >
+  Removes Microsoft Edge and all residual files associated with it.
+privilege: TrustedInstaller
+actions:
+  - !writeStatus: {status: 'Removing Microsoft Edge'}
+  - !powerShell:
+      command: '.\MSEdge-Remover.ps1'
+      exeDir: true
+      option: 'remove-msedge'
+      weight: 300
+  - !appx: {name: '*Microsoft.MicrosoftEdge_8wekyb3d8bbwe*', type: family, option: 'remove-msedge'}
+  - !appx: {name: '*Microsoft.MicrosoftEdge.Stable*', type: family, option: 'remove-msedge'}
+  - !appx: {name: '*Microsoft.MicrosoftEdgeDevToolsClient*', type: family, option: 'remove-msedge'}

@@ -1,0 +1,6 @@
+---
+title: Offline Maps
+description: >
+  This registry parameter disables the offline maps. The offline maps feature allows you to download and use maps without an internet connection.
+actions:
+  - !registryValue: {path: 'HKLM\SYSTEM\Maps', value: 'AutoUpdateEnabled', type: REG_DWORD, data: '0'}

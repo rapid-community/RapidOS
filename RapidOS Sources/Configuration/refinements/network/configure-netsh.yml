@@ -1,0 +1,31 @@
+---
+title: Netsh Configuration
+description: >
+  The following commands configure various network-related settings on a Windows system using the netsh utility.
+  Each command modifies specific parameter to enhance network performance.
+privilege: TrustedInstaller
+actions:
+  # Main internet settings
+  - !run: {exe: 'netsh', args: 'int tcp set global rss=enabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global rsc=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global ecncapability=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global timestamps=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global initialRto=2000'}
+  - !run: {exe: 'netsh', args: 'int tcp set global MaxSynRetransmissions=2'}
+  - !run: {exe: 'netsh', args: 'int tcp set global fastopen=enabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global fastopenfallback=enabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global pacingprofile=off'}
+  - !run: {exe: 'netsh', args: 'int tcp set global hystart=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global dca=enabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global netdma=enabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global nonsackrttresiliency=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set global maxsynretransmissions=2'}
+  - !run: {exe: 'netsh', args: 'int tcp set security profiles=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set security mpp=disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set heuristics disabled'}
+  - !run: {exe: 'netsh', args: 'int tcp set supplemental internet congestionprovider=default'}
+  - !run: {exe: 'netsh', args: 'interface Teredo set state type=enterpriseclient'}
+  - !run: {exe: 'netsh', args: 'interface Teredo set state servername=default'}
+  
+  # Disabling Firewall for RapidOS Extreme
+  # - !run: {exe: 'netsh', args: 'advfirewall set allprofiles state off', option: "rapid-gaming"}

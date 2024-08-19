@@ -1,0 +1,44 @@
+---
+title: File Explorer Configuration
+description: >
+  This system customization script is designed to enhance your File Explorer by tweaking various settings.
+actions:
+  # Open File Explorer to - This PC
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'LaunchTo', type: REG_DWORD, data: '1'}
+
+  # Display the full path in title bar
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState', value: 'FullPath', type: REG_DWORD, data: '1'}
+
+  # Do not hide extensions for known file types
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'HideFileExt', type: REG_DWORD, data: '0'}
+
+  # Show hidden folders
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'Hidden', type: REG_DWORD, data: '1'}
+
+  # Increased context options time threshold
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer', value: 'MultipleInvokePromptMinimum', type: REG_DWORD, data: '100'}
+  - !registryValue: {path: 'HKCU\Software\Winaero.com\Winaero Tweaker\Changes', value: 'pageContextMenuSelectionLimit', type: REG_DWORD, data: '1'}
+
+  # Always show more details in a file copy dialog
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager', value: 'EnthusiastMode', type: REG_DWORD, data: '1'}
+
+  # Disable Windows low disk space checking
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'NoLowDiskSpaceChecks', type: REG_DWORD, data: '1'}
+
+  # Turn off display of recent search entries in the File Explorer search box
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Windows\Explorer', value: 'DisableSearchBoxSuggestions', type: REG_DWORD, data: '1'}
+
+  # Remove network navigation pane from File Explorer
+  - !registryValue: {path: 'HKCR\CLSID\{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}\ShellFolder', value: 'Attributes', type: REG_DWORD, data: '2962489444'}
+
+  # Do not show sync provider notifications (ads)
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'ShowSyncProviderNotifications', type: REG_DWORD, data: '0'}
+
+  # Do not track Shell shortcuts during roaming
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'LinkResolveIgnoreLinkInfo', type: REG_DWORD, data: '1'}
+
+  # Do not use the search-based method when resolving shell shortcuts
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'NoResolveSearch', type: REG_DWORD, data: '1'}
+
+  # Do not use the tracking-based method when resolving shell shortcuts
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'NoResolveTrack', type: REG_DWORD, data: '1'}

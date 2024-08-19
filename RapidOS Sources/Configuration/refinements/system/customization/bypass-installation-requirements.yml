@@ -1,0 +1,15 @@
+---
+title: Bypass Requirements
+description: >
+  The provided commands modify various registry values in the Windows Registry to bypass specific system requirements during installation or upgrade processes.
+  These changes allow the system to proceed with installation or upgrade even if certain hardware components, such as TPM, CPU, RAM, or storage, do not meet the standard requirements.
+actions:
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\MoSetup', value: 'AllowUpgradesWithUnsupportedTPMOrCPU', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE', value: 'BypassNRO', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKCU\Control Panel\UnsupportedHardwareNotificationCache', value: 'SV1', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\Control Panel\UnsupportedHardwareNotificationCache', value: 'SV2', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\LabConfig', value: 'BypassSecureBootCheck', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\LabConfig', value: 'BypassTPMCheck', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\LabConfig', value: 'BypassCPUCheck', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\LabConfig', value: 'BypassRAMCheck', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\LabConfig', value: 'BypassStorageCheck', type: REG_DWORD, data: '1'}

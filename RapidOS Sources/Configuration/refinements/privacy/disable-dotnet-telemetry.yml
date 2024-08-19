@@ -1,0 +1,6 @@
+---
+title: DotNet Telemetry
+description: >
+  This modification prevents DotNet from collecting and sending telemetry data, enhancing user privacy.
+actions:
+  - !run: {exe: 'setx', args: 'DOTNET_CLI_TELEMETRY_OPTOUT 1'}

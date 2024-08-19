@@ -1,0 +1,71 @@
+---
+title: Playbook Installation Initialization
+description: >
+  This configuration file prepares playbook for optimal initialization and customization.
+privilege: TrustedInstaller
+actions:
+  # Displays a notification regarding the instability of the Extreme version of RapidOS
+  # - !task: {path: 'rapid\extreme\warning.yml'} Disabled due to beta
+  
+  # Writes status 'Prepairing for installation'
+  - !task: {path: 'additionals\statuses\preparation-status.yml'}
+
+  # Stop Windows Update (Not needed anymore, AME Wizard automatically stops Windows updates)
+  # - !service: 
+  #   name: wuauserv 
+  #   operation: stop
+      
+  # Copy necessary folders for proper playbook installation
+  - !task: {path: 'additionals\copy-folders.yml'}
+      
+  # Configure Windows notifications settings
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows Defender Security Center\Notifications'
+      value: 'DisableNotifications'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-def'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications'
+      value: 'DisableNotifications'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-def'
+
+  - !run: {exe: 'timeout', args: '/t 3 /nobreak'}
+
+  # Optimize PowerShell performance and configuration
+  - !writeStatus: {status: 'Optimizing PowerShell'}
+
+  # Disable PowerShell telemetry
+  - !task: {path: 'refinements\privacy\disable-powershell-telemetry.yml'}
+
+  # Set 'Unrestrcited' in PowerShell Execution Policy
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell'
+      value: 'ExecutionPolicy'
+      type: REG_SZ
+      data: 'Unrestricted'
+
+  # Run NGEN Optimizer for PowerShell
+  - !powerShell:
+      command: '.\NGEN-Optimizer.ps1'
+      exeDir: true
+      weight: 300
+
+  # Configure DISM features
+  - !writeStatus: {status: 'Configuring DISM Features'} 
+  - !powerShell:
+      command: '.\DISM-Optimizer.ps1'
+      exeDir: true
+      weight: 300

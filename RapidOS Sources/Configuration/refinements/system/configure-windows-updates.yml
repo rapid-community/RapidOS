@@ -1,0 +1,98 @@
+---
+title: Windows Updates Configuration
+description: >
+  Enhances and configures Windows Update settings for better control and management.
+actions:
+  # A lot of features was taken from Revision Playbook, will be reworked in the future
+
+  - !writeStatus: {status: 'Configuring Windows Updates'}
+
+  # Pause Windows Updates until January 19, 2038
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'FlightSettingsMaxPauseDays', type: REG_DWORD, data: '5269'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseFeatureUpdatesStartTime', type: REG_SZ, data: '2023-08-17T12:47:51Z'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseFeatureUpdatesStartTime', type: REG_SZ, data: '2038-01-19T03:14:07Z'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseQualityUpdatesStartTime', type: REG_SZ, data: '2023-08-17T12:47:51Z'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseQualityUpdatesEndTime', type: REG_SZ, data: '2038-01-19T03:14:07Z'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseUpdatesStartTime', type: REG_SZ, data: '2023-08-17T12:47:51Z'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseUpdatesExpiryTime', type: REG_SZ, data: '2038-01-19T03:14:07Z'}
+
+  # Disable Dual Scan to prevent conflicts in update management
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'DisableDualScan', type: REG_DWORD, data: '1'}
+
+  # Disable automatic restarts during update installations
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'NoAutoRebootWithLoggedOnUsers', type: REG_DWORD, data: '1'}
+
+  # Disable auto-restart notifications to minimize interruptions
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'SetAutoRestartNotificationDisable', type: REG_DWORD, data: '1'}
+
+  # Disable Windows Update Notifications to reduce system distractions
+  - !registryValue: {path: 'HKLM\SYSTEM\Setup\UpgradeNotification', value: 'UpgradeAvailable', type: REG_DWORD, data: '0'}
+
+  # Disable Software Notifications for a cleaner update experience
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'EnableFeaturedSoftware', type: REG_DWORD, data: '0'}
+
+  # Disable Malicious Software Reporting tool diagnostic data for privacy
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\MRT', value: 'DontReportInfectionInformation', type: REG_DWORD, data: '0'}
+
+  # Prevent Malicious Software Removal Tool from installing automatically
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\MRT', value: 'DontOfferThroughWUAU', type: REG_DWORD, data: '1'}
+
+  # Exclude drivers from Windows Updates for stability
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'ExcludeWUDriversInQualityUpdate', type: REG_DWORD, data: '1'}
+
+  # Set the Windows readiness level for updates
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'BranchReadinessLevel', type: REG_DWORD, data: '20'}
+
+  # Schedule when Quality Updates are received
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'DeferQualityUpdates', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'DeferQualityUpdatesPeriodInDays', type: REG_DWORD, data: '4'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'DeferFeatureUpdatesPeriodInDays', type: REG_DWORD, data: '365'}
+
+  # Configure Delivery Optimization for efficient update downloads
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings', value: 'DownloadMode', type: REG_SZ, data: '0'}
+
+  # Disable Windows Update device driver search prompts 
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Windows\DriverSearching', value: 'DontPromptForWindowsUpdate', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DriverSearching', value: 'DontPromptForWindowsUpdate', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DriverSearching', value: 'DontSearchWindowsUpdate', type: REG_DWORD, data: '1'}
+
+  # Prevent automatic wake-ups for update installations
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'AUPowerManagement', type: REG_DWORD, data: '0'}
+
+  # Prevent device metadata retrieval from the Internet for privacy
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Device Metadata', value: 'PreventDeviceMetadataFromNetwork', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata', value: 'PreventDeviceMetadataFromNetwork', type: REG_DWORD, data: '1'}
+
+  # Disallow specifying search order for device driver source locations
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DriverSearching', value: 'SearchOrderConfig', type: REG_DWORD, data: '0'}
+
+  # Prevent downloading repair content and optional features from Windows Update
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing', value: 'RepairContentServerSource', type: REG_DWORD, data: '2'}
+
+  # Disable Reserved Storage for more control over disk space
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager', value: 'ShippedWithReserves', type: REG_DWORD, data: '0'}
+
+  # Prevent Automatic Updates for tailored update management
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\WindowsMediaPlayer', value: 'DisableAutoUpdate', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'NoAutoUpdate', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'DisableWindowsUpdateAccess', type: REG_DWORD, data: '1'}
+
+  # Configure display options for update notifications
+  # 2 – Disable all notifications, including restart warnings
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate', value: 'UpdateNotificationLevel', type: REG_DWORD, data: '2'}
+
+  # Control visibility of Windows Update status icon in the taskbar
+  # 0 - Invisible status icon
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'TrayIconVisibility', type: REG_DWORD, data: '0'}
+  # 1 - Hidden status icon
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'IsWUHidden', type: REG_DWORD, data: '1'}
+
+
+  # Fix potential issues that were in our old project - EternityOS(if someone updates from EternityOS to RapidOS, these parameters below will fix issues with Windows Update)
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'AUOptions', operation: delete}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'AutoInstallMinorUpdates', operation: delete}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'NoAUAsDefaultShutdownOption', operation: delete}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'NoAUShutdownOption', operation: delete}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'NoAutoRebootWithLoggedOnUsers', operation: delete}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'IncludeRecommendedUpdates', operation: delete}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU', value: 'EnableFeaturedSoftware', operation: delete}

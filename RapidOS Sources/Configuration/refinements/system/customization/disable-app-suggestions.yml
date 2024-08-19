@@ -1,0 +1,6 @@
+---
+title: App Suggestions
+description: >
+  This registry parameter turn off app suggestions in Start Menu.
+actions:
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-338388Enabled', type: REG_DWORD, data: '0'}

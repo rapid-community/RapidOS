@@ -1,0 +1,14 @@
+---
+title: Moderate Risk File Types
+description: >
+  These registry parameters configures the list of moderate risk file types.
+  Moderate risk file types are files that can contain code or commands that can run on your computer, but are not executable by themselves.
+actions:
+  # Zone information in file attachments
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments', value: 'SaveZoneInformation', type: REG_DWORD, data: '1'}
+
+  # Inclusion list for moderate risk file types
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Associations', value: 'ModRiskFileTypes', type: REG_SZ, data: '.bat;.reg;.vbs;.chm;.js;.cmd'}
+
+  # Default risk level for file attachments - Disable the warning The Publisher could not be verified
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Associations', value: 'DefaultFileTypeRisk', type: REG_DWORD, data: '1808'}

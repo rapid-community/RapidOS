@@ -1,0 +1,11 @@
+---
+title: SizReqBuf
+description: >
+  The SizReqBuf parameter represents the size of the server buffer for serving standard file requests.
+actions:
+  # Change SizReqBuf to 17424 bytes (default - 16384 bytes)
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters'
+      value: 'SizReqBuf'
+      type: REG_DWORD
+      data: '17424'

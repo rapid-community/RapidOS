@@ -1,0 +1,56 @@
+---
+title: Start Menu Configuration
+description: >
+  Configures and optimizes the Start Menu layout and functionality.
+privilege: TrustedInstaller
+actions:
+  # Close StartMenuExperienceHost process and clean up start menu pins
+  - !writeStatus: {status: 'Cleaning up Start Menu', option: 'modify-ui'}
+  - !taskKill: {name: 'StartMenuExperienceHost', ignoreErrors: true, option: 'modify-ui'}
+  - !appx: {name: '*StartMenuExperienceHost*', operation: clearCache, option: 'modify-ui'}
+  - !taskKill: {name: 'explorer', ignoreErrors: true, option: 'modify-ui'}
+  - !powerShell:
+      command: '.\StartMenu-Cleanup.ps1'
+      exeDir: true
+      weight: 300
+      option: 'modify-ui'
+
+  # Do not display recent and frequently used items
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer'
+      value: 'ShowRecent'
+      type: REG_DWORD
+      data: '0'
+      option: 'modify-ui'
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer'
+      value: 'ShowFrequent'
+      type: REG_DWORD
+      data: '0'
+      option: 'modify-ui'
+
+  # Ensure more pins than recommendations
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'Start_Layout'
+      type: REG_DWORD
+      data: '1'
+      option: 'modify-ui'
+
+  # Do not track recently opened documents
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'Start_TrackDocs'
+      type: REG_DWORD
+      data: '0'
+      option: 'modify-ui'
+
+  # Configure Start Menu pins(taken from ReviOS)
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'ConfigureStartPins'
+      type: REG_SZ
+      data: '{"pinnedList":[{"packagedAppId":"Microsoft.WindowsStore_8wekyb3d8bbwe!App"},{"packagedAppId":"windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},{"packagedAppId":"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App"},{"packagedAppId":"Microsoft.Paint_8wekyb3d8bbwe!App"},{"desktopAppLink":"%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"},{"packagedAppId":"Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"}]}'
+      option: 'modify-ui'
+  
+  - !run: {exe: 'timeout', args: '/t 3 /nobreak', option: 'modify-ui'}

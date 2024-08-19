@@ -1,0 +1,6 @@
+---
+title: Remove Rich Text Format
+description: The provided command modifies the Windows Registry to remove the "Rich Text Format (RTF)" option from the "New" context menu.
+privilege: TrustedInstaller
+actions:
+ - !registryKey: {path: 'HKCR\.rtf\ShellNew'}

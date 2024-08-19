@@ -1,0 +1,7 @@
+---
+title: Windows Startup Sound
+description: >
+  The registry value disables the Windows startup sound. The Windows startup sound is a short audio clip that plays when you turn on your computer and log in to Windows.
+actions:
+  # Disable Windows Startup sound
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'DisableStartupSound', type: REG_DWORD, data: '1'}

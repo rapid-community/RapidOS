@@ -1,0 +1,12 @@
+---
+title: DefaultTTL
+description: >
+  The "DefaultTTL" parameter determines the Time To Live (TTL) for network packets.
+  TTL signifies the maximum time, in seconds, a packet can exist in a network before it is discarded.
+actions:
+  # Change DefaultTTL to 62 sec (default - 128 sec)
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
+      value: 'DefaultTTL'
+      type: REG_DWORD
+      data: '62'

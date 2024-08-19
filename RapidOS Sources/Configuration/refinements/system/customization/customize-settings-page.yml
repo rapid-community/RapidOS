@@ -1,0 +1,36 @@
+---
+title: Settings Page Visibility
+description: >
+  This registry value allows you to customize the visibility of pages in the Settings app.
+actions:
+  # Windows 10
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'SettingsPageVisibility'
+      data: 'hide:recovery;maps;maps-downloadmaps;privacy;privacy-speechtyping;privacy-speech;privacy-feedback;privacy-activityhistory;search-permissions;privacy-general;sync;mobile-devices;mobile-devices-addphone;workplace;backup'
+      type: REG_SZ
+      builds: [ '<22000' ]
+      option: 'enable-def'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'SettingsPageVisibility'
+      data: 'hide:recovery;maps;maps-downloadmaps;privacy;privacy-speechtyping;privacy-speech;privacy-feedback;privacy-activityhistory;search-permissions;privacy-general;sync;mobile-devices;mobile-devices-addphone;workplace;backup;windowsdefender'
+      type: REG_SZ
+      builds: [ '<22000' ]
+      option: 'disable-def'
+
+  # Windows 11
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'SettingsPageVisibility'
+      data: 'hide:recovery;maps;maps-downloadmaps;privacy;privacy-feedback;privacy-activityhistory;search-permissions;privacy-general;sync;mobile-devices;mobile-devices-addphone;workplace;family-group;deviceusage;home'
+      type: REG_SZ
+      builds: [ '>=22000' ]
+      option: 'enable-def'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'SettingsPageVisibility'
+      data: 'hide:recovery;maps;maps-downloadmaps;privacy;privacy-feedback;privacy-activityhistory;search-permissions;privacy-general;sync;mobile-devices;mobile-devices-addphone;workplace;family-group;deviceusage;home;windowsdefender'
+      type: REG_SZ
+      builds: [ '>=22000' ]
+      option: 'disable-def'

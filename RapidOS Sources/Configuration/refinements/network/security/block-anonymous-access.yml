@@ -1,0 +1,11 @@
+---
+title: Block Anonymous access
+description: >
+  Restricts anonymous access to network resources, enhancing network security by ensuring that only authenticated users can access shared resources.
+actions:
+  # Disable anonymous access parameter
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters'
+      value: 'RestrictNullSessAccess'
+      type: REG_DWORD
+      data: '1'

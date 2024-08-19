@@ -1,0 +1,15 @@
+---
+title: Xbox Game Bar
+description: >
+  The registry parameters disable the Xbox Game Bar feature. The Xbox Game Bar is a gaming overlay that lets you access various gaming features and actions,
+  such as recording, streaming, chatting, and more.
+actions:
+  - !registryValue: {path: 'HKCU\Software\Microsoft\GameBar', value: 'AllowAutoGameMode', type: REG_DWORD, data: '0', builds: [ '<22000' ]}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\GameBar', value: 'AutoGameModeEnabled', type: REG_DWORD, data: '0', builds: [ '<22000' ]}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\GameBar', value: 'GamePanelStartupTipIndex', type: REG_DWORD, data: '3', option: 'remove-xbox'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\GameBar', value: 'ShowStartupPanel', type: REG_DWORD, data: '0', option: 'remove-xbox'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\GameBar', value: 'UseNexusForGameBarEnabled', type: REG_DWORD, data: '0', option: 'remove-xbox'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR', value: 'AppCaptureEnabled', type: REG_DWORD, data: '0', option: 'remove-xbox'}
+  - !registryValue: {path: 'HKCU\System\GameConfigStore', value: 'GameDVR_Enabled', type: REG_DWORD, data: '0', option: 'remove-xbox'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR', value: 'AllowGameDVR', type: REG_DWORD, data: '0', option: 'remove-xbox'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR', value: 'value', type: REG_DWORD, data: '0', option: 'remove-xbox'}

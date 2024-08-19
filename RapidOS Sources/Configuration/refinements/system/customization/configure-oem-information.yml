@@ -1,0 +1,9 @@
+---
+title: RapidOS OEM Information
+description: >
+  This script facilitates setting OEM information for RapidOS.
+actions:
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument set_rapidos_information'
+      exeDir: true
+      weight: 100

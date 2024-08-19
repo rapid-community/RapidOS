@@ -1,0 +1,6 @@
+---
+title: Remove Open in terminal
+description: The provided command modifies the Windows Registry to remove the "Open in terminal" option from the context menu.
+privilege: TrustedInstaller
+actions:
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked', value: '{9F156763-7844-4DC4-B2B1-901F640F5155}', type: REG_SZ, data: ''}
