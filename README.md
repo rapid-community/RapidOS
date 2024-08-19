@@ -46,10 +46,11 @@ All these options can be selected within the playbook under custom features!
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
 
-If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work. In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`. Our playbooks consist of `.xml`, `.yml`, and `.ps1` files. You'll need a text editor like Sublime Text or VS Code to work with them:
+If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work. In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`. Our playbooks consist of `.xml`, `.yml`, and `.ps1` files. You'll need a text editor like Sublime Text, Notepad++ or VS Code to work with them:
 
-![Sublime](https://img.shields.io/badge/-VS%20Code-black?style=for-the-badge&logo=visual-studio-code&logoColor=white&color=007ACC)
-![VS Code](https://img.shields.io/badge/-pnpm-black?style=for-the-badge&logoColor=white&logo=pnpm&color=B76507)
+![Sublime Text](https://img.shields.io/badge/sublime_text-%23575757.svg?style=for-the-badge&logo=sublime-text&logoColor=important)
+![Notepad++](https://img.shields.io/badge/Notepad++-90E59A.svg?style=for-the-badge&logo=notepad%2b%2b&logoColor=black)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 
 ## <a name="how to contact us">📧 How to Contact Us?</a>
 
