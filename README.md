@@ -47,7 +47,7 @@ If you have any questions, feedback, or suggestions, please feel free to join ou
 
 ## License :page_facing_up:
 
-RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/Rapid/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
+RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
 ## Join the RapidOS Community Today! :earth_americas: :star2:
 
