@@ -41,8 +41,12 @@ All these options can be selected within the playbook under custom features!
 ***Note**: Our playbook is currently in beta and we use the stable version by default, after the full release we will give you the opportunity to use all these versions.*
 
 ## <a name="how to get started">🔨 How to Get Started?</a>
+RapidOS is now available for download! It’s built on the powerful **[AME Wizard](https://ameliorated.io/)**, which lets you customize Windows like never before.
 
-**RapidOS** is currently available for download. Our system is based on **[AME Wizard](https://ameliorated.io/)**, a powerful tool that allows you to apply custom playbooks to your Windows installation. A playbook consists of scripts and configurations that modify your system according to your preferences. With **RapidOS**, you can transform your Windows experience in just a few easy steps. You can find the system release on [GitHub](https://github.com/rapid-community/RapidOS/releases). 🚀
+With AME Wizard, you can use custom playbooks—scripts and settings that adjust your system to fit your needs. In just a few easy steps, **RapidOS** can totally change how you use Windows.
+
+🔗 **Learn more and download** from our [official website](https://rapid-community.ru).  
+🔗 **Check out the source** on [GitHub](https://github.com/rapid-community/RapidOS/releases).
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
 
