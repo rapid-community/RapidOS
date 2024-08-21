@@ -45,8 +45,8 @@ RapidOS is now available for download! It’s built on the powerful **[AME Wizar
 
 With AME Wizard, you can use custom playbooks—scripts and settings that adjust your system to fit your needs. In just a few easy steps, **RapidOS** can totally change how you use Windows.
 
-🔗 **Learn more and download** from our [official website](https://rapid-community.ru).  
-🔗 **Check out the source** on [GitHub](https://github.com/rapid-community/RapidOS/releases).
+### 🔗 **Learn more and download** from our [official website](https://rapid-community.ru).  
+### 🔗 **Check out the source** on [GitHub](https://github.com/rapid-community/RapidOS/releases).
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
 
