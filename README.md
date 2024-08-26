@@ -42,8 +42,6 @@ All these options can be selected within the playbook under custom features!
 
 ## <a name="how to get started">🔨 How to Get Started?</a>
 
-<br>
-
 RapidOS is now available for download! Built on the powerful **[AME Wizard](https://ameliorated.io/)**, it lets you customize Windows like never before.
 
 <br>
