@@ -65,6 +65,9 @@ For any questions, feedback, or suggestions, you can:
 - **Join our [Discord server](https://dsc.gg/rapid-community)**  
   Connect with the RapidOS community and interact with developers.
 
+- **Follow us on [X](https://x.com/community_rapid)**  
+  Stay updated with the latest news and announcements.
+
 Feel free to reach out - we're here to help!
 
 ## <a name="license">:page_facing_up: Licence</a>
