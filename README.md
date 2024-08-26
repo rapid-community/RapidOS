@@ -65,12 +65,12 @@ For any questions, feedback, or suggestions, you can:
 - **Join our [Discord server](https://dsc.gg/rapid-community)**  
   Connect with the RapidOS community and interact with developers.
 
-- **Follow us on [X](https://x.com/community_rapid)**  
+- **Follow us on [X.com](https://x.com/community_rapid)**  
   Stay updated with the latest news and announcements.
 
 Feel free to reach out - we're here to help!
 
-## <a name="license">:page_facing_up: Licence</a>
+## <a name="license">:page_facing_up: License</a>
 
 RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
@@ -82,7 +82,7 @@ RapidOS is licensed under the [GNU General Public License v3.0](https://github.c
 
 **Love the project?** Show your support by clicking the :star: (top right) and joining our community of [stargazers](https://github.com/rapid-community/RapidOS/stargazers)!
 
-[![Stargazers repo roster for @rapid-community/RapidOS](https://reporoster.com/stars/rapid-community/RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
+[![Stargazers repo roster for @rapid-community/RapidOS](https://reporoster.com/stars/dark/rapid-community/RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
 
 ## :earth_americas: Join the RapidOS Community Today!
 
