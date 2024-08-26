@@ -68,7 +68,7 @@ RapidOS is licensed under the [GNU General Public License v3.0](https://github.c
 
 >[!Warning]
 >
->Except for the source code licensed under __**GPLv3**__, you are not allowed to use the name RapidOS for any projects based on the Playbook system, including forks and unofficial builds. This rule ensures that the RapidOS name is used only in its intended context and prevents misuse.
+>Except for the source code licensed under **GPLv3**, you are not allowed to use the name RapidOS for any projects based on the Playbook system, including forks and unofficial builds. This rule ensures that the RapidOS name is used only in its intended context and prevents misuse.
 
 ## :earth_americas: Join the RapidOS Community Today!
 
