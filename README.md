@@ -46,8 +46,6 @@ RapidOS is now available for download! Built on the powerful **[AME Wizard](http
 
 With AME Wizard, you can use custom playbooks—scripts and settings that adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
 
-<br>
-
 ### 🌟 **Ready to transform your Windows experience?**  
 Download RapidOS today and join the future of customization:
 
