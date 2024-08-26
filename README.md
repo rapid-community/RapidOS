@@ -48,7 +48,7 @@ With AME Wizard, you can use custom playbooks—scripts and settings that adjust
 
 <br>
 
-🌟 **Ready to transform your Windows experience?**  
+###🌟 **Ready to transform your Windows experience?**  
 Download RapidOS today and join the future of customization:
 
 <br>
