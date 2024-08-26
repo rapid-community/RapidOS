@@ -78,6 +78,12 @@ RapidOS is licensed under the [GNU General Public License v3.0](https://github.c
 >
 >Except for the source code licensed under **GPLv3**, you are not allowed to use the name RapidOS for any projects based on the Playbook system, including forks and unofficial builds. This rule ensures that the RapidOS name is used only in its intended context and prevents misuse.
 
+## <a name="support us">:star: Support Us</a>
+
+**Love the project?** Show your support by clicking the :star: (top right) and joining our community of [stargazers](https://github.com/rapid-community/RapidOS/stargazers)!
+
+[![Stargazers repo roster for @rapid-community/RapidOS](https://reporoster.com/stars/rapid-community/RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
+
 ## :earth_americas: Join the RapidOS Community Today!
 
 RapidOS is more than just a project. It is a vision, a passion, and a community.
