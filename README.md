@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/rapid-community/RapidOS"><img src="https://i.imgur.com/M2N83g1.png" alt="RapidOS logo" height="80"/></a></p>
+<p align="center"><a href="https://github.com/rapid-community/RapidOS"><img src="https://i.imgur.com/M2N83g1.png" alt="RapidOS logo" width="100"/></a></p>
 <h1 align="center">RapidOS</h1>
 <p align="center">Turning dreams into reality</p>
 
