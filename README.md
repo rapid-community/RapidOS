@@ -49,7 +49,7 @@ With AME Wizard, you can use custom playbooks—scripts and settings that adjust
 ### 🌟 **Ready to transform your Windows experience?**  
 _Download RapidOS today and join the future of customization:_
 
-<a href="https://rapid-community.ru"><img src="https://img.shields.io/badge/🌐-Official%20Website-blue"></a> or 
+<a href="https://rapid-community.ru"><img src="https://img.shields.io/badge/🌐-Official%20Website-blue"></a>
 <a href="https://github.com/rapid-community/RapidOS/releases"><img src="https://img.shields.io/badge/📂-GitHub%20Source-brightgreen"></a>
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
