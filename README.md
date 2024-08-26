@@ -51,10 +51,8 @@ _Download RapidOS today and join the future of customization:_
 
 <br>
 
-<p align="center">
-  <a href="https://rapid-community.ru"><img src="https://img.shields.io/badge/🌐-Official%20Website-blue"></a>
-  <a href="https://github.com/rapid-community/RapidOS/releases"><img src="https://img.shields.io/badge/📂-GitHub%20Source-brightgreen"></a>
-</p>
+<a href="https://rapid-community.ru"><img src="https://img.shields.io/badge/🌐-Official%20Website-blue"></a>
+<a href="https://github.com/rapid-community/RapidOS/releases"><img src="https://img.shields.io/badge/📂-GitHub%20Source-brightgreen"></a>
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
 
