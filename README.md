@@ -60,7 +60,12 @@ You'll need a text editor to deploy the project:
 
 ## <a name="how to contact us">📧 How to Contact Us?</a>
 
-If you have any questions, feedback, or suggestions, please feel free to join our [Discord server](https://dsc.gg/rapid-community) to chat with other RapidOS users and developers.
+For any questions, feedback, or suggestions, you can:
+
+- **Join our [Discord server](https://dsc.gg/rapid-community)**  
+  Connect with the RapidOS community and interact with developers.
+
+Feel free to reach out - we're here to help!
 
 ## <a name="license">:page_facing_up: Licence</a>
 
