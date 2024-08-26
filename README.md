@@ -41,16 +41,26 @@ All these options can be selected within the playbook under custom features!
 ***Note**: Our playbook is currently in beta and we use the stable version by default, after the full release we will give you the opportunity to use all these versions.*
 
 ## <a name="how to get started">🔨 How to Get Started?</a>
-RapidOS is now available for download! It’s built on the powerful **[AME Wizard](https://ameliorated.io/)**, which lets you customize Windows like never before.
-
-With AME Wizard, you can use custom playbooks - scripts and settings that adjust your system to fit your needs. In just a few easy steps, **RapidOS** can totally change how you use Windows.
 
 <br>
 
-🌟 Ready to transform your Windows experience?
+RapidOS is now available for download! Built on the powerful **[AME Wizard](https://ameliorated.io/)**, it lets you customize Windows like never before.
+
+<br>
+
+With AME Wizard, you can use custom playbooks—scripts and settings that adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
+
+<br>
+
+🌟 **Ready to transform your Windows experience?**  
 Download RapidOS today and join the future of customization:
 
-<p align="center"> <a href="https://rapid-community.ru"><img src="https://img.shields.io/badge/🌐-Official%20Website-blue"></a> <a href="https://github.com/rapid-community/RapidOS/releases"><img src="https://img.shields.io/badge/📂-GitHub%20Source-brightgreen"></a> </p>
+<br>
+
+<p align="center">
+  <a href="https://rapid-community.ru"><img src="https://img.shields.io/badge/🌐-Official%20Website-blue"></a>
+  <a href="https://github.com/rapid-community/RapidOS/releases"><img src="https://img.shields.io/badge/📂-GitHub%20Source-brightgreen"></a>
+</p>
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
 
