@@ -58,7 +58,7 @@ _Download RapidOS today and join the future of customization:_
 
 ## <a name="want to deploy">🔨 Want to Deploy?</a>
 
-If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work. In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`. Our playbooks consist of `.xml`, `.yml`, and `.ps1` files.
+If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work. In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`. Our playbooks consist of `.yaml` (default AME Wizard configuration files), `.ps1` and `.bat` files.
 
 You'll need a text editor to deploy the project:
 
