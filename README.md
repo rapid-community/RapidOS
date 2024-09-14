@@ -48,7 +48,7 @@ With AME Wizard, you can use custom playbooks scripts and settings that - adjust
 
 >[!Caution]
 >
->At this time, <u>RapidOS does not support ARM64 processors</u>. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
+>At this time, RapidOS does **not support ARM64** processors. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
 
 ### 🌟 **Ready to transform your Windows experience?**  
 _Download RapidOS today and join the future of customization:_
