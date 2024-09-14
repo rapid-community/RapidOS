@@ -46,6 +46,10 @@ RapidOS is now available for download! Built on the powerful **[AME Wizard](http
 
 With AME Wizard, you can use custom playbooks scripts and settings that - adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
 
+>[!Warning]
+>
+>At this time, RapidOS does not support ARM64 processors. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
+
 ### 🌟 **Ready to transform your Windows experience?**  
 _Download RapidOS today and join the future of customization:_
 
