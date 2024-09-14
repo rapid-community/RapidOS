@@ -24,21 +24,21 @@ In short, RapidOS enhances your Windows experience by focusing on privacy, speed
 
 ## <a name="versions of rapidos">:gear: Versions of RapidOS</a>
 
-### :lock: Stable RapidOS
-- **Description**: Standard Windows with minor performance tweaks for daily use.
-- **Features**: Reliable, secure, and easy to use.
+### 🔒 Stable RapidOS
+- **What is it**: A tweaked Windows for daily use.
+- **What you get**: Secure, reliable, and easy to use.
 
-### :racing_car: Speed RapidOS
-- **Description**: High-performance and stable system for power users.
-- **Features**: Optimized for speed while maintaining stability.
+### 🏎️ Speed RapidOS
+- **What is it**: Made for power users who want speed without losing a lot of stability.
+- **What you get**: Fast performance while staying stable.
 
-### :video_game: Extreme RapidOS
-- **Description**: Maximum performance optimized for gaming and intensive tasks, with reduced stability.
-- **Features**: Best for gaming, less stable than other versions.
+### 🎮 Extreme RapidOS
+- **What is it**: Maxed out for gaming and heavy tasks, but less stable.
+- **What you get**: Top performance with a bit more instability.
 
-All these options can be selected within the playbook under custom features!
+~~You can choose any of these versions in the playbook under custom features!~~
 
-***Note**: Our playbook is currently in beta and we use the stable version by default, after the full release we will give you the opportunity to use all these versions.*
+***Note**: The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
 
 ## <a name="how to get started">🔨 How to Get Started?</a>
 
@@ -48,7 +48,7 @@ With AME Wizard, you can use custom playbooks scripts and settings that - adjust
 
 >[!Caution]
 >
->At this time, RapidOS does not support ARM64 processors. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
+>At this time, _RapidOS does not support ARM64 processors_. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
 
 ### 🌟 **Ready to transform your Windows experience?**  
 _Download RapidOS today and join the future of customization:_
