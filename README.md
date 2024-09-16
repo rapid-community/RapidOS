@@ -46,13 +46,14 @@ RapidOS is now available for download! Built on the powerful **[AME Wizard](http
 With AME Wizard, you can use custom playbooks scripts and settings that - adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
 
 ### 💻 Supported Operating Systems
-- **Windows 10 22H2 Pro**
-- **Windows 11 23H2 Pro**
-- **Windows 11 24H2 Pro**
 
 >[!Warning]
 >
 >It's a good idea to do a clean install of the OS. This helps avoid any leftover problems from old installs (like outdated drivers or messy settings from old RapidOS versions), so you’ll get the best performance, security, and overall smooth experience.
+
+- **Windows 10 22H2 Pro**
+- **Windows 11 23H2 Pro**
+- **Windows 11 24H2 Pro**
 
 ### How to Install These Builds
 
