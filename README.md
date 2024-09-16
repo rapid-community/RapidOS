@@ -43,12 +43,37 @@ In short, RapidOS enhances your Windows experience by focusing on privacy, speed
 ## <a name="how to get started">🔨 How to Get Started?</a>
 
 RapidOS is now available for download! Built on the powerful **[AME Wizard](https://ameliorated.io/)**, it lets you customize Windows like never before.
-
 With AME Wizard, you can use custom playbooks scripts and settings that - adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
+
+### 💻 Supported Operating Systems
+- **Windows 10 22H2 Pro**
+- **Windows 11 23H2 Pro**
+- **Windows 11 24H2 Pro**
+
+>[!Warning]
+>
+>It's a good idea to do a clean install of the OS. This helps avoid any leftover problems from old installs (like outdated drivers or messy settings from old RapidOS versions), so you’ll get the best performance, security, and overall smooth experience.
+
+### How to Install These Builds
 
 >[!Caution]
 >
 >At this time, RapidOS does **not support ARM64** processors. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
+
+You can install the supported Windows builds using one of these methods:
+
+1. **Media Creation Tool**  
+   The official [Media Creation Tool](https://www.microsoft.com/software-download) from Microsoft is an easy way to create a bootable USB or directly upgrade your system.
+
+2. **GraveSoft Windows Image Archive**  
+   Head over to [GraveSoft](https://msdl.gravesoft.dev/) to download a wide range of Windows ISO images.
+
+3. **Uppdump (not recommended)**  
+   [Uppdump](https://uppdump.cc/) is another option, but it's **not recommended** due to instability when downloading.
+
+>[!Tip]
+>
+>If your computer meets the official system requirements for Windows 11, it's a good idea to go with Windows 11 to get the latest features and updates.
 
 ### 🌟 **Ready to transform your Windows experience?**  
 _Download RapidOS today and join the future of customization:_
