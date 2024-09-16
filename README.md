@@ -51,11 +51,13 @@ With AME Wizard, you can use custom playbooks scripts and settings that - adjust
 >
 >It's a good idea to do a clean install of the OS. This helps avoid any leftover problems from old installs (like outdated drivers or messy settings from old RapidOS versions), so you’ll get the best performance, security, and overall smooth experience.
 
-- **Windows 10 22H2 Pro**
-- **Windows 11 23H2 Pro**
-- **Windows 11 24H2 Pro**
+- **Windows 10 22H2 `19045`**
+- **Windows 11 23H2 `22631`**
+- **Windows 11 24H2 `26100`**
 
-### How to Install These Builds
+Any other build **is not** supported by RapidOS.
+
+### 🛠️ How to Install These Builds
 
 >[!Caution]
 >
