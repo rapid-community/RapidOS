@@ -72,7 +72,7 @@ You can install the supported Windows builds using one of these methods:
    Head over to [GraveSoft](https://msdl.gravesoft.dev/) to download a wide range of Windows ISO images.
 
 3. **Uppdump (not recommended)**  
-   [Uppdump](https://uppdump.net/) is another option, but it's **not recommended** due to instability when downloading.
+   [Uppdump](https://uupdump.net/) is another option, but it's **not recommended** due to instability when downloading.
 
 >[!Tip]
 >
