@@ -2,17 +2,12 @@
 <h1 align="center">RapidOS</h1>
 <p align="center">Turning dreams into reality</p>
 
-<<<<<<< HEAD
 *RapidOS is an open-source project that aims to revolutionize the Windows experience. RapidOS it's powerful, streamlined and user-centric system that puts you in control.* ⚡
-=======
-*RapidOS is an open-source project that aims to revolutionize the Windows experience. RapidOS it's powerful, streamlined, and user-centric system that puts you in control.* :zap:
->>>>>>> 8c44015510d5a393c5c4a8251b53e936e7a22fd9
 
 ## ❓ Why RapidOS
 
 RapidOS is here to make your Windows experience faster, cleaner, and more secure. We're not just tweaking the system - we're giving you more control over it. Here's why RapidOS could be the right choice for you:
 
-<<<<<<< HEAD
 #### 🔒 **Privacy at It's Core**:
 - Keep your data safe.
 - Block unnecessary telemetry.
@@ -34,19 +29,6 @@ RapidOS is here to make your Windows experience faster, cleaner, and more secure
 #### 🛠️ **Community Support**:
 - Access help from a supportive community.
 - Get guidance when things go wrong.
-=======
-- **Privacy**: 🔒 It keeps your data locked down, blocks telemetry, and stops anyone from poking around where they shouldn't be.
-
-- **Speed**: 🏎️ Fast, period. RapidOS strips away all the bloat, tweaks settings, and keeps things running smooth.
-
-- **Simplicity**: 🖥️ No clutter, just a clean, easy-to-use interface without all the extra fluff.
-
-- **Community**: 🤝 You’re not alone. Connect with other users and devs, share ideas, and get help when you need it.
-
-- **Creativity**: 💡 Got ideas? You can shape how RapidOS evolves with your input.
-
-- **Support**: 🛠️ If something goes wrong, the community’s got your back.
->>>>>>> 8c44015510d5a393c5c4a8251b53e936e7a22fd9
 
 In short, RapidOS enhances your Windows experience by focusing on privacy, speed, simplicity, community, creativity and support.
 
@@ -62,15 +44,9 @@ In short, RapidOS enhances your Windows experience by focusing on privacy, speed
 
 ### 🎮 Extreme RapidOS
 - **What is it**: Maxed out for gaming and heavy tasks, but less stable.
-<<<<<<< HEAD
 - **What you get**: Top performance with instability.
 
 You can choose any of these versions in the playbook under custom features!
-=======
-- **What you get**: Top performance with a bit more instability.
-
-~~You can choose any of these versions in the playbook under custom features!~~
->>>>>>> 8c44015510d5a393c5c4a8251b53e936e7a22fd9
 
 ***Note**: The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
 
@@ -110,45 +86,7 @@ Open-source projects thrive on community involvement, ensuring that they remain 
 RapidOS is now available for download! Built on the powerful **[AME Wizard](https://ameliorated.io/)**, it lets you customize Windows like never before.
 With AME Wizard, you can use custom playbooks scripts and settings that - adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
 
-<<<<<<< HEAD
 ---
-=======
-### 💻 Supported Operating Systems
-
->[!Warning]
->
->It's a good idea to do a clean install of the OS. This helps avoid any leftover problems from old installs (like outdated drivers or messy settings from old RapidOS versions), so you’ll get the best performance, security, and overall smooth experience.
-
-- **Windows 10 22H2 `19045`**
-- **Windows 11 23H2 `22631`**
-- **Windows 11 24H2 `26100`**
-
-Any other build **is not** supported by RapidOS.
-
-### 🛠️ How to Install These Builds
-
->[!Caution]
->
->At this time, RapidOS does **not support ARM64** processors. Full support for ARM64 will be introduced in version 2.0. Thank you for your understanding.
-
-You can install the supported Windows builds using one of these methods:
-
-1. **Media Creation Tool**  
-   The official [Media Creation Tool](https://www.microsoft.com/software-download) from Microsoft is an easy way to create a bootable USB or directly upgrade your system.
-
-2. **GraveSoft Windows Image Archive**  
-   Head over to [GraveSoft](https://msdl.gravesoft.dev/) to download a wide range of Windows ISO images.
-
-3. **Uppdump (not recommended)**  
-   [Uppdump](https://uupdump.net/) is another option, but it's **not recommended** due to instability when downloading.
-
->[!Tip]
->
->If your computer meets the official system requirements for Windows 11, it's a good idea to go with Windows 11 to get the latest features and updates.
-
-### 🌟 **Ready to transform your Windows experience?**  
-_Download RapidOS today and join the future of customization:_
->>>>>>> 8c44015510d5a393c5c4a8251b53e936e7a22fd9
 
 ### 💻 Supported Windows Builds
 
@@ -156,7 +94,6 @@ _Download RapidOS today and join the future of customization:_
 >
 >If your computer meets the official system requirements for Windows 11, it's a good idea to go with Windows 11 to get the latest features and updates.
 
-<<<<<<< HEAD
 - **Windows 10 22H2 - `19045`**
 - **Windows 11 23H2 - `22631`**
 - **Windows 11 24H2 - `26100`**
@@ -284,9 +221,6 @@ In short, while the playbooks are in `.apbx` format, they are actually `7z` arch
 Our playbooks consist of `.yml` (default AME Wizard configuration files), `.ps1` and `.bat` files.
 
 In most `.yml` files, you can adjust many of RapidOS's changes. For example, you can configure AppX file to prevent the deletion of necessary apps you need. In `custom.yml`, you can also disable specific `.yml` files by commenting them out with `#`.
-=======
-If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work. In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`. Our playbooks consist of `.yaml` (default AME Wizard configuration files), `.ps1` and `.bat` files.
->>>>>>> 8c44015510d5a393c5c4a8251b53e936e7a22fd9
 
 You'll need a text editor to deploy the project:
 
