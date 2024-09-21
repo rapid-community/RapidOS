@@ -77,7 +77,7 @@ We're enhancing control for advanced users with **RapidOS Toolbox**:
 This project is fully open-source, meaning you're free to dive into the code, contribute, or suggest improvements. Just like **AME Wizard**, **RapidOS** is designed to be secure and clean from any harmful software.
 
 - 🔗 [Check the AME Wizard Codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master).
-- 🔗 [Check out RapidOS Code](https://github.com/rapid-community/RapidOS/tree/main).
+- 🔗 [Check out RapidOS Code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources).
 
 Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated, and trustworthy.
 
