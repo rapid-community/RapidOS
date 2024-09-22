@@ -79,7 +79,7 @@ This project is fully open-source, meaning you're free to dive into the code, co
 - 🔗 [Check the AME Wizard Codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master).
 - 🔗 [Check out RapidOS Code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources).
 
-Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated, and trustworthy.
+Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated and trustworthy.
 
 ## 🔨 How to Get Started
 
