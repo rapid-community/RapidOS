@@ -185,7 +185,7 @@ After finishing the setup and confirming everything works, remember to re-enable
 To install RapidOS, follow these steps:
 
 1. **Download and Extract Files:**
-   - Install [AME Wizard](https://ameliorated.io/).
+   - Install latest [AME Wizard](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/releases).
    - Download the RapidOS Playbook from:
      - [GitHub releases page](https://github.com/rapid-community/RapidOS/releases).
      - [Our website](https://rapid-community.ru).
@@ -203,11 +203,8 @@ To install RapidOS, follow these steps:
 5. **Run AME Wizard:**
    - Open **AME Wizard Beta.exe** from the AME Wizard folder. 
    - If SmartScreen warns that AME Wizard is unrecognized, click **More info** and then **Run anyway**.
-
-6. **Update AME Wizard:**
-   - Click on **Updates** at the top of AME Wizard and ensure it is up to date.
-
-7. **Install RapidOS Playbook:**
+   - 
+6. **Install RapidOS Playbook:**
    - Drag **RapidOS.apbx** from the Atlas Playbook into AME Wizard.
    - Follow the on-screen instructions in AME Wizard to complete the installation of the RapidOS Playbook.
 
