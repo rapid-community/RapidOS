@@ -48,7 +48,7 @@ In short, RapidOS enhances your Windows experience by focusing on privacy, speed
 
 You can choose any of these versions in the playbook under custom features!
 
-***Note**: The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
+> ❗ ***Note**: The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
 
 ## 🔧 System Changes & Enhancements
 
