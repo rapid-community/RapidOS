@@ -203,7 +203,7 @@ To install RapidOS, follow these steps:
 5. **Run AME Wizard:**
    - Open **AME Wizard Beta.exe** from the AME Wizard folder. 
    - If SmartScreen warns that AME Wizard is unrecognized, click **More info** and then **Run anyway**.
-   - 
+
 6. **Install RapidOS Playbook:**
    - Drag **RapidOS.apbx** from the Atlas Playbook into AME Wizard.
    - Follow the on-screen instructions in AME Wizard to complete the installation of the RapidOS Playbook.
