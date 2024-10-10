@@ -48,7 +48,7 @@ In short, RapidOS enhances your Windows experience by focusing on privacy, speed
 
 You can choose any of these versions in the playbook under custom features!
 
-> ❗ ***Note**: The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
+> ❗ **Note**: *The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
 
 ## 🔧 System Changes & Enhancements
 
@@ -207,10 +207,10 @@ To install RapidOS, follow these steps:
    - If SmartScreen warns that AME Wizard is unrecognized, click **More info** and then **Run anyway**.
 
 6. **Install RapidOS Playbook:**
-   - Drag **RapidOS.apbx** from the Atlas Playbook into AME Wizard.
+   - Drag **RapidOS.apbx** into AME Wizard.
    - Follow the on-screen instructions in AME Wizard to complete the installation of the RapidOS Playbook.
 
-*Note: The basis for this installation guide was sourced from AtlasOS.*
+> ❗ **Note**: *The basis for this installation guide was sourced from AtlasOS.*
 
 ## 🛠️ Want to Deploy?
 
