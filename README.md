@@ -134,7 +134,7 @@ After installing or building Windows, you need to transfer it to a USB drive (if
 
 >[!Tip]
 >
->If you use Ventoy, I highly recommend using the ReviOS Ventoy settings, as this method is really effective on 24H2 versions for bypassing the required Microsoft account login and the need for an internet connection. Additionally, this method will disable BitLocker, automatic updates (including driver auto-updates): [ventoy-conf](https://github.com/meetrevision/ventoy-conf/).
+>If you use Ventoy, I highly recommend using the [ReviOS Ventoy](https://github.com/meetrevision/ventoy-conf/) settings, as this method is really effective for bypassing the required Microsoft account login and the need for an internet connection. Additionally, this method will disable BitLocker, automatic updates (including driver auto-updates).
 
 ---
 
@@ -148,22 +148,24 @@ After creating a bootable USB drive with **Rufus** or **Ventoy**, follow these s
 - **Secure Boot**: Be aware that **Ventoy** might not work well with Secure Boot enabled. Keep this in mind and consider disabling it temporarily for the installation process.
 
 #### 2. Windows OOBE (Out-of-Box Experience)
-Once the installation process starts, you'll need to disconnect your Ethernet cable. Then you will be guided through Windows OOBE. If you're using Windows 23H2, you can bypass network requirements:
+Once the installation process starts, you'll need to disconnect your Ethernet cable. Then you will be guided through Windows OOBE.
 
 - **Bypass Network Requirement**: 
   - At the network setup screen, press `Shift + F10` to open a command prompt.
   - Type `OOBE\BYPASSNRO` and press Enter.
   - The system will restart, and after reboot, the option to "I don't have internet" will appear, allowing you to proceed without connecting to a network.
-  
+
+<!--  
 >[!Important]
 >
 >For Windows 10 22H2 and Windows 11 24H2, `OOBE\BYPASSNRO` is not available. This method works only for Windows 11 23H2. To bypass the necessary internet connection, use the ReviOS Ventoy configuration described earlier.
+-->
 
 #### 3. Choose How to Handle Driver Installation:
 
 It is recommended to manually install drivers for better control and stability. Here's how:
 
-- **To Prevent Automatic Driver Installation**: Use the registry tweak available here (Credits to AtlasOS): [Disable Automatic Driver Installation](https://github.com/Atlas-OS/Atlas/releases/download/0.4.0/Disable.Automatic.Driver.Installation.reg). After applying this tweak, you can reconnect to the internet via Wi-Fi or Ethernet cable.
+- **To Prevent Automatic Driver Installation**: Use the AtlasOS registry tweak available her: [Disable Automatic Driver Installation](https://github.com/Atlas-OS/Atlas/releases/download/0.4.0/Disable.Automatic.Driver.Installation.reg). After applying this tweak, you can reconnect to the internet via Wi-Fi or Ethernet cable.
 
 **Option 1: Manually Install Drivers**
 - **Download Drivers**: 
