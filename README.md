@@ -60,8 +60,8 @@ RapidOS is designed to be smooth and reliable. With the **1.0 Beta2** release co
 
 **For more details, check our GitHub FAQ Readme pages:**
 
-- **[What's Removed from AppX (UWP apps)](https://github.com/rapid-community/RapidOS/blob/main/AppX%20README.md)**: See what's been removed from AppX apps.
-- **[Service Changes Across Versions](https://github.com/rapid-community/RapidOS/blob/main/Services%20README.md)**: Find out which services have been changed or disabled in different versions of RapidOS.
+- **[What's Removed from AppX (UWP apps)](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/AppX%20README.md)**: See what's been removed from AppX apps.
+- **[Service Changes Across Versions](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/Services%20README.md)**: Find out which services have been changed or disabled in different versions of RapidOS.
 
 ## 🧰 Versatility & Control (Coming in v1.0 Stable)
 
