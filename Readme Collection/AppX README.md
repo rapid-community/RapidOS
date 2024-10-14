@@ -36,7 +36,7 @@ Using the Custom Features in RapidOS, you can select which default Windows apps 
 - **Microsoft Edge**
 - **OneDrive**
 - **Microsoft Office** and individual Office apps (Excel, OneNote, PowerPoint, Word, Outlook)
-- **Xbox and related components (Game Bar, Xbox Services, etc.)**
+- **Xbox** and related components (Game Bar, Xbox Services, etc.)
 - **Your Phone**
 
 These options allow for more flexibility during installation, letting you customize the system according to your needs.
