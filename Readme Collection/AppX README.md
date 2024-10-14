@@ -15,12 +15,8 @@ When installing RapidOS, the following default Windows apps are removed:
 - **Quick Assist**
 - **Get Help**
 - **Get Started**
-<!-- - **3D Viewer** -->
 - **Microsoft Solitaire Collection**
-<!-- - **Sticky Notes** -->
 - **Microsoft Teams**
-<!-- - **Mixed Reality Portal** -->
-<!-- - **Paint 3D** -->
 - **People**
 - **Skype**
 - **To Do**
@@ -28,11 +24,6 @@ When installing RapidOS, the following default Windows apps are removed:
 - **Whiteboard**
 - **Maps**
 - **OOBE (Out-of-Box Experience) components**
-<!-- 
-- **Sound Recorder**
-- **Alarms**
-- **Camera**
- -->
 - **Feedback Hub**
 - **Mail**
 
