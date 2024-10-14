@@ -15,25 +15,24 @@ When installing RapidOS, the following default Windows apps are removed:
 - **Quick Assist**
 - **Get Help**
 - **Get Started**
-- **3D Viewer**
-- **Power BI**
+<!-- - **3D Viewer** -->
 - **Microsoft Solitaire Collection**
-- **Sticky Notes**
+<!-- - **Sticky Notes** -->
 - **Microsoft Teams**
-- **Mixed Reality Portal**
-- **Paint 3D**
-- **Microsoft Office Hub** and individual Office apps (Excel, OneNote, PowerPoint, Word, Outlook)
+<!-- - **Mixed Reality Portal** -->
+<!-- - **Paint 3D** -->
 - **People**
-- **Power Automate Desktop**
 - **Skype**
 - **To Do**
 - **Wallet**
 - **Whiteboard**
 - **Maps**
-- **OOBE (Out-of-Box Experience) apps**
+- **OOBE (Out-of-Box Experience) components**
+<!-- 
 - **Sound Recorder**
 - **Alarms**
 - **Camera**
+ -->
 - **Feedback Hub**
 - **Mail**
 
@@ -45,10 +44,8 @@ Using the Custom Features in RapidOS, you can select which default Windows apps 
 
 - **Microsoft Edge**
 - **OneDrive**
-- **DevHome**
-- **Outlook**
+- **Microsoft Office** and individual Office apps (Excel, OneNote, PowerPoint, Word, Outlook)
 - **Xbox and related components (Game Bar, Xbox Services, etc.)**
 - **Your Phone**
-- **AI-related components (Recall, Copilot)**
 
 These options allow for more flexibility during installation, letting you customize the system according to your needs.
