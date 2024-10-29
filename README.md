@@ -145,7 +145,7 @@ After creating a bootable USB drive with **Rufus** or **Ventoy**, follow these s
 #### 1. BIOS Settings
 - **Access BIOS**: Reboot your PC and enter BIOS (usually by pressing `Esc`, `Del`, `F2` or `F12`).
 - **Boot Order**: Ensure your USB drive is set as the first boot device.
-- **Secure Boot**: Be aware that **Ventoy** might not work well with Secure Boot enabled. Keep this in mind and consider disabling it temporarily for the installation process.
+- **Secure Boot**: Note that **Ventoy** may not work properly with Secure Boot enabled. If you encounter a **Security Violation** message, you can either disable Secure Boot or [enroll a key or hash](https://www.ventoy.net/en/doc_secure.html) to resolve the issue.
 
 #### 2. Windows OOBE (Out-of-Box Experience)
 Once the installation process starts, you'll need to disconnect your Ethernet cable. Then you will be guided through Windows OOBE.
@@ -176,9 +176,6 @@ It is recommended to manually install drivers for better control and stability. 
 **Option 2: Allow Windows to Install Drivers Automatically**
 - **Keep Internet Connected**: If you prefer Windows to handle driver installation, leave the system connected to the internet during installation.
   - Windows will automatically download and install the necessary drivers after reaching the desktop.
-
-#### 4. Re-enable Secure Boot
-After finishing the setup and confirming everything works, remember to re-enable **Secure Boot** in your BIOS to ensure maximum security.
 
 ---
 
