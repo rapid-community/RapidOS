@@ -111,6 +111,8 @@ Any other build **is not** officially supported by RapidOS.
 
 ---
 
+### 📜 Documentation
+
 In the [**RapidOS Documentation**](docs.rapid-community.ru), you'll find a straightforward guide to help you install Windows and RapidOS:
 
 1. **Installing Windows**:
@@ -155,7 +157,7 @@ For any questions, feedback or suggestions, you can:
 
 Feel free to reach out - we're here to help!
 
-## 🧾 License
+## 📝 License
 
 RapidOS is licensed under the [GNU General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
