@@ -32,6 +32,8 @@ RapidOS is here to make your Windows experience faster, cleaner, and more secure
 
 In short, RapidOS enhances your Windows experience by focusing on privacy, speed, simplicity, community, creativity and support.
 
+<!-- 
+
 ## ⚙️ RapidOS Versions
 
 ### 🔒 Stable RapidOS
@@ -50,9 +52,11 @@ You can choose any of these versions in the playbook under custom features!
 
 > ❗ **Note**: *The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
 
+-->
+
 ## 🔧 System Changes & Enhancements
 
-RapidOS is designed to be smooth and reliable. With the **1.0 Beta2** release coming up, we're fixing any remaining issues to improve performance and stability.
+RapidOS is designed to be smooth and reliable. Every release we're fixing any remaining issues to improve performance and stability.
 
 >[!Tip]
 >
@@ -63,20 +67,24 @@ RapidOS is designed to be smooth and reliable. With the **1.0 Beta2** release co
 - **[What's Removed from AppX (UWP apps)](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/AppX%20README.md)**: See what's been removed from AppX apps.
 - **[Service Changes Across Versions](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/Services%20README.md)**: Find out which services have been changed or disabled in different versions of RapidOS.
 
-## 🧰 Versatility & Control (Coming in v1.0 Stable)
+<!--
+
+## 🧰 Versatility & Control
 
 We're enhancing control for advanced users with **RapidOS Toolbox**:
 
 - **General Settings**: Review and undo changes made during RapidOS installation.
 - **Advanced Tweaks**: Access additional Windows configuration options (**use with caution, as these are not used by default to ensure system stability**).
 
-> ❗ **Note**: Some changes, like removing built-in apps, can’t be fully recovered.
+> ❗ **Note**: Some changes, like removing built-in apps, can't be fully recovered.
+
+-->
 
 ## 🔓 Open-Source and Safe
 
 This project is fully open-source, meaning you're free to dive into the code, contribute, or suggest improvements. Just like **AME Wizard**, **RapidOS** is designed to be secure and clean from any harmful software.
 
-- 🔗 [Check the AME Wizard Codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master).
+- 🔗 [Check the AME Wizard Codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master/TrustedUninstaller.CLI).
 - 🔗 [Check out RapidOS Code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources).
 
 Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated and trustworthy.
@@ -95,6 +103,7 @@ With AME Wizard, you can use custom playbooks scripts and settings that - adjust
 >If your computer meets the official system requirements for Windows 11, it's a good idea to go with Windows 11 to get the latest features and updates.
 
 - **Windows 10 22H2 - `19045`**
+- **Windows 11 22H2 - `22621`**
 - **Windows 11 23H2 - `22631`**
 - **Windows 11 24H2 - `26100`**
 
@@ -102,112 +111,19 @@ Any other build **is not** officially supported by RapidOS.
 
 ---
 
-### 🌐 Install Latest Windows
+In the [**RapidOS Documentation**](docs.rapid-community.ru), you'll find a straightforward guide to help you install Windows and RapidOS:
 
->[!Important]
->
->It's a good idea to do a clean install of the OS. This helps avoid any leftover problems from old installs (like outdated drivers or messy settings from old RapidOS versions), so you'll get the best performance, security and overall smooth experience.
+1. **Installing Windows**:
+   - We cover all the methods for installing Windows, whether you're using the Media Creation Tool, MSDL, or UPPDump.
+   - You'll learn how to make a bootable USB using **Rufus** or **Ventoy**, with clear steps for each.
+   - There's a section on the Windows installation process, including the OOBE setup and how to handle drivers (manual or automatic), plus tips for bypassing network requirements if needed.
 
->[!Caution]
->
->At this time, RapidOS does **not support ARM64** processors. Full support for ARM64 will be introduced likely in version 2.0. Thank you for your understanding.
+2. **Installing RapidOS**:
+   - We'll show you how to get everything ready before you install RapidOS.
+   - You'll get detailed instructions for downloading and running AME Wizard, the tool used to install RapidOS.
+   - Finally, we walk you through the installation of RapidOS itself, with all the steps to make sure everything works smoothly.
 
-You need to install supported Windows build using one of these methods:
-
-1. **Media Creation Tool**  
-   The official [Media Creation Tool](https://www.microsoft.com/software-download) from Microsoft is an easy way to create a bootable USB or directly upgrade your system.
-
-2. **GraveSoft Windows Image Archive**  
-   Head over to [GraveSoft](https://msdl.gravesoft.dev/) to download a wide range of Windows ISO images.
-
-3. **Uppdump**  
-   [Uppdump](https://uupdump.net/) is a tool for downloading Windows updates and builds directly from Microsoft's servers, but it’s known to be **unstable** during the download process.
-
----
-
-### 💾 Install Windows on a USB Drive
-
-After installing or building Windows, you need to transfer it to a USB drive (if you haven't used the Media Creation Tool). You can do this in two ways:
-
-- Use [Ventoy](https://www.ventoy.net/), a tool that allows you to boot multiple ISOs from a single USB drive.
-- Use [Rufus](https://rufus.ie/), a lightweight utility designed to create bootable USB drives for installing operating systems.
-
->[!Tip]
->
->If you use Ventoy, I highly recommend using the [ReviOS Ventoy](https://github.com/meetrevision/ventoy-conf/) settings, as this method is really effective for bypassing the required Microsoft account login and the need for an internet connection. Additionally, this method will disable BitLocker, automatic updates (including driver auto-updates).
-
----
-
-### 🚀 Post-Windows Installation Guide
-
-After creating a bootable USB drive with **Rufus** or **Ventoy**, follow these steps to set up Windows before reaching the desktop:
-
-#### 1. BIOS Settings
-- **Access BIOS**: Reboot your PC and enter BIOS (usually by pressing `Esc`, `Del`, `F2` or `F12`).
-- **Boot Order**: Ensure your USB drive is set as the first boot device.
-- **Secure Boot**: Note that **Ventoy** may not work properly with Secure Boot enabled. If you encounter a **Security Violation** message, you can either disable Secure Boot or [enroll a key or hash](https://www.ventoy.net/en/doc_secure.html) to resolve the issue.
-
-#### 2. Windows OOBE (Out-of-Box Experience)
-Once the installation process starts, you'll need to disconnect your Ethernet cable. Then you will be guided through Windows OOBE.
-
-- **Bypass Network Requirement**: 
-  - At the network setup screen, press `Shift + F10` to open a command prompt.
-  - Type `OOBE\BYPASSNRO` and press Enter.
-  - The system will restart, and after reboot, the option to "I don't have internet" will appear, allowing you to proceed without connecting to a network.
-
-<!--  
->[!Important]
->
->For Windows 10 22H2 and Windows 11 24H2, `OOBE\BYPASSNRO` is not available. This method works only for Windows 11 23H2. To bypass the necessary internet connection, use the ReviOS Ventoy configuration described earlier.
--->
-
-#### 3. Choose How to Handle Driver Installation:
-
-It is recommended to manually install drivers for better control and stability. Here's how:
-
-- **To Prevent Automatic Driver Installation**: Use the AtlasOS registry tweak available her: [Disable Automatic Driver Installation](https://github.com/Atlas-OS/Atlas/releases/download/0.4.0/Disable.Automatic.Driver.Installation.reg). After applying this tweak, you can reconnect to the internet via Wi-Fi or Ethernet cable.
-
-**Option 1: Manually Install Drivers**
-- **Download Drivers**: 
-  - Use **NVCleanInstall** for Nvidia drivers.
-  - Download drivers directly from your motherboard's manufacturer website, or from AMD, Intel and other relevant sources.
-  - Alternatively, you can use **[Snappy Driver Installer (SDI)](https://sdi-tool.org/)** if necessary.
-
-**Option 2: Allow Windows to Install Drivers Automatically**
-- **Keep Internet Connected**: If you prefer Windows to handle driver installation, leave the system connected to the internet during installation.
-  - Windows will automatically download and install the necessary drivers after reaching the desktop.
-
----
-
-### 📥 Installing RapidOS
-
-To install RapidOS, follow these steps:
-
-1. **Download and Extract Files:**
-   - Install latest [AME Wizard](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/releases).
-   - Download the RapidOS Playbook from:
-     - [GitHub releases page](https://github.com/rapid-community/RapidOS/releases).
-     - [Our website](https://rapid-community.ru).
-   - Extract both downloads to your desktop.
-
-2. **Update Windows:**
-   - Open **Settings** and update Windows, including optional updates, until no more updates are available. If updates are paused, click **Resume Updates** to continue.
-
-3. **Update Microsoft Store:**
-   - Open the Microsoft Store and update all apps. You might need to update the Microsoft Store itself first.
-
-4. **Restart Your Computer:**
-   - Restart after all updates are complete. Check for updates again until there are no more available.
-
-5. **Run AME Wizard:**
-   - Open **AME Wizard Beta.exe** from the AME Wizard folder. 
-   - If SmartScreen warns that AME Wizard is unrecognized, click **More info** and then **Run anyway**.
-
-6. **Install RapidOS Playbook:**
-   - Drag **RapidOS.apbx** into AME Wizard.
-   - Follow the on-screen instructions in AME Wizard to complete the installation of the RapidOS Playbook.
-
-> ❗ **Note**: *The basis for this installation guide was sourced from AtlasOS.*
+The guide is designed to be simple and easy to follow, so you won't miss a thing. Everything is laid out clearly, so you can get your system up and running with minimal hassle.
 
 ## 🛠️ Want to Deploy?
 
@@ -233,6 +149,9 @@ For any questions, feedback or suggestions, you can:
 
 - **Follow us on [X.com](https://x.com/community_rapid)**  
   Stay updated with the latest news and announcements.
+
+- **Follow us on [Telegram](https://t.me/rapid_community)**  
+  Stay up to date with exclusive news, discussions, and updates about the docs, the site, and the Playbook.
 
 Feel free to reach out - we're here to help!
 
