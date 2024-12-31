@@ -1,64 +1,77 @@
 ---
 title: System Boot Configuration
 description: >
-  These commands modify various system boot settings, including startup delay, boot execution sequence,
-  and BCD settings for system integrity, memory management, and debug mode.
-privilege: TrustedInstaller
+  These commands modify various system boot settings like boot menu style and debugging.
 actions:
   - !writeStatus: {status: 'Configuring boot settings'}
   # Set startup delay for applications to 0 milliseconds
   - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize', value: 'StartupDelayInMSec', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize', value: 'WaitforIdleState', type: REG_DWORD, data: '0'}
-
-  # Configure automatic file system check on C: drive at boot
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'DelayedDesktopSwitchTimeout', type: REG_DWORD, data: '0'}
+  
+  # Configure automatic file system check on C:/ drive at boot
   - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control\Session Manager', value: 'BootExecute', type: REG_MULTI_SZ, data: 'autocheck autochk /k:C*'}
-
-  ## HPET Disable(0.1 to 0.15ms delay with HPET on while turning it off can gain you around 3-4 FPS)
-  # -------------------------------------------------------------------------------#
-
-  # Disable platform clock
-  - !run: {exe: 'bcdedit', args: '/set useplatformclock false', showOutput: false}
-
-  # Disable dynamic ticks
-  - !run: {exe: 'bcdedit', args: '/set disabledynamictick yes', showOutput: false}
-
-  # -------------------------------------------------------------------------------#
  
   # Use classic boot menu style
   - !run: {exe: 'bcdedit', args: '/set bootmenupolicy Legacy', showOutput: false}
 
-  # Disable isolated context for drivers
-  - !run: {exe: 'bcdedit', args: '/set isolatedcontext no', showOutput: false}
-
-  # Disable debugging
+  # Disable debugging (only if Secure Boot disabled)
   - !run: {exe: 'bcdedit', args: '/set debug no', showOutput: false}
-
-  # Disable integrity services
-  - !run: {exe: 'bcdedit', args: '/set integrityservices disable', showOutput: false}
-
-  # Disable Emergency Management Services (EMS)
-  - !run: {exe: 'bcdedit', args: '/set ems no', showOutput: false}
-
-  # Disable Physical Address Extension (PAE)
-  - !run: {exe: 'bcdedit', args: '/set pae ForceDisable', showOutput: false}
-
-  # Disable Linear Address 57 feature
-  - !run: {exe: 'bcdedit', args: '/set linearaddress57 OptOut', showOutput: false}
-
-  # Increase user-mode address space to 256MB
-  - !run: {exe: 'bcdedit', args: '/set increaseuserva 268435328', showOutput: false}
-
-  # Use all of the first megabyte of memory
-  - !run: {exe: 'bcdedit', args: '/set firstmegabytepolicy UseAll', showOutput: false}
-
-  # Set low memory threshold to 128MB
-  - !run: {exe: 'bcdedit', args: '/set avoidlowmemory 0x8000000', showOutput: false}
-
-  # Disable low memory usage
-  - !run: {exe: 'bcdedit', args: '/set nolowmem yes', showOutput: false}
-
-  # Disable in-memory settings
-  - !run: {exe: 'bcdedit', args: '/set allowedinmemorysettings 0x0', showOutput: false}
 
   # Set boot menu timeout to 15 seconds
   - !run: {exe: 'bcdedit', args: '/timeout 15', showOutput: false}
+
+
+  ### Deprecated
+  
+  # Disable integrity services
+  # - !run: {exe: 'bcdedit', args: '/set integrityservices disable', showOutput: false}
+  # Reason: Disabling integrity services weakens system protection against tampering
+
+  # Disable Emergency Management Services (EMS)
+  # - !run: {exe: 'bcdedit', args: '/set ems no', showOutput: false}
+  # Reason: Disables remote management features used during system failures
+
+  # Disable Physical Address Extension (PAE)
+  # - !run: {exe: 'bcdedit', args: '/set pae ForceDisable', showOutput: false}
+  # Reason: Limits memory use on 32-bit systems by disabling PAE, which may be necessary on systems with more than 4GB RAM
+
+  # Disable Linear Address 57 feature
+  # - !run: {exe: 'bcdedit', args: '/set linearaddress57 OptOut', showOutput: false}
+  # Reason: May cause performance issues or affect compatibility; disable if not needed
+
+  # Increase user-mode address space to 256MB
+  # - !run: {exe: 'bcdedit', args: '/set increaseuserva 268435328', showOutput: false}
+  # Reason: May lead to instability; not commonly required
+
+  # Use all of the first megabyte of memory
+  # - !run: {exe: 'bcdedit', args: '/set firstmegabytepolicy UseAll', showOutput: false}
+  # Reason: Rarely needed and could interfere with system functions
+
+  # Set low memory threshold to 128MB
+  # - !run: {exe: 'bcdedit', args: '/set avoidlowmemory 0x8000000', showOutput: false}
+  # Reason: Setting a low memory threshold can lead to instability with low RAM conditions
+
+  # Disable low memory usage
+  # - !run: {exe: 'bcdedit', args: '/set nolowmem yes', showOutput: false}
+  # Reason: May negatively impact systems with limited RAM
+
+  # Disable in-memory settings
+  # - !run: {exe: 'bcdedit', args: '/set allowedinmemorysettings 0x0', showOutput: false}
+  # Reason: Disabling these settings can affect performance and system stability
+
+  # Disable isolated context for drivers
+  # - !run: {exe: 'bcdedit', args: '/set isolatedcontext no', showOutput: false}
+  # Reason: Disabling this may expose the system to driver-related vulnerabilities
+
+  # HPET Disable (0.1 to 0.15ms delay with HPET on while turning it off can gain you around 3-4 FPS)
+  # ------------------------------------------------------------------------------------------------- #
+
+  # Disable platform clock
+  # - !run: {exe: 'bcdedit', args: '/set useplatformclock false', showOutput: false}
+
+  # Disable dynamic ticks
+  # - !run: {exe: 'bcdedit', args: '/set disabledynamictick yes', showOutput: false}
+
+  # ------------------------------------------------------------------------------------------------- #
+  # Reason: Can cause instability and stuttering on newer PCs.

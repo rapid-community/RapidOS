@@ -4,38 +4,38 @@ description: >
   These registry parameters disable various text input features.
   These features include autocorrecting, highlighting, and suggesting words as you type on the software keyboard or the hardware keyboard.
 actions:
-  # Do not autocorrect misspelled words
+  # Don't autocorrect misspelled words
   - !registryValue: {path: 'HKCU\Software\Microsoft\TabletTip\1.7', value: 'EnableAutocorrection', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\TabletTip\1.7', value: 'EnableAutocorrection', type: REG_DWORD, data: '0'}
 
-  # Do not highlight misspelled words
+  # Don't highlight misspelled words
   - !registryValue: {path: 'HKCU\Software\Microsoft\TabletTip\1.7', value: 'EnableSpellchecking', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\TabletTip\1.7', value: 'EnableSpellchecking', type: REG_DWORD, data: '0'}
 
-  # Do not show text suggestions as i type on the software keyboard
+  # Don't show text suggestions as i type on the software keyboard
   - !registryValue: {path: 'HKCU\Software\Microsoft\TabletTip\1.7', value: 'EnableTextPrediction', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\TabletTip\1.7', value: 'EnableTextPrediction', type: REG_DWORD, data: '0'}
 
-  # Do not add a space after i choose text suggestion
+  # Don't add a space after i choose text suggestion
   - !registryValue: {path: 'HKCU\Software\Microsoft\TabletTip\1.7', value: 'EnablePredictionSpaceInsertion', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\TabletTip\1.7', value: 'EnablePredictionSpaceInsertion', type: REG_DWORD, data: '0'}
 
-  # Do not add a full stop after i double-tap the spacebar
+  # Don't add a full stop after i double-tap the spacebar
   - !registryValue: {path: 'HKCU\Software\Microsoft\TabletTip\1.7', value: 'EnableDoubleTapSpace', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\TabletTip\1.7', value: 'EnableDoubleTapSpace', type: REG_DWORD, data: '0'}
 
-  # Do not show text suggestions as i type
+  # Don't show text suggestions as i type
   - !registryValue: {path: 'HKCU\Software\Microsoft\Input\Settings', value: 'EnableHwkbTextPrediction', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings', value: 'EnableHwkbTextPrediction', type: REG_DWORD, data: '0'}
 
-  # Do not autocorrect misspelled words i type
+  # Don't autocorrect misspelled words i type
   - !registryValue: {path: 'HKCU\Software\Microsoft\Input\Settings', value: 'EnableHwkbAutocorrection', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings', value: 'EnableHwkbAutocorrection', type: REG_DWORD, data: '0'}
 
-  # Do not typing insights
+  # Don't typing insights
   - !registryValue: {path: 'HKCU\Software\Microsoft\Input\Settings', value: 'InsightsEnabled', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings', value: 'InsightsEnabled', type: REG_DWORD, data: '0'}
 
-  # Do not show text suggestions based on the recognized languages that you are typing
+  # Don't show text suggestions based on the recognized languages that you are typing
   - !registryValue: {path: 'HKCU\Software\Microsoft\Input\Settings', value: 'MultilingualEnabled', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings', value: 'MultilingualEnabled', type: REG_DWORD, data: '0'}

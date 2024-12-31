@@ -2,23 +2,27 @@
 title: Power Settings
 description: >
   This configuration file modifies your system's power settings
-  to improve overall performance and responsiveness
-  and registers the .pow extension.
+  to improve overall performance and responsiveness and registers the .pow extension.
 actions:
   - !writeStatus: {status: 'Power modification started'}
-  
-  # Run custom power configuration script
+  # Install balanced preset 
   - !powerShell:
-      command: '.\Power-Optimizer.ps1 -MyArgument enable_power_saving'
+      command: '.\RapidScripts\UtilityScripts\Power-Optimizer.ps1 -MyArgument balanced_performance'
+      option: 'balanced-performance'
       exeDir: true
-      option: 'enable-power-saving'
-      weight: 300
-      
+      weight: 200
+  # Install high performance preset     
   - !powerShell:
-      command: '.\Power-Optimizer.ps1 -MyArgument disable_power_saving'
+      command: '.\RapidScripts\UtilityScripts\Power-Optimizer.ps1 -MyArgument high_performance'
+      option: 'high-performance'
       exeDir: true
-      option: 'disable-power-saving'
-      weight: 300
+      weight: 200
+  # Install maximized performance preset  
+  - !powerShell:
+      command: '.\RapidScripts\UtilityScripts\Power-Optimizer.ps1 -MyArgument maximized_performance'
+      option: 'maximized-performance'
+      exeDir: true
+      weight: 200
 
   # Register .pow file extension
   - !registryValue: {path: 'HKCR\.pow', value: '', type: REG_SZ, data: 'Power Plan'}

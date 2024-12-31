@@ -1,0 +1,11 @@
+---
+title: Optimize Svchost Processes
+description: >
+  Adjusts svchost.exe split threshold based on system RAM and manages AutoLogger logs for improved performance.
+actions:
+  # Optimizes svchost processes
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument optimize_svchost'
+      option: 'remove-xbox' # Optimizing svchost means modified SvcHostSplitThresholdInKB --> https://github.com/meetrevision/playbook/issues/34 
+      exeDir: true
+      weight: 100

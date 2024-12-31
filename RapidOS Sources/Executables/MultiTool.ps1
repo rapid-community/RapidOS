@@ -1,111 +1,25 @@
 param (
-    [string]$MyArgument
+    [string[]]$MyArgument
 )
 
-# Check if the script is running as administrator
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) {
-    Write-Host "Restarting script with administrator privileges..." -ForegroundColor Yellow
-    $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"{0}`" -MyArgument {1}" -f $PSCommandPath, $MyArgument
-    Start-Process PowerShell.exe -ArgumentList $arguments -Verb RunAs
-    exit
+# Ensure administrator privileges
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) { Write-Host "Restarting script with administrator privileges..." -ForegroundColor Yellow; $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"{0}`" -MyArgument {1}" -f $PSCommandPath, $MyArgument; Start-Process PowerShell.exe -ArgumentList $arguments -Verb RunAs; exit }
+
+# Function to set registry values
+function Set-RegistryValue {
+    param (
+        [string]$Path,
+        [string]$Name,
+        [string]$Type,
+        [string]$Value
+    )
+    if (-not (Test-Path $Path)) {
+        New-Item -Path $Path -Force | Out-Null
+    }
+    Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force
 }
 
-Write-Host "$MyArgument" -ForegroundColor Green
-
-function Optimize-MSEdge {
-    # Registry paths
-    $edgeKeyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Edge"
-    $edgeUpdateKeyPath = "HKLM:\SOFTWARE\Policies\Microsoft\EdgeUpdate"
-    $microsoftKeyPath = "HKLM:\SOFTWARE\Microsoft"
-    $edgeExtensionsKeyPath = "HKLM:\SOFTWARE\Microsoft\Edge\Extensions\odfafepnkmbhccpbejgmiehpchacaeak"
-
-    # Create registry key paths if they do not exist
-    if (-not (Test-Path $edgeKeyPath)) {
-        New-Item -Path $edgeKeyPath -Force | Out-Null
-    }
-
-    if (-not (Test-Path $edgeUpdateKeyPath)) {
-        New-Item -Path $edgeUpdateKeyPath -Force | Out-Null
-    }
-
-    if (-not (Test-Path $microsoftKeyPath)) {
-        New-Item -Path $microsoftKeyPath -Force | Out-Null
-    }
-
-    if (-not (Test-Path $edgeExtensionsKeyPath)) {
-        New-Item -Path $edgeExtensionsKeyPath -Force | Out-Null
-    }
-
-    # Edge settings
-    $edgeSettings = @{
-        "BrowserSignin"                     = 0
-        "StartupBoostEnabled"               = 0
-        "BingAdsSuppression"                = 1
-        "BackgroundModeEnabled"             = 0
-        "ComponentUpdatesEnabled"           = 0
-        "EdgeShoppingAssistantEnabled"      = 0
-        "ForceGoogleSafeSearch"             = 1
-        "PersonalizationReportingEnabled"   = 0
-        "HubsSidebarEnabled"                = 0
-        "CopilotCDPPageContext"             = 0
-        "CopilotPageContext"                = 0
-        "DiscoverPageContextEnabled"        = 0
-        "AutoImportAtFirstRun"              = 4
-    }
-
-    # Apply Edge settings
-    foreach ($setting in $edgeSettings.GetEnumerator()) {
-    Set-ItemProperty -Path $edgeKeyPath -Name $setting.Key -Value $setting.Value -Type DWord
-    }
-
-    # Edge Update settings
-    $edgeUpdateSettings = @{
-        "AutoUpdateCheckPeriodMinutes"      = 0
-        "UpdateDefault"                     = 0
-        "UpdatePolicy"                      = 0
-        "InstallDefault"                    = 0
-        "Install{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}" = 0
-        "Install{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" = 1
-    }
-
-    # Apply Edge Update settings
-    foreach ($setting in $edgeUpdateSettings.GetEnumerator()) {
-    Set-ItemProperty -Path $edgeUpdateKeyPath -Name $setting.Key -Value $setting.Value -Type DWord
-    }
-
-    # Set Microsoft key setting
-    Set-ItemProperty -Path $microsoftKeyPath -Name "DoNotUpdateToEdgeWithChromium" -Value 1 -Type DWord
-
-    # Add uBlockOrigin extension
-    Set-ItemProperty -Path $edgeExtensionsKeyPath -Name "update_url" -Value "https://edge.microsoft.com/extensionwebstorebase/v1/crx" -Type String
-}
-
-function Set-RapidOSInfo {
-    $build = (Get-WmiObject Win32_OperatingSystem).BuildNumber
-
-    # Set OEM information based on the build number
-    switch ($build) {
-        "19045" {
-            bcdedit /set description "RapidOS 10 22H2"
-            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" -Name "Model" -Value "RapidOS 10 22H2"
-            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "RegisteredOrganization" -Value "RapidOS 10 22H2"
-        }
-        "22631" {
-            bcdedit /set description "RapidOS 11 23H2"
-            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" -Name "Model" -Value "RapidOS 11 23H2"
-            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "RegisteredOrganization" -Value "RapidOS 11 23H2"
-        }
-        "26100" {
-            bcdedit /set description "RapidOS 11 24H2"
-            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" -Name "Model" -Value "RapidOS 11 24H2"
-            Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name "RegisteredOrganization" -Value "RapidOS 11 24H2"
-        }
-    }
-    # Set the Support URL
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" -Name "SupportURL" -Value "https://dsc.gg/rapid-community"
-}
-
-function Set-SSDConfiguration {
+function Set-DriveConfiguration {
     # Check if the system has an SSD
     $systemDriveLetter = $env:SystemDrive.Substring(0, 1)
     $diskNumber = (Get-Partition -DriveLetter $systemDriveLetter).DiskNumber
@@ -116,15 +30,11 @@ function Set-SSDConfiguration {
     if ($mediaType -eq 'SSD') {
         Write-Host "Configuring system settings for SSD..."
 
-        # Disable ReadyBoost (Commented out due to BSOD)
-        # Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\rdyboost" -Name "Start" -Value 4 -Type DWord
-        # Remove-Item -Path "HKCR:\Drive\shellex\PropertySheetHandlers\{55B3A0BD-4D28-42fe-8CFB-FA3EDFF969B8}" -ErrorAction SilentlyContinue
-
+        # Disable ReadyBoost (BSOD)
+        # Set-RegistryValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\rdyboost" -Name "Start" -Value 4 -Type DWord
+        
         # Disable SysMain (Superfetch)
-        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\SysMain" -Name "Start" -Value 4 -Type DWord
-
-        # Disable svsvc service
-        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\svsvc" -Name "Start" -Value 4 -Type DWord
+        # Set-RegistryValue -Path "HKLM:\SYSTEM\CurrentControlSet\Services\SysMain" -Name "Start" -Value 4 -Type DWord
 
         # Enable TRIM support for SSDs
         fsutil behavior set disabledeletenotify 0
@@ -132,232 +42,333 @@ function Set-SSDConfiguration {
         # Disable tasks related to HDD
         Disable-ScheduledTask -TaskPath "\Microsoft\Windows\Data Integrity Scan\" -TaskName "Data Integrity Scan"
 
-        Write-Host "Configuration completed."
+        Write-Host "Configuration for SSD completed."
     } else {
-        Write-Host "No SSD drive found."
-    }
-}
-
-function Optimize-InternetParameters {
-    Write-Output "Optimizing Internet Parameters..."
-
-    # Refresh network settings
-    ipconfig /release
-    ipconfig /renew
-    ipconfig /flushdns
-
-    # Modify network adapter power settings
-    $networkAdapters = Get-ChildItem -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4D36E972-E325-11CE-BFC1-08002bE10318}"
-    foreach ($adapter in $networkAdapters) {
-        $keyPath = $adapter.PSPath
-
-        Set-ItemProperty -Path $keyPath -Name "AutoPowerSaveModeEnabled" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "AutoDisableGigabit" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "AdvancedEEE" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "DisableDelayedPowerUp" -Type String -Value "2" -Force
-        Set-ItemProperty -Path $keyPath -Name "*EEE" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EEE" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnablePME" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EEELinkAdvertisement" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnableGreenEthernet" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnableSavePowerNow" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnablePowerManagement" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnableDynamicPowerGating" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnableConnectedPowerGating" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "EnableWakeOnLan" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "GigaLite" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "NicAutoPowerSaver" -Type String -Value "2" -Force
-        Set-ItemProperty -Path $keyPath -Name "PowerDownPll" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "PowerSavingMode" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "ReduceSpeedOnPowerDown" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "SmartPowerDownEnable" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "S5NicKeepOverrideMacAddrV2" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "S5WakeOnLan" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "ULPMode" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "WakeOnDisconnect" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "*WakeOnMagicPacket" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "*WakeOnPattern" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "WakeOnLink" -Type String -Value "0" -Force
-        Set-ItemProperty -Path $keyPath -Name "WolShutdownLinkSpeed" -Type String -Value "2" -Force
+        Write-Host "No SSD drive found. Proceeding with other configurations."
     }
 
-    # Enable WeakHost Send and Receive
-    Write-Output "Enabling WeakHost Send and Receive..."
-    powershell -Command "Get-NetAdapter -IncludeHidden | Set-NetIPInterface -WeakHostSend Enabled -WeakHostReceive Enabled -ErrorAction SilentlyContinue"
+    # Optimize Drives
+    Get-Volume -DriveLetter C | Optimize-Volume -NormalPriority -Verbose
 
-    Write-Output "Optimization completed."
+    # Set SysMain service to "Below Normal" for all drives
+    $sysMainService = Get-CimInstance -ClassName Win32_Service -Filter "Name='SysMain'"
+    if ($null -ne $sysMainService) {
+        $process = Get-Process -Id $sysMainService.ProcessId
+        $process.PriorityClass = "BelowNormal"
+        Write-Host "SysMain priority set to Below Normal."
+    }
 }
 
 function Remove-WindowsInstallationAssistant {
     $installerPath = "$env:ProgramFiles(x86)\WindowsInstallationAssistant\Windows10UpgraderApp.exe"
     $installerDir = "$env:ProgramFiles(x86)\WindowsInstallationAssistant"
 
-    Write-Output "Removing Windows Installation Assistant..."
+    Write-Host "Removing Windows Installation Assistant..."
 
     # Uninstall and remove directory
     if (Test-Path $installerPath) {
         Start-Process -FilePath $installerPath -ArgumentList "/SunValley /ForceUninstall" -NoNewWindow -RedirectStandardOutput "$null" -RedirectStandardError "$null" -Wait
         Remove-Item -Path $installerDir -Recurse -Force -ErrorAction SilentlyContinue
-        Write-Output "Removal successful."
+        Write-Host "Removal successful."
     } else {
         Write-Host "Windows Installation Assistant not found."
     }
 }
 
-function Disable-TelemetryUsingHosts {
-    $hostspath = "$env:windir\System32\drivers\etc\hosts"
-    $telemetryHosts = @(
-        "vortex.data.microsoft.com",
-        "vortex-win.data.microsoft.com",
-        "telecommand.telemetry.microsoft.com",
-        "telecommand.telemetry.microsoft.com.nsatc.net",
-        "oca.telemetry.microsoft.com",
-        "oca.telemetry.microsoft.com.nsatc.net",
-        "sqm.telemetry.microsoft.com",
-        "sqm.telemetry.microsoft.com.nsatc.net",
-        "watson.telemetry.microsoft.com",
-        "watson.telemetry.microsoft.com.nsatc.net",
-        "redir.metaservices.microsoft.com",
-        "choice.microsoft.com",
-        "choice.microsoft.com.nsatc.net",
-        "df.telemetry.microsoft.com",
-        "reports.wes.df.telemetry.microsoft.com",
-        "services.wes.df.telemetry.microsoft.com",
-        "sqm.df.telemetry.microsoft.com",
-        "telemetry.microsoft.com",
-        "watson.ppe.telemetry.microsoft.com",
-        "telemetry.appex.bing.net",
-        "telemetry.urs.microsoft.com",
-        "telemetry.appex.bing.net:443",
-        "vortex-sandbox.data.microsoft.com",
-        "settings-sandbox.data.microsoft.com",
-        "vortex.data.microsoft.com",
-        "vortex-win.data.microsoft.com",
-        "telecommand.telemetry.microsoft.com",
-        "telecommand.telemetry.microsoft.com.nsatc.net",
-        "oca.telemetry.microsoft.com",
-        "oca.telemetry.microsoft.com.nsatc.net",
-        "sqm.telemetry.microsoft.com",
-        "sqm.telemetry.microsoft.com.nsatc.net",
-        "watson.telemetry.microsoft.com",
-        "watson.telemetry.microsoft.com.nsatc.net",
-        "redir.metaservices.microsoft.com",
-        "choice.microsoft.com",
-        "choice.microsoft.com.nsatc.net",
-        "vortex-sandbox.data.microsoft.com",
-        "settings-sandbox.data.microsoft.com",
-        "df.telemetry.microsoft.com",
-        "reports.wes.df.telemetry.microsoft.com",
-        "sqm.df.telemetry.microsoft.com",
-        "telemetry.microsoft.com",
-        "watson.microsoft.com",
-        "watson.ppe.telemetry.microsoft.com",
-        "wes.df.telemetry.microsoft.com",
-        "telemetry.appex.bing.net",
-        "telemetry.urs.microsoft.com",
-        "survey.watson.microsoft.com",
-        "watson.live.com",
-        "services.wes.df.telemetry.microsoft.com",
-        "telemetry.appex.bing.net",
-        "vortex.data.microsoft.com",
-        "vortex-win.data.microsoft.com",
-        "telecommand.telemetry.microsoft.com",
-        "telecommand.telemetry.microsoft.com.nsatc.net",
-        "oca.telemetry.microsoft.com",
-        "oca.telemetry.microsoft.com.nsatc.net",
-        "sqm.telemetry.microsoft.com",
-        "sqm.telemetry.microsoft.com.nsatc.net",
-        "watson.telemetry.microsoft.com",
-        "watson.telemetry.microsoft.com.nsatc.net",
-        "redir.metaservices.microsoft.com",
-        "choice.microsoft.com",
-        "choice.microsoft.com.nsatc.net",
-        "df.telemetry.microsoft.com",
-        "reports.wes.df.telemetry.microsoft.com",
-        "wes.df.telemetry.microsoft.com",
-        "services.wes.df.telemetry.microsoft.com",
-        "sqm.df.telemetry.microsoft.com",
-        "telemetry.microsoft.com",
-        "watson.ppe.telemetry.microsoft.com",
-        "telemetry.appex.bing.net",
-        "telemetry.urs.microsoft.com",
-        "telemetry.appex.bing.net:443",
-        "settings-sandbox.data.microsoft.com",
-        "vortex-sandbox.data.microsoft.com",
-        "survey.watson.microsoft.com",
-        "watson.live.com",
-        "watson.microsoft.com",
-        "statsfe2.ws.microsoft.com",
-        "corpext.msitadfs.glbdns2.microsoft.com",
-        "compatexchange.cloudapp.net",
-        "cs1.wpc.v0cdn.net",
-        "a-0001.a-msedge.net",
-        "a-0002.a-msedge.net",
-        "a-0003.a-msedge.net",
-        "a-0004.a-msedge.net",
-        "a-0005.a-msedge.net",
-        "a-0006.a-msedge.net",
-        "a-0007.a-msedge.net",
-        "a-0008.a-msedge.net",
-        "a-0009.a-msedge.net",
-        "msedge.net",
-        "a-msedge.net",
-        "statsfe2.update.microsoft.com.akadns.net",
-        "sls.update.microsoft.com.akadns.net",
-        "fe2.update.microsoft.com.akadns.net",
-        "diagnostics.support.microsoft.com",
-        "corp.sts.microsoft.com",
-        "statsfe1.ws.microsoft.com",
-        "pre.footprintpredict.com",
-        "i1.services.social.microsoft.com",
-        "i1.services.social.microsoft.com.nsatc.net",
-        "feedback.windows.com",
-        "feedback.microsoft-hohm.com",
-        "feedback.search.microsoft.com",
-        "live.rads.msn.com",
-        "ads1.msn.com",
-        "static.2mdn.net",
-        "g.msn.com",
-        "a.ads2.msads.net",
-        "b.ads2.msads.net",
-        "ad.doubleclick.net",
-        "ac3.msn.com",
-        "rad.msn.com",
-        "msntest.serving-sys.com",
-        "bs.serving-sys.com1",
-        "flex.msn.com",
-        "ec.atdmt.com",
-        "cdn.atdmt.com",
-        "db3aqu.atdmt.com",
-        "cds26.ams9.msecn.net",
-        "sO.2mdn.net",
-        "aka-cdn-ns.adtech.de",
-        "secure.flashtalking.com",
-        "adnexus.net",
-        "adnxs.com",
-        "*.rad.msn.com",
-        "*.msads.net",
-        "*.msecn.net"
-    )
+function Create-Shortcuts {
+    $appPath = "$env:SystemRoot\RapidOS Toolbox"
+    $shortcutName = "RapidOS Toolbox.lnk"
 
-    Write-Host "Attempting to write to hosts file: $hostspath"
+    function New-Shortcut {
+        [CmdletBinding()]
+        param (
+            [Parameter(Mandatory = $True)][ValidateNotNullOrEmpty()][string]$Source,
+            [Parameter(Mandatory = $True)][ValidateNotNullOrEmpty()][string]$Destination,
+            [ValidateNotNullOrEmpty()][string]$WorkingDir,
+            [ValidateNotNullOrEmpty()][string]$Arguments,
+            [ValidateNotNullOrEmpty()][string]$Icon,
+            [switch]$IfExist
+        )
 
-    try {
-        foreach ($telemetryHost in $telemetryHosts) {
-            Add-Content -Path $hostspath -Value "127.0.0.1 $telemetryHost" -ErrorAction Stop
-            Write-Host "Added entry for $telemetryHost"
+        if (!(Test-Path $Source) -and !(Get-Command $Source -EA 0)) {
+            throw "Source '$Source' not found."
         }
-    } catch {
-        Write-Host "Error writing to hosts file: $($Error[0].Message)"
+
+        if ($IfExist -and (Test-Path $Destination)) {
+            return
+        }
+
+        if (-not $WorkingDir) {
+            try {
+                $WorkingDir = Split-Path $Source
+            } catch {
+                $WorkingDir = [Environment]::GetFolderPath('System')
+            }
+        }
+
+        $WshShell = New-Object -ComObject WScript.Shell
+        $Shortcut = $WshShell.CreateShortcut($Destination)
+        $Shortcut.TargetPath = $Source
+        $Shortcut.WorkingDirectory = $WorkingDir
+        if ($Icon) { $Shortcut.IconLocation = $Icon }
+        if ($Arguments) { $Shortcut.Arguments = $Arguments }
+        $Shortcut.Save()
+    }
+
+    $currentUserDesktop = "$env:USERPROFILE\Desktop"
+    $currentUserShortcut = Join-Path $currentUserDesktop $shortcutName
+
+    if (!(Test-Path $currentUserShortcut)) {
+        New-Shortcut -Source $appPath -Destination $currentUserShortcut
+    }
+
+    $allUsers = Get-ChildItem "C:\Users" | Where-Object { $_.PSIsContainer -and $_.Name -ne "Public" -and $_.Name -ne "Default" }
+    foreach ($user in $allUsers) {
+        $userDesktop = Join-Path $user.FullName "Desktop"
+        if (Test-Path $userDesktop) {
+            Write-Host "Creating shortcut for $($user.Name)..."
+            if (!(Test-Path (Join-Path $userDesktop $shortcutName))) {
+                Copy-Item $currentUserShortcut -Destination $userDesktop -Force
+            }
+        } else {
+            Write-Host "Desktop not found for $($user.Name)."
+        }
+    }
+
+    $commonStartMenu = [Environment]::GetFolderPath('CommonStartMenu')
+    $commonShortcut = Join-Path $commonStartMenu "Programs\$shortcutName"
+    if (!(Test-Path $commonShortcut)) {
+        Copy-Item $currentUserShortcut -Destination $commonShortcut -Force
     }
 }
 
-switch ($MyArgument) {
-    "optimize_msedge" { Optimize-MSEdge }
-    "set_rapidos_information" { Set-RapidOSInfo }
-    "configure_ssd" { Set-SSDConfiguration }
-    "optimize_internet" { Optimize-InternetParameters }
-    "remove_installation_assistant" { Remove-WindowsInstallationAssistant }
-    "disable-telemetry-using-hosts" { Disable-TelemetryUsingHosts }
-    default { Write-Host "Invalid argument." }
+function Remove-NewOutlook {
+    New-Item -Path "$env:APPDATA\NewOutlook" -ItemType Directory -Force | Out-Null
+    $manifestPath = switch ($env:PROCESSOR_ARCHITECTURE) { 
+        "AMD64" { "RapidResources\AppxManifest.xml" }; 
+        "x86" { "RapidResources\AppxManifestx86.xml" }; 
+        "ARM64" { "RapidResources\AppxManifest-ARM64.xml" }; 
+    }
+    Copy-Item $manifestPath -Destination "$env:APPDATA\NewOutlook\AppxManifest.xml" -Force
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" -Name "AllowDevelopmentWithoutDevLicense" -Type DWORD -Value 1 -Force
+    Get-AppxPackage -AllUsers Microsoft.OutlookForWindows | Remove-AppxPackage -AllUsers
+    Add-AppxPackage -Register "$env:APPDATA\NewOutlook\AppxManifest.xml"
+}
+
+function Optimize-SvchostProcesses {
+    # Groups or splits svchost.exe processes based on the amount of physical memory in the system to optimize performance
+    $ram = (Get-CimInstance -ClassName Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1kb
+    Set-RegistryValue -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value $ram -Force
+
+    $autoLoggerDir = "$env:PROGRAMDATA\Microsoft\Diagnosis\ETLLogs\AutoLogger"
+    If (Test-Path "$autoLoggerDir\AutoLogger-Diagtrack-Listener.etl") {
+        Remove-Item "$autoLoggerDir\AutoLogger-Diagtrack-Listener.etl"
+    }
+
+    $icaclsCommand = "icacls `"$autoLoggerDir`" /deny SYSTEM:`"(OI)(CI)F`""
+    Invoke-Expression $icaclsCommand | Out-Null
+}
+
+function Configure-Autologgers {
+    Write-Host "Configuring autologgers"
+
+    $autologgers = @(
+        'Circular Kernel Context Logger',
+        'CloudExperienceHostOobe',
+        'Diagtrack-Listener',
+        'LwtNetLog',
+        'Microsoft-Windows-Rdp-Graphics-RdpIdd-Trace',
+        'NtfsLog',
+        'RdrLog',
+        'SpoolerLogger',
+        'UBPM',
+        'WiFiSession'
+    )
+
+    foreach ($logger in $autologgers) {
+        $regPath = "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\$logger"
+        try {
+            New-Item -Path $regPath -Force | Out-Null
+            [Microsoft.Win32.Registry]::SetValue($regPath, "Start", 0, [Microsoft.Win32.RegistryValueKind]::DWord)
+        } catch {
+            Write-Host "Failed to set key for: $logger"
+        }
+    }     
+  
+    # Fix Task Manager not responding when exiting
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DiagLog" /v Start /t REG_DWORD /d 1 /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WdiContextLog" /v Start /t REG_DWORD /d 1 /f
+
+    Write-Host "Autologgers setup complete."
+}
+
+function Set-VisualEffects {
+    Write-Host "Configuring visual effects"
+    $TotalMemoryGB = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
+
+    # Show icons with text
+    Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'IconsOnly' -Type DWORD -Value 0  
+
+    # Enable listview shadows
+    Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'ListviewShadow' -Type DWORD -Value 1  
+
+    # Enable full window drag
+    Set-RegistryValue -Path 'HKCU:\Control Panel\Desktop' -Name 'DragFullWindows' -Type DWORD -Value 1  
+
+    # Disable Aero Peek
+    Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\DWM' -Name 'EnableAeroPeek' -Type DWORD -Value 0  
+
+    # Enable ClearType font smoothing
+    Set-RegistryValue -Path 'HKCU:\Control Panel\Desktop' -Name 'FontSmoothing' -Type DWORD -Value 2  
+
+    # Set visual effects and performance balance
+    reg add "HKCU\Control Panel\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f  
+
+    # Set balanced visual effects
+    Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects' -Name 'VisualFXSetting' -Type DWORD -Value 3  
+
+    if ($TotalMemoryGB -lt 8) {
+        Write-Host "System has less than 8GB of RAM. Applying performance settings."
+
+        # Disable taskbar animations
+        Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'TaskbarAnimations' -Type DWORD -Value 0  
+        # Disable thumbnail previews
+        Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\DWM' -Name 'AlwaysHibernateThumbnails' -Type DWORD -Value 0  
+        # Disable window minimize animations
+        Set-RegistryValue -Path 'HKCU:\Control Panel\Desktop' -Name 'MinAnimate' -Type DWORD -Value 0  
+
+    } else {
+        Write-Host "System has 8GB or more RAM. Applying aesthetics settings."
+
+        # Enable taskbar animations
+        Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'TaskbarAnimations' -Type DWORD -Value 1  
+        # Enable thumbnail previews
+        Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\DWM' -Name 'AlwaysHibernateThumbnails' -Type DWORD -Value 1  
+        # Enable window minimize animations
+        Set-RegistryValue -Path 'HKCU:\Control Panel\Desktop' -Name 'MinAnimate' -Type DWORD -Value 1  
+
+    }
+
+    Write-Host "Visual effects applied."
+}
+
+function Set-DeprovisionedApps {
+    Write-Host "Setting deprovisioned apps"
+
+    $keys = @(
+        'Microsoft.Advertising.Xaml_8wekyb3d8bbwe',
+        'Microsoft.WindowsAlarms_8wekyb3d8bbwe',
+        'Microsoft.549981C3F5F10_8wekyb3d8bbwe',
+        'Microsoft.BingNews_8wekyb3d8bbwe',
+        'Microsoft.BingWeather_8wekyb3d8bbwe',
+        'Microsoft.WindowsCalculator_8wekyb3d8bbwe',
+        'Microsoft.WindowsCamera_8wekyb3d8bbwe',
+        'clipchamp.clipchamp_yxz26nhyzhsrt',
+        'Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy',
+        'Microsoft.Windows.DevHome_8wekyb3d8bbwe',
+        'Microsoft.ECApp_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftEdge_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe',
+        'MicrosoftCorporationII.MicrosoftFamily_8wekyb3d8bbwe',
+        'Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe',
+        'Microsoft.GetHelp_8wekyb3d8bbwe',
+        'Microsoft.Getstarted_8wekyb3d8bbwe',
+        'MicrosoftCorporationII.MailforSurfaceHub_8wekyb3d8bbwe',
+        'microsoft.windowscommunicationsapps_8wekyb3d8bbwe',
+        'Microsoft.WindowsMaps_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftPowerBIForWindows_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftTeamsforSurfaceHub_8wekyb3d8bbwe',
+        'MSTeams_8wekyb3d8bbwe',
+        'Microsoft.MixedReality.Portal_8wekyb3d8bbwe',
+        'Microsoft.WindowsNotepad_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe',
+        'Microsoft.Office.OneNote_8wekyb3d8bbwe',
+        'Microsoft.Office.Excel_8wekyb3d8bbwe',
+        'Microsoft.Office.PowerPoint_8wekyb3d8bbwe',
+        'Microsoft.Office.Word_8wekyb3d8bbwe',
+        'Microsoft.OutlookForWindows_8wekyb3d8bbwe',
+        'Microsoft.MSPaint_8wekyb3d8bbwe',
+        'Microsoft.Paint_8wekyb3d8bbwe',
+        'Microsoft.People_8wekyb3d8bbwe',
+        'Microsoft.Windows.PeopleExperienceHost_cw5n1h2txyewy',
+        'Microsoft.Windows.Photos_8wekyb3d8bbwe',
+        'Microsoft.PowerAutomateDesktop_8wekyb3d8bbwe',
+        'MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe',
+        'microsoft.microsoftskydrive_8wekyb3d8bbwe',
+        'Microsoft.SkypeApp_kzf8qxf38zg5c',
+        'Microsoft.Windows.Apprep.ChxApp_cw5n1h2txyewy',
+        'Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe',
+        'Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe',
+        'Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe',
+        'Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy',
+        'Microsoft.Todos_8wekyb3d8bbwe',
+        'MicrosoftWindows.Client.WebExperience_cw5n1h2txyewy',
+        'Microsoft.Whiteboard_8wekyb3d8bbwe',
+        'Microsoft.ZuneMusic_8wekyb3d8bbwe',
+        'Microsoft.ZuneVideo_8wekyb3d8bbwe',
+        'Microsoft.Microsoft3DViewer_8wekyb3d8bbwe'
+    )
+
+    foreach ($key in $keys) {
+        $regPath = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\$key"
+        try {
+            [Microsoft.Win32.Registry]::SetValue($regPath, "", 0, [Microsoft.Win32.RegistryValueKind]::DWord)
+        } catch {
+            Write-Host "Failed to set key for: $key"
+        }
+    }
+
+    Write-Host "Deprovisioned apps setup complete."
+}
+
+# Function to display usage information
+function Show-Usage {
+    Write-Host "Usage:" -ForegroundColor Cyan
+    Write-Host "---------" -ForegroundColor Cyan
+    Write-Host " .\MultiTool.ps1 -MyArgument <option>" -ForegroundColor White
+    Write-Host ""
+    
+    Write-Host "Options:" -ForegroundColor Cyan
+    Write-Host "---------" -ForegroundColor Cyan
+    Write-Host " - configure_drives              : Configure system settings for all drives" -ForegroundColor Gray
+    Write-Host " - remove_installation_assistant : Remove Windows Installation Assistant if present" -ForegroundColor Gray
+    Write-Host " - optimize_svchost              : Optimize svchost processes based on system RAM" -ForegroundColor Gray
+    Write-Host " - set_visualeffects             : Set aesthetic or performance visual effects based on RAM" -ForegroundColor Gray
+    Write-Host " - set_deprovisioned_apps        : Set registry keys to deprovision pre-installed apps" -ForegroundColor Gray
+    Write-Host " - rapidos_toolbox               : Makes RapidOS Toolbox shortcut on desktop and start menu" -ForegroundColor Gray
+    Write-Host ""
+    
+    Write-Host "Example:" -ForegroundColor Cyan
+    Write-Host "---------" -ForegroundColor Cyan
+    Write-Host " .\MultiTool.ps1 -MyArgument remove_installation_assistant" -ForegroundColor White
+    Write-Host " .\MultiTool.ps1 -MyArgument optimize_svchost, configure_drives" -ForegroundColor White
+    Write-Host ""
+}
+
+# Check if no arguments were provided
+if (-not $MyArgument) {
+    Write-Host "Error: No arguments provided." -ForegroundColor Red
+    Write-Host ""
+    Show-Usage
+}
+
+# Function call based on the argument
+foreach ($arg in $MyArgument) {
+    switch ($arg) {
+        "configure_drives" { Set-DriveConfiguration }
+        "remove_installation_assistant" { Remove-WindowsInstallationAssistant }
+        "optimize_svchost" { Optimize-SvchostProcesses }
+        "configure_autologgers" { Configure-Autologgers }
+        "set_visualeffects" { Set-VisualEffects }
+        "set_deprovisioned_apps" { Set-DeprovisionedApps }
+        "rapidos_toolbox" { Create-Shortcuts }
+        "remove_outlook" { Remove-NewOutlook }
+
+        default {
+            Write-Host "Error: Invalid argument `"$arg`"" -ForegroundColor Red
+            Write-Host ""
+            Show-Usage
+        }
+    }
 }

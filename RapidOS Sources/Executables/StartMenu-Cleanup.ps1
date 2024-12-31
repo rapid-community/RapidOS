@@ -73,7 +73,7 @@ foreach ($userProfile in $userProfiles) {
 
     # Re-register the Start Menu Experience Host app
     Get-AppxPackage -AllUsers Microsoft.Windows.ShellExperienceHost | ForEach-Object {
-        Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"
+        Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml" -ErrorAction SilentlyContinue
     }
 
     # Remove ads from the Start Menu for this user

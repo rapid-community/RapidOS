@@ -1,0 +1,11 @@
+---
+title: Set Powershell Execution Policy Unrestricted
+description: >
+  Sets the PowerShell execution policy to 'Unrestricted' to prevent script execution (for proper playbook installation).
+actions:
+  # Set 'Unrestricted' in PowerShell Execution Policy
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell'
+      value: 'ExecutionPolicy'
+      type: REG_SZ
+      data: 'Unrestricted'

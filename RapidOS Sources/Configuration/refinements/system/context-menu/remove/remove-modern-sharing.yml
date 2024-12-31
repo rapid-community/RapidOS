@@ -1,6 +1,5 @@
 ---
 title: Remove Modern Sharing
 description: The provided command modifies the Windows Registry to remove the "ModernSharing" option from the context menu.
-privilege: TrustedInstaller
 actions:
- - !registryKey: {path: 'HKCR\AllFileSystemObjects\ShellEx\ContextMenuHandlers\ModernSharing'}
+  - !registryKey: {path: 'HKCR\AllFileSystemObjects\ShellEx\ContextMenuHandlers\ModernSharing'}

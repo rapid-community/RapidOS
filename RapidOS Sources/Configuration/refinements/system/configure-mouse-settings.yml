@@ -9,9 +9,7 @@ actions:
   - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseHoverTime', type: REG_SZ, data: '30'}
   - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseThreshold1', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseThreshold2', type: REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseSensitivity', type: REG_DWORD, data: '0'}
-  # - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'SmoothMouseYCurve', type: REG_BINARY, data: '00000000000000000000000000000000000000000000000000000000000000000000000000000000'}
-  # - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'SmoothMouseXCurve', type: REG_BINARY, data: '00000000000000000000000000000000000000000000000000000000000000000000000000000000'}
+  - !registryValue: {path: 'HKCU\Control Panel\Mouse', value: 'MouseSensitivity', type: REG_DWORD, data: '10'}
 
   # Cursor Magnetism settings
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Input\Settings\ControllerProcessor\CursorMagnetism', value: 'DistanceThresholdInDIPS', type: REG_DWORD, data: '28'}

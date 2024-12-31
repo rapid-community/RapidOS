@@ -7,25 +7,33 @@ actions:
   - !writeStatus: {status: 'Installing Light theme'}
 
   # Setting up theme as default in system
-  - !registryValue: {path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes', value: 'CurrentTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\HighContrast', value: 'CurrentTheme', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallTheme', type: REG_SZ, data: '%WinDir%\Resources\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes', value: 'InstallTheme', type: REG_SZ, data: '%WinDir%\Resources\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes', value: 'CurrentTheme', type: REG_SZ, data: '%WinDir%\Resources\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\HighContrast', value: 'CurrentTheme', type: REG_SZ, data: '%WinDir%\Resources\Themes\rapid-light.theme'}
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Windows\Personalization', value: 'ThemeFile', type: REG_SZ, data: '%WinDir%\Resources\Themes\rapid-light.theme'}
   
-  # Lock Screen wallpaper settings
-  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization', value: 'LockScreenImage', type: REG_SZ, data: '%WinDir%\RapidScripts\Themes\rapid-light.theme'}
- 
   # Refreshing system parameters
   - !run: {exe: 'rundll32.exe', args: 'user32.dll,UpdatePerUserSystemParameters'}
 
+  # Applying Lock Screen settings
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization', value: 'LockScreenImage', type: REG_SZ, data: '%WinDir%\RapidScripts\lockscreen-rapid-light.png'}
+  - !powerShell:
+      command: '.\Change-LockScreen.ps1 -MyArgument light_lockscreen'
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      weight: 100
+
   # Applying Light Theme
   - !cmd:
-      command: 'start "" "%WinDir%\RapidScripts\Themes\rapid-light.theme"'
-      wait: true
+      command: 'start "" "%WinDir%\Resources\Themes\rapid-light.theme"'
       runas: currentUserElevated
+      wait: true
+      weight: 100
 
   # Wait before proceeding
-  - !run: {exe: 'timeout', args: '/t 5 /nobreak'}
+  - !run: {exe: 'timeout', args: '/t 3 /nobreak'}
   
   # Closing system settings and control panel after applying Light Theme
   - !taskKill: {name: 'SystemSettings', ignoreErrors: true}

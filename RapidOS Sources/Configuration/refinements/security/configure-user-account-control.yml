@@ -5,14 +5,12 @@ description: >
   or an administrator password before allowing certain actions.
 actions:
   - !writeStatus: {status: 'Configuring UAC'}
-  # Enable UAC
-  - !service: {name: 'luafv', operation: change, startup: 2, option: 'enable-uac'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type: REG_DWORD, data: '1', option: 'enable-uac'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type: REG_DWORD, data: '1', option: 'enable-uac'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type: REG_DWORD, data: '5', option: 'enable-uac'}
 
-  # Disable UAC
-  - !service: {name: 'luafv', operation: change, startup: 4, option: 'disable-uac'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type: REG_DWORD, data: '0', option: 'disable-uac'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type: REG_DWORD, data: '0', option: 'disable-uac'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type: REG_DWORD, data: '0', option: 'disable-uac'}
+  ## RapidOS no longer disables UAC; users must report their actions.
+   
+  # Disable switching to the Secure Desktop when prompting for elevation
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+      value: 'PromptOnSecureDesktop'
+      type: REG_DWORD
+      data: '0'

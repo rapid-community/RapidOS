@@ -1,25 +1,22 @@
 ---
 title: Folders Configuration
 description: >
-  Copying necessary folders for proper playbook installation.
-privilege: TrustedInstaller
+  Copy necessary folders for proper playbook installation.
 actions:
-  # Copying RapidScripts to Windows folder
+  # Copy RapidScripts to Windows folder
   - !cmd:
       exeDir: true
       command: 'robocopy "RapidScripts" "%WinDir%\RapidScripts" /E /PURGE /IM /IT /NP > nul 2>&1'
       wait: true
-      weight: 10
-      
-  # Copying Wallpapers to Windows folder without purging existing files
-  # - !cmd:
-  #     exeDir: true
-  #     command: 'robocopy "RapidResources\Web" "%WinDir%\Web" /E /IM /IT /NP > nul'
-  #     wait: true
-  #     weight: 10
 
-  # Copying EmptyStandbyList.exe to Windows folder
-  # - !cmd:
-  #     exeDir: true
-  #     command: 'copy "RapidResources\EmptyStandbyList.exe" "%WinDir%" > nul'
-  #     weight: 10
+  # Copy RapidOS Toolbox to Windows folder
+  - !cmd:
+      exeDir: true
+      command: 'robocopy "RapidResources\RapidOS Toolbox" "%WinDir%\RapidOS Toolbox" /E /PURGE /IM /IT /NP > nul 2>&1'
+      wait: true
+
+  # Copy RapidOS themes into Windows themes catalog
+  - !cmd:
+      exeDir: true
+      command: 'xcopy "RapidResources\Themes" "%WinDir%\Resources\Themes" /E /I /H /Y > nul 2>&1'
+      wait: true

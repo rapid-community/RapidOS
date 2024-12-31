@@ -1,6 +1,5 @@
 ---
 title: Remove '- Shortcut' text added onto shortcuts
 description: The provided command modifies the Windows Registry to remove the "- Shortcut" text that is added to shortcut files.
-privilege: TrustedInstaller
 actions:
- - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer', value: 'link', type: REG_BINARY, data: '00000000'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer', value: 'link', type: REG_BINARY, data: '00000000'}

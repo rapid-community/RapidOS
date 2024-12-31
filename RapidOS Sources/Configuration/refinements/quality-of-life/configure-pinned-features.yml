@@ -11,7 +11,7 @@ actions:
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'AllowPinnedFolderDownloads', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'AllowPinnedFolderDownloads_ProviderSet', type: REG_DWORD, data: '0'}
 
-  # Hide pinned File Explorer folder
+  # Show pinned File Explorer folder
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'AllowPinnedFolderFileExplorer', type: REG_DWORD, data: '1'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'AllowPinnedFolderFileExplorer_ProviderSet', type: REG_DWORD, data: '1'}
 

@@ -2,7 +2,6 @@
 title: Taskbar and Desktop Configuration
 description: >
   Configures various settings related to the taskbar and desktop.
-privilege: TrustedInstaller
 actions:
   # Taskbar pins
   # - !registryValue: 
@@ -19,11 +18,11 @@ actions:
   #     option: 'modify-ui'
       
   # Set taskbar to the left
-  - !registryValue:
-      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
-      value: 'TaskbarAl'
-      data: '0'
-      type: REG_DWORD
+  # - !registryValue:
+  #     path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+  #     value: 'TaskbarAl'
+  #     data: '0'
+  #     type: REG_DWORD
 
   # Do not show Task View button in taskbar
   - !registryValue: 
@@ -62,16 +61,18 @@ actions:
       value: 'EnableFeeds'
       type: REG_DWORD
       data: '0'
-  # - !registryValue: 
-  #     path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds'
-  #     value: 'ShellFeedsTaskbarViewMode'
-  #     type: REG_DWORD
-  #     data: '2'
-  # - !registryValue: 
-  #     path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
-  #     value: 'TaskbarDa'
-  #     type: REG_DWORD
-  #     data: '0'
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds'
+      value: 'ShellFeedsTaskbarViewMode'
+      type: REG_DWORD
+      data: '2'
+    # builds: [ '<26100' ] # Blocked in 24H2 | Can be bypassed disabling UCPD service
+  - !registryValue: 
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'TaskbarDa'
+      type: REG_DWORD
+      data: '0'
+    # builds: [ '<26100' ] # Blocked in 24H2 | Can be bypassed disabling UCPD service
   - !registryValue: 
       path: 'HKLM\SOFTWARE\Policies\Microsoft\Dsh'
       value: 'AllowNewsAndInterests'
@@ -105,3 +106,17 @@ actions:
       value: 'TaskbarEndTask'
       type: REG_DWORD
       data: '1'
+
+  # Show Search Icon instead of Search Box
+  - !registryValue:
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Search'
+      value: 'SearchboxTaskbarMode'
+      type: REG_DWORD
+      data: '1'
+      builds: [ '<22000' ]
+
+  # Restore the classic search icon in Windows 22H2 to match older Windows 10 versions
+  - !cmd:
+      command: '%WinDir%\RapidScripts\ViveTool\ViVeTool.exe /disable /id:41868508'
+      builds: [ '<22000' ]
+      weight: 50

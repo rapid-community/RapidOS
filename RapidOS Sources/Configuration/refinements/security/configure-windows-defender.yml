@@ -3,54 +3,17 @@ title: Windows Defender settings
 description: >
   This execute file control over Windows Defender, a security feature providing antivirus and threat protection. 
   Enabling it enhances system security, while disabling it removes the protection, but increases performance.
-privilege: TrustedInstaller
 actions: 
-  ## Enabling Windows Defender and Recovering All Components
-  - !writeStatus: {status: 'Enabling Windows Defender', option: 'enable-def'}    
-  
-  - !cmd:
-      command: '%WinDir%\RapidScripts\MinSudo.exe -TI -P -NoL powershell.exe -File .\Defender-Configuration.ps1 -MyArgument enable_windows_defender'
-      exeDir: true
-      wait: true
-      option: 'enable-def'
-      weight: 300
-
-  # Enable non-critical notifications from Windows Defender
-  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications', value: 'DisableEnhancedNotifications', type: REG_DWORD, data: '0', option: 'enable-def'}
-  
-  # Recover Windows Defender Systray Icon
-  - !registryValue: {path: 'HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run', value: 'SecurityHealth', type: REG_SZ, data: 'C:\Program Files\Windows Defender\MSASCui.exe', option: 'enable-def'}
-  - !registryValue: {path: 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run', value: 'SecurityHealth', type: REG_SZ, data: 'C:\Program Files\Windows Defender\MSASCui.exe', option: 'enable-def'}
- 
-  # Recover Windows Defender Context Menu
-  - !registryValue: {path: 'HKCR\*\shellex\ContextMenuHandlers\EPP', type: REG_SZ, data: '{09A47860-11B0-4DA5-AFA5-26D86198A780}', option: 'enable-def'}
-  - !registryValue: {path: 'HKCR\Directory\shellex\ContextMenuHandlers\EPP', type: REG_SZ, data: '{09A47860-11B0-4DA5-AFA5-26D86198A780}', option: 'enable-def'}
-  - !registryValue: {path: 'HKCR\Drive\shellex\ContextMenuHandlers\EPP', type: REG_SZ, data: '{09A47860-11B0-4DA5-AFA5-26D86198A780}', option: 'enable-def'}
-
-  # Notify antivirus programs when opening attachments
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments', value: 'ScanWithAntiVirus', type: REG_DWORD, data: '1', option: 'enable-def'}
-
-  ## Disabling Windows Defender and Eliminating All Components
   - !writeStatus: {status: 'Disabling Windows Defender', option: 'disable-def'}
-
-  - !cmd:
-      command: '%WinDir%\RapidScripts\MinSudo.exe -TI -P -NoL powershell.exe -File .\Defender-Configuration.ps1 -MyArgument disable_windows_defender'
+  - !powerShell:
+      command: '.\Install-Software.ps1 -MyArgument install_defswitcher'
+      runas: currentUserElevated
       exeDir: true
+      weight: 100
       wait: true
+
+  - !powerShell:
+      command: '& "$env:WinDir\RapidScripts\UtilityScripts\DefenderSwitcher.exe" disable_av'
       option: 'disable-def'
-      weight: 300
-
-  # Disable non-critical notifications from Windows Defender
-  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications', value: 'DisableEnhancedNotifications', type: REG_DWORD, data: '1', option: 'disable-def'}
-
-  # Remove Windows Defender Systray Icon
-  - !registryValue: {path: 'HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run', value: 'SecurityHealth', operation: delete, option: 'disable-def'}
-  - !registryValue: {path: 'HKLM\Software\Microsoft\Windows\CurrentVersion\Run', value: 'SecurityHealth', operation: delete, option: 'disable-def'}
-
-  # Remove Windows Defender Context Menu
-  - !registryKey: {path: 'HKCR\*\shellex\ContextMenuHandlers\EPP', operation: delete, option: 'disable-def'}
-  - !registryKey: {path: 'HKCR\Directory\shellex\ContextMenuHandlers\EPP', operation: delete, option: 'disable-def'}
-  - !registryKey: {path: 'HKCR\Drive\shellex\ContextMenuHandlers\EPP', operation: delete, option: 'disable-def'}
-
-  # Don't notify antivirus programs when opening attachments
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments', value: 'ScanWithAntiVirus', type: REG_DWORD, data: '0', option: 'disable-def'}
+      weight: 200
+      wait: true

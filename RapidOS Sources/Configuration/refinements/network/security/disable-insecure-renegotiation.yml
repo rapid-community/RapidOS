@@ -1,0 +1,33 @@
+---
+title: Disable insecure renegotiation
+description: >
+  This configuration script strengthen security by disabling insecure renegotiation options.
+  It sets registry values to prevent insecure renegotiation on both clients and servers, and enforces the use of Server Certificate Status (SCSV) for TLS connections.
+  These changes help protect against certain types of attacks and ensure a more secure communication environment.
+actions:
+  # Disable insecure renegotiation
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'AllowInsecureRenegoClients'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'AllowInsecureRenegoServers'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'DisableRenegoOnServer'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'DisableRenegoOnClient'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'UseScsvForTls'
+      type: REG_DWORD
+      data: '1'

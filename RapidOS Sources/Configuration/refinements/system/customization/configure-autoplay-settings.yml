@@ -1,8 +1,28 @@
 ---
-title: Autoplay Confuguration
+title: Autoplay/Autorun Confuguration
 description: >
-  These registry parameters disables the autoplay. The autoplay feature allows you to choose an action for different kinds of media or devices when you plug them in or insert them into your computer.
+  Autoplay and autorun allows you to choose an action for different kinds of media or devices when you plug them in or insert them into your computer.
 actions:
-  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'NoDriveTypeAutoRun', type: REG_DWORD, data: '181'}
-  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers', value: 'DisableAutoplay', type: REG_DWORD, data: '1'}
-  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'NoAutorun', type: REG_DWORD, data: '1'}
+  # Disable Autoplay
+  - !registryValue:
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers'
+      value: 'DisableAutoplay'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      value: 'NoAutoplayfornonVolume'
+      type: REG_DWORD
+      data: '1'
+
+  # Disable Autorun
+  - !registryValue:
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'NoDriveTypeAutoRun'
+      type: REG_DWORD
+      data: '181'
+  - !registryValue:
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'NoAutorun'
+      type: REG_DWORD
+      data: '1'

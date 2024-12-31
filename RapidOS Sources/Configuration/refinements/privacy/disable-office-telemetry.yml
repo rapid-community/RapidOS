@@ -1,0 +1,40 @@
+---
+title: Microsoft Office telemetry
+description: >
+  This configuration disables various telemetry and logging features in Microsoft Office.
+actions:
+  # Disable Office Telemetry
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\Common\ClientTelemetry', value: 'DisableTelemetry', type: REG_DWORD, data: '1', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Common\ClientTelemetry', value: 'DisableTelemetry', type: REG_DWORD, data: '1', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\Common\ClientTelemetry', value: 'VerboseLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Common\ClientTelemetry', value: 'VerboseLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+
+  # Disable Office logging options
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\15.0\Outlook\Options\Mail', value: 'EnableLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Outlook\Options\Mail', value: 'EnableLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\15.0\Outlook\Options\Calendar', value: 'EnableCalendarLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Outlook\Options\Calendar', value: 'EnableCalendarLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\15.0\Word\Options', value: 'EnableLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Word\Options', value: 'EnableLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Office\15.0\OSM', value: 'EnableLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Office\15.0\OSM', value: 'EnableUpload', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Office\16.0\OSM', value: 'EnableLogging', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Policies\Microsoft\Office\16.0\OSM', value: 'EnableUpload', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+
+  # Disable Office feedback
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\15.0\Common\Feedback', value: 'Enabled', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Common\Feedback', value: 'Enabled', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+
+  # Disable Office Customer Experience Improvement Program
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\15.0\Common', value: 'QMEnable', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+  - !registryValue: {path: 'HKCU\Software\Microsoft\Office\16.0\Common', value: 'QMEnable', type: REG_DWORD, data: '0', option: '!remove-office-apps'}
+
+  # Disable Office Telemetry Agent
+  - !scheduledTask: {path: '\Microsoft\Office\OfficeTelemetryAgentFallBack', operation: disable, option: '!remove-office-apps', ignoreErrors: true}
+  - !scheduledTask: {path: '\Microsoft\Office\OfficeTelemetryAgentFallBack2016', operation: disable, option: '!remove-office-apps', ignoreErrors: true}
+  - !scheduledTask: {path: '\Microsoft\Office\OfficeTelemetryAgentLogOn', operation: disable, option: '!remove-office-apps', ignoreErrors: true}
+  - !scheduledTask: {path: '\Microsoft\Office\OfficeTelemetryAgentLogOn2016', operation: disable, option: '!remove-office-apps', ignoreErrors: true}
+
+  # Disable Office Subscription Heartbeat
+  - !scheduledTask: {path: '\Microsoft\Office\Office 15 Subscription Heartbeat', operation: disable, option: '!remove-office-apps', ignoreErrors: true}
+  - !scheduledTask: {path: '\Microsoft\Office\Office 16 Subscription Heartbeat', operation: disable, option: '!remove-office-apps', ignoreErrors: true}

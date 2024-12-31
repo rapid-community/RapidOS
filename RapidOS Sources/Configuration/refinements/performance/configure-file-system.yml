@@ -2,10 +2,10 @@
 title: File System
 description: >
   This script modifies various file system behaviors using the fsutil command in Windows.
-privilege: TrustedInstaller
 actions:
   # Enables TRIM support for SSDs to optimize their performance and lifespan
-  # - !run: {exe: 'fsutil', args: 'behavior set disabledeletenotify 0', showOutput: false} # Added in MultiTool.ps1 in SSD Configuration function
+  # - !run: {exe: 'fsutil', args: 'behavior set disabledeletenotify 0', showOutput: false} 
+  # Added in MultiTool.ps1 in "Drive Configuration" function
 
   # Disables automatic NTFS file compression to avoid using system resources for compression
   - !run: {exe: 'fsutil', args: 'behavior set disablecompression 1', showOutput: false}
@@ -21,5 +21,6 @@ actions:
 
   # Disables the creation of 8.3 format filenames for compatibility with older applications, which can improve file system performance
   - !run: {exe: 'fsutil', args: 'behavior set disable8dot3 1', showOutput: false}
-
-
+  
+  # Disables updating the last access timestamp for files
+  - !run: {exe: 'fsutil', args: 'behavior set disableLastAccess 1', showOutput: false}

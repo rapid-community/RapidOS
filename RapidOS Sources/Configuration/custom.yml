@@ -4,6 +4,14 @@ description: Initiates scripts of RapidOS Playbook
 privilege: Admin
 actions: []
 features:
+  ## Recommendation                                                                                                 
+  # ----------------------------------------------------------------- #
+  # The commented lines are left that way on purpose for reasons like #
+  # QoL, stability, and user convenience. RapidOS devs pay close      #
+  # attention to every change in the code. If you want to use any of  #
+  # the commented options, feel free to uncomment them.               #
+  # ----------------------------------------------------------------- #
+
   ## Pre-installation Setup
   - refinements\system\prepare-initial-playbook.yml
  
@@ -27,7 +35,8 @@ features:
   - refinements\debloat\remove-windows-installation-assistant.yml
   - refinements\debloat\configure-deprovisioned-apps.yml
   - refinements\system\optimize-services.yml
-  - additionals\configure-third-party-software.yml
+  - additionals\configure-appx-apps.yml 
+  - additionals\configure-3rdparty-software.yml
   # ----------------------------------------------------------------- #
 
   ## Further System Optimizations
@@ -45,16 +54,18 @@ features:
   - refinements\system\configure-boot-settings.yml
   - refinements\system\configure-crash-control.yml
   - refinements\system\configure-dxgkrnl.yml
-  - refinements\system\configure-microsoft-store.yml
   - refinements\system\configure-mouse-settings.yml
+  - refinements\system\configure-sync.yml
   - refinements\system\configure-windows-updates.yml
-  - refinements\system\optimize-ssd.yml
+  - refinements\system\optimize-drive.yml
   - refinements\system\reduce-startmenu-delay.yml
   - refinements\system\set-shutdown-timeout.yml
+  - refinements\system\clean-environment-path.yml
+  # - refinements\system\set-timer-resolution.yml
 
   - additionals\statuses\configuring-windows-status.yml
   # Personal Adjustments
-  - refinements\system\customization\explorer\add-this-pc-shortcut.yml
+  # - refinements\system\customization\explorer\add-this-pc-shortcut.yml
   - refinements\system\customization\explorer\config-file-explorer.yml
   - refinements\system\customization\audio-communications.yml
   # - refinements\system\customization\bypass-installation-requirements.yml
@@ -62,16 +73,18 @@ features:
   - refinements\system\customization\configure-ease-of-access.yml
   - refinements\system\customization\configure-multitasking.yml
   - refinements\system\customization\configure-oem-information.yml
+  - refinements\system\customization\configure-environment.yml
   - refinements\system\customization\customize-settings-page.yml
   - refinements\system\customization\customize-text-input.yml
   - refinements\system\customization\disable-activity-feed.yml
-  - refinements\system\customization\disable-app-suggestions.yml
+  - refinements\system\customization\disable-ai-features.yml
   # - refinements\system\customization\disable-clipboard-history.yml
   - refinements\system\customization\disable-input-personalization.yml
   - refinements\system\customization\disable-offline-maps.yml
   - refinements\system\customization\disable-system-restore.yml
-  - refinements\system\customization\disable-tablet-mode.yml
+  # - refinements\system\customization\disable-tablet-mode.yml
   # - refinements\system\customization\disable-windows-startup-sound.yml
+  # - refinements\system\customization\configure-xbox-gamebar.yml
   - refinements\system\customization\enhance-user-experience.yml
   - refinements\system\customization\optimize-windows-search.yml
 
@@ -111,10 +124,12 @@ features:
   # ----------------------------------------------------------------- #
   - refinements\security\configure-windows-defender.yml
   - refinements\security\configure-user-account-control.yml
-  - refinements\security\mitigate-spectre-meltdown.yml
-  - refinements\security\vulnerable-driver-blocklist.yml
-  - refinements\security\core-isolation-configuration.yml
+  - refinements\security\configure-mitigations.yml
+  - refinements\security\configure-core-isolation.yml
+  - refinements\security\configure-fth-settings.yml
+  # - refinements\security\vulnerable-driver-blocklist.yml
   - refinements\security\configure-risk-types.yml
+  - refinements\security\configure-security-settings.yml
   # ----------------------------------------------------------------- #
 
   ## Advanced Network Configurations
@@ -132,14 +147,18 @@ features:
   - additionals\statuses\network-status.yml
   - refinements\network\configure-netsh.yml
   # - refinements\network\configure-default-ttl.yml
-  # - refinements\network\configure-irp-stack-size.yml
+  - refinements\network\configure-irp-stack-size.yml
   # - refinements\network\configure-max-free-tcbs.yml
   # - refinements\network\configure-max-user-port.yml
   # - refinements\network\configure-sizereqbuf.yml
   # - refinements\network\configure-tcp1323-options.yml
-  # - refinements\network\optimize-internet-settings.yml
+  - refinements\network\configure-firewall.yml
   - refinements\network\security\block-anonymous-access.yml
+  - refinements\network\security\disable-insecure-ciphers.yml
+  - refinements\network\security\disable-insecure-dotnet-apps-connections.yml
+  - refinements\network\security\disable-insecure-renegotiation.yml
   - refinements\network\security\disable-smb-speed-limit.yml
+  - refinements\network\security\enable-strong-key-requirement.yml
   - refinements\network\security\prevent-anonymous-enumeration.yml
   # ----------------------------------------------------------------- #
 
@@ -158,10 +177,10 @@ features:
   - additionals\statuses\performance-status.yml  
   - refinements\performance\apply-system-registry-tweaks.yml
   - refinements\performance\configure-file-system.yml
-  - refinements\performance\configure-fth-settings.yml
   - refinements\performance\configure-multi-plane-overlay.yml
   - refinements\performance\enhance-task-priority.yml
-  - refinements\performance\manage-uwp-background-tasks.yml
+  # - refinements\performance\manage-uwp-background-tasks.yml
+  - refinements\performance\optimize-svchost.yml
   - refinements\performance\set-resource-management-policy.yml
   # ----------------------------------------------------------------- #
 
@@ -178,12 +197,13 @@ features:
   # ----------------------------------------------------------------- #
   - additionals\statuses\privacy-status.yml
   - refinements\privacy\configure-ads-settings.yml
-  - refinements\privacy\configure-advertising-id.yml
   - refinements\privacy\configure-app-permissions.yml
-  # - refinements\privacy\configure-autologgers.yml
+  - refinements\privacy\configure-autologgers.yml
   - refinements\privacy\configure-data-collection.yml
-  - refinements\privacy\configure-hosts.yml
+  # - refinements\privacy\configure-hosts.yml
+  - refinements\privacy\configure-scheduled-tasks.yml
   - refinements\privacy\disable-dotnet-telemetry.yml
+  - refinements\privacy\disable-office-telemetry.yml
   - refinements\privacy\disable-telemetry-collection.yml
   - refinements\privacy\remove-defaultuser0.yml
   # ----------------------------------------------------------------- #
@@ -207,5 +227,9 @@ features:
   - refinements\quality-of-life\customize-notifications.yml
   - refinements\quality-of-life\customize-taskbar.yml
   - refinements\quality-of-life\set-desktop-preferences.yml
-  - refinements\quality-of-life\activate-classic-photo-viewer.yml
+  - refinements\quality-of-life\create-post-install-folder.yml
+  # - refinements\quality-of-life\activate-classic-photo-viewer.yml
   # ----------------------------------------------------------------- #
+
+  ## End of installation. Set PowerShell execution policy to Windows default
+  - refinements\security\execution-policy\set-execution-policy-restricted.yml

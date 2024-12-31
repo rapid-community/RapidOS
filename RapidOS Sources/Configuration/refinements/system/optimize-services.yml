@@ -3,77 +3,36 @@ title: Windows Services Configuration
 description: >
   This section comprises commands for configuring Windows services to enhance
   system performance, security, and user experience.
-privilege: TrustedInstaller
 actions:
   - !writeStatus: {status: 'Configuring services started'}
-  
-  ## For RapidOS Stable, Speed, and Extreme
-  - !service: {name: 'ALG', operation: change, startup: 4}
+  # ================================================================================================ #
+  # These services unnecessary for typical operation or are rarely used in most environments.        #
+  # By disabling them or setting them to Manual startup, system resources are conserved, potentially #
+  # improving performance.                                                                           #
+  #                                                                                                  #
+  # These changes are safe for most users, as these services are either related to legacy            #
+  # features, specific hardware or software configurations, or are otherwise redundant in            #
+  # the current system setup. They can be re-enabled if specific functionality is required.          #
+  # ================================================================================================ #
+  # Streamlined services
   - !service: {name: 'AppMgmt', operation: change, startup: 4}
-  - !service: {name: 'AppReadiness', operation: change, startup: 4}
   - !service: {name: 'AxInstSV', operation: change, startup: 4}
-  - !service: {name: 'CertPropSvc', operation: change, startup: 4}
-  - !service: {name: 'DoSvc', operation: change, startup: 3}
-  - !service: {name: 'DPS', operation: change, startup: 4}
-  - !service: {name: 'DevQueryBroker', operation: change, startup: 4}
-  - !service: {name: 'fdPHost', operation: change, startup: 4}
-  - !service: {name: 'FDResPub', operation: change, startup: 4}
-  - !service: {name: 'fhsvc', operation: change, startup: 4}
+  - !service: {name: 'DoSvc' , operation: change, startup: 3}
   - !service: {name: 'FontCache', operation: change, startup: 3}
-  - !service: {name: 'GpuEnergyDrv', operation: change, startup: 4}
-  - !service: {name: 'IpxlatCfgSvc', operation: change, startup: 4}
-  - !service: {name: 'irmon', operation: change, startup: 4}
   - !service: {name: 'LanmanServer', operation: change, startup: 3}
-  # - !service: {name: 'lmhosts', operation: change, startup: 4}
-  - !service: {name: 'MapsBroker', operation: change, startup: 4}
-  - !service: {name: 'McpManagementService', operation: change, startup: 4}
-  - !service: {name: 'MSDTC', operation: change, startup: 4}
-  - !service: {name: 'Ndu', operation: change, startup: 4}
-  - !service: {name: 'NvTelemetryContainer', operation: change, startup: 4}
+  - !service: {name: 'MSDTC', operation: change, startup: 3}
   - !service: {name: 'PcaSvc', operation: change, startup: 4}
-  - !service: {name: 'perceptionsimulation', operation: change, startup: 4}
-  - !service: {name: 'PhoneSvc', operation: change, startup: 4}
-  - !service: {name: 'pla', operation: change, startup: 4}
-  - !service: {name: 'PNRPAutoReg', operation: change, startup: 4}
-  - !service: {name: 'PNRPsvc', operation: change, startup: 4}
-  # - !service: {name: 'PrintWorkflowUserSvc', operation: change, startup: 4}
-  - !service: {name: 'P9RdrService', operation: change, startup: 4}
-  - !service: {name: 'p2psvc', operation: change, startup: 4}
-  - !service: {name: 'p2pimsvc', operation: change, startup: 4}
-  - !service: {name: 'QWAVE', operation: change, startup: 4}
-  - !service: {name: 'RasAuto', operation: change, startup: 4}
-  - !service: {name: 'RemoteRegistry', operation: change, startup: 4}
-  - !service: {name: 'RetailDemo', operation: change, startup: 4}
-  - !service: {name: 'RpcLocator', operation: change, startup: 4}
-  - !service: {name: 'SCardSvr', operation: change, startup: 4}
-  - !service: {name: 'ScDeviceEnum', operation: change, startup: 4}
-  - !service: {name: 'SCPolicySvc', operation: change, startup: 4}
   - !service: {name: 'SEMgrSvc', operation: change, startup: 4}
   - !service: {name: 'ShellHWDetection', operation: change, startup: 4}
-  - !service: {name: 'SensorDataService', operation: change, startup: 4}
-  - !service: {name: 'SensorService', operation: change, startup: 4}
-  - !service: {name: 'SensrSvc', operation: change, startup: 4}
-  - !service: {name: 'SessionEnv', operation: change, startup: 4}
-  - !service: {name: 'spectrum', operation: change, startup: 4}
-  - !service: {name: 'SmsRouter', operation: change, startup: 4}
-  - !service: {name: 'SNMPTRAP', operation: change, startup: 4}
   - !service: {name: 'SSDPSRV', operation: change, startup: 4}
   - !service: {name: 'TrkWks', operation: change, startup: 4}
-  - !service: {name: 'UdkUserSvc', operation: change, startup: 4}
-  - !service: {name: 'UmRdpService', operation: change, startup: 4}
-  - !service: {name: 'WalletService', operation: change, startup: 4}
-  - !service: {name: 'WdiServiceHost', operation: change, startup: 4}
-  - !service: {name: 'WdiSystemHost', operation: change, startup: 4}
+  # === Start of UCPD Configuration ===
+  # The AME Wizard automatically disables UCPD using this playbook, but this is here to ensure everything is properly disabled
+  - !service: {name: 'UCPD', operation: change, startup: 4} # Disable it to be able to change reg values for ShellFeedsTaskbarViewMode/IsFeedsAvailable/TaskbarDa/DeviceRegion
+  - !powerShell: {command: "Disable-ScheduledTask -TaskPath '\\Microsoft\\Windows\\AppxDeploymentClient' -TaskName 'UCPD velocity'"}
+  # === End of UCPD Configuration ===
   - !service: {name: 'WEPHOSTSVC', operation: change, startup: 4}
-  - !service: {name: 'Wecsvc', operation: change, startup: 4}
-  - !service: {name: 'WerSvc', operation: change, startup: 4}
-  - !service: {name: 'WManSvc', operation: change, startup: 4}
   - !service: {name: 'WinRM', operation: change, startup: 4}
-  # - !service: {name: 'wisvc', operation: change, startup: 4} # Disabling is pointless, default startup is ‘manual’, might be used (for Windows Insider features).
-  - !service: {name: 'WMPNetworkSvc', operation: change, startup: 4}
-  - !service: {name: 'wmiApSrv', operation: change, startup: 4}
-  - !service: {name: 'WPDBusEnum', operation: change, startup: 4}
-  - !service: {name: 'WpcMonSvc', operation: change, startup: 4}
 
   # Disable telemetry-related services
   - !service: {name: 'AssignedAccessManagerSvc', operation: change, startup: 4}
@@ -81,46 +40,74 @@ actions:
   - !service: {name: 'DiagTrack', operation: change, startup: 4}
   - !service: {name: 'diagsvc', operation: change, startup: 4}
   - !service: {name: 'dmwappushservice', operation: change, startup: 4}
+  - !service: {name: 'NvTelemetryContainer', operation: change, startup: 4}
+  - !service: {name: 'pla', operation: change, startup: 4}
   - !service: {name: 'Telemetry', operation: change, startup: 4}
   - !service: {name: 'TroubleshootingSvc', operation: change, startup: 4}
+  - !service: {name: 'UdkUserSvc', operation: change, startup: 4}
   - !service: {name: 'uhssvc', operation: change, startup: 4}
   - !service: {name: 'WarpJITSvc', operation: change, startup: 4}
+  - !service: {name: 'WdiServiceHost', operation: change, startup: 4}
+  - !service: {name: 'WdiSystemHost', operation: change, startup: 4}
+  - !service: {name: 'Wecsvc', operation: change, startup: 4}
+  - !service: {name: 'WerSvc', operation: change, startup: 4}
   - !service: {name: 'wercplsupport', operation: change, startup: 4}
 
-  # Stop services
-  - !service: {name: 'XblAuthManager', operation: stop}
-  - !service: {name: 'XblGameSave', operation: stop}
-  - !service: {name: 'XboxNetApiSvc', operation: stop}
+  # Streamlined drivers
+  - !service: {name: 'NetBT', operation: change, startup: 4}
+  - !service: {name: 'GpuEnergyDrv', operation: change, startup: 4}
 
-  ## For Rapid Speed and Extreme
-  - !service: {name: 'autotimesvc', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'bam', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'Beep', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'BluetoothUserService', operation: change, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'DusmSvc', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  # - !service: {name: 'embeddedmode', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'OneSyncSvc', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'SharedAccess', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-  - !service: {name: 'WSearch', operation: change, startup: 4, options: ['rapid-speed', 'rapid-gaming']}
-
-  ## For Rapid Extreme only
-  - !service: {name: 'DoSvc', operation: change, startup: 4, option: 'rapid-gaming'}
-  # - !service: {name: 'IKEEXT', operation: change, startup: 4, option: 'rapid-gaming'} # Disabling is pointless, default startup is ‘manual’, might be used (for VPN and Xbox).
-  - !service: {name: 'FontCache', operation: change, startup: 4, option: 'rapid-gaming'}
-  - !service: {name: 'GraphicsPerfSvc', operation: change, startup: 4, option: 'rapid-gaming'}
-  - !service: {name: 'LanmanServer', operation: change, startup: 4, option: 'rapid-gaming'}
-  - !service: {name: 'WpnService', operation: change, startup: 4, option: 'rapid-gaming'}
-  - !service: {name: 'AssignedAccessManagerSvc', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'diagnosticshub.standardcollector.service', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'DiagTrack', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'diagsvc', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'dmwappushservice', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'Telemetry', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'TroubleshootingSvc', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'uhssvc', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'WarpJITSvc', operation: delete, option: 'rapid-gaming'}
-  - !service: {name: 'wercplsupport', operation: delete, option: 'rapid-gaming'}
-
-  ## Fix for printers
+  # Fix for printers
   - !service: {name: 'PrintWorkflowUserSvc', operation: change, startup: 4}
-  - !cmd: {command: 'sc stop Spooler & del /q /f %systemroot%\System32\spool\PRINTERS\*.* & sc start Spooler'}
+  - !cmd: {command: 'sc stop Spooler > nul 2>&1 & del /q /f %systemroot%\System32\spool\PRINTERS\*.* > nul 2>&1 & sc start Spooler > nul 2>&1'}
+
+  # ================================================================================================ #
+  # Revert all changes from previous versions RapidOS to their default startup configuration.        #
+  #                                                                                                  #
+  # Disabling these services is unnecessary because their default setting ensures they only activate #
+  # when required by the system or specific applications. This approach maintains system stability   #
+  # and ensures that resources are only used when needed.                                            #
+  # ================================================================================================ #
+  - !service: {name: 'ALG', operation: change, startup: 3}
+  - !service: {name: 'AppReadiness', operation: change, startup: 3}
+  - !service: {name: 'bam', operation: change, startup: 1}
+  - !service: {name: 'CertPropSvc', operation: change, startup: 3}
+  - !service: {name: 'DevQueryBroker', operation: change, startup: 3}
+  - !service: {name: 'DPS', operation: change, startup: 3}
+  - !service: {name: 'fdPHost', operation: change, startup: 3}
+  - !service: {name: 'FDResPub', operation: change, startup: 3}
+  - !service: {name: 'fhsvc', operation: change, startup: 3}
+  - !service: {name: 'IpxlatCfgSvc', operation: change, startup: 3}
+  - !service: {name: 'irmon', operation: change, startup: 3}
+  - !service: {name: 'MapsBroker', operation: change, startup: 3}
+  - !service: {name: 'McpManagementService', operation: change, startup: 3}
+  - !service: {name: 'MSDTC', operation: change, startup: 3}
+  - !service: {name: 'Ndu', operation: change, startup: 2}
+  - !service: {name: 'perceptionsimulation', operation: change, startup: 3}
+  - !service: {name: 'PhoneSvc', operation: change, startup: 3}
+  - !service: {name: 'PNRPAutoReg', operation: change, startup: 3}
+  - !service: {name: 'PNRPsvc', operation: change, startup: 3}
+  - !service: {name: 'P9RdrService', operation: change, startup: 3}
+  - !service: {name: 'p2psvc', operation: change, startup: 3}
+  - !service: {name: 'p2pimsvc', operation: change, startup: 3}
+  - !service: {name: 'QWAVE', operation: change, startup: 3}
+  - !service: {name: 'RasAuto', operation: change, startup: 3}
+  - !service: {name: 'RetailDemo', operation: change, startup: 3}
+  - !service: {name: 'RpcLocator', operation: change, startup: 3}
+  - !service: {name: 'SCardSvr', operation: change, startup: 3}
+  - !service: {name: 'ScDeviceEnum', operation: change, startup: 3}
+  - !service: {name: 'SCPolicySvc', operation: change, startup: 3}
+  - !service: {name: 'SensorDataService', operation: change, startup: 3}
+  - !service: {name: 'SensorService', operation: change, startup: 3}
+  - !service: {name: 'SensrSvc', operation: change, startup: 3}
+  - !service: {name: 'SessionEnv', operation: change, startup: 3}
+  - !service: {name: 'spectrum', operation: change, startup: 3}
+  - !service: {name: 'SmsRouter', operation: change, startup: 3}
+  - !service: {name: 'SNMPTRAP', operation: change, startup: 3}
+  - !service: {name: 'UmRdpService', operation: change, startup: 3}
+  - !service: {name: 'WalletService', operation: change, startup: 3}
+  - !service: {name: 'WManSvc', operation: change, startup: 3}
+  - !service: {name: 'WMPNetworkSvc', operation: change, startup: 3}
+  - !service: {name: 'wmiApSrv', operation: change, startup: 3}
+  - !service: {name: 'WPDBusEnum', operation: change, startup: 3}
+  - !service: {name: 'WpcMonSvc', operation: change, startup: 3}

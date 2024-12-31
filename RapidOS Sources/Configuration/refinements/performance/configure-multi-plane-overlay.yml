@@ -1,9 +1,11 @@
 ---
-title: Disable MPO
+title: Disable Multi Plane Overlay
 description: >
-  MPO in Windows enhances video playback performance and quality but can cause issues like visual artifacts,
+  MPO in Windows enhances video playback performance and quality, but can cause issues like visual artifacts,
   sync problems with G-Sync/FreeSync, and HDR conflicts. Currently, it's recommended to disable MPO to avoid these problems.
+builds: [ '<26100' ]
 actions:
+  # Disable Multi Plane Overlay
   - !registryValue: 
       path: 'HKLM\SOFTWARE\Microsoft\Windows\Dwm'
       value: 'OverlayTestMode'

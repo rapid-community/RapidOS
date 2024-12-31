@@ -2,25 +2,18 @@
 title: Playbook Installation Initialization
 description: >
   This configuration file prepares playbook for optimal initialization and customization.
-privilege: TrustedInstaller
 actions:
-  # Displays a notification regarding the instability of the Extreme version of RapidOS
-  # - !task: {path: 'rapid\extreme\warning.yml'} Disabled due to beta
-  
-  # Writes status 'Prepairing for installation'
-  - !task: {path: 'additionals\statuses\preparation-status.yml'}
+  - !writeStatus: {status: 'Prepairing for installation'}
 
-  # Stop Windows Update (Not needed anymore, AME Wizard automatically stops Windows updates)
-  # - !service: 
-  #   name: wuauserv 
-  #   operation: stop
+  # Sets passwords to never expire
+  - !run: {exe: 'net', args: 'accounts /maxpwage:unlimited'}
       
   # Copy necessary folders for proper playbook installation
   - !task: {path: 'additionals\copy-folders.yml'}
       
   # Configure Windows notifications settings
   - !registryValue:
-      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
       value: 'Enabled'
       type: REG_DWORD
       data: '0'
@@ -29,43 +22,44 @@ actions:
       value: 'Enabled'
       type: REG_DWORD
       data: '0'
-  - !registryValue:
-      path: 'HKLM\SOFTWARE\Microsoft\Windows Defender Security Center\Notifications'
-      value: 'DisableNotifications'
-      type: REG_DWORD
-      data: '1'
-      option: 'disable-def'
-  - !registryValue:
-      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications'
-      value: 'DisableNotifications'
-      type: REG_DWORD
-      data: '1'
-      option: 'disable-def'
 
-  - !run: {exe: 'timeout', args: '/t 3 /nobreak'}
+  - !service: 
+      name: wuauserv 
+      operation: stop
 
-  # Optimize PowerShell performance and configuration
-  - !writeStatus: {status: 'Optimizing PowerShell'}
+  # Сleans up the Windows component store (WinSxS) by removing outdated system files, superseded updates, and unnecessary components
+  - !run: {exe: 'DISM', args: '/Online /Cleanup-Image /StartComponentCleanup', weight: 200}
 
-  # Disable PowerShell telemetry
+  # Installing WinGet
+  - !powerShell:
+      command: 'powershell -NoP -EP Unrestricted -Command ".\Install-Software.ps1 -MyArgument install_winget"'
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      weight: 200
+
+  # Optimize PowerShell 
   - !task: {path: 'refinements\privacy\disable-powershell-telemetry.yml'}
-
-  # Set 'Unrestrcited' in PowerShell Execution Policy
-  - !registryValue:
-      path: 'HKLM\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell'
-      value: 'ExecutionPolicy'
-      type: REG_SZ
-      data: 'Unrestricted'
-
-  # Run NGEN Optimizer for PowerShell
+  - !task: {path: 'refinements\security\execution-policy\set-execution-policy-unrestricted.yml'}
+  # Installs the latest version of PowerShell to fix issues with the default PowerShell 5.1
+  # https://github.com/PowerShell/PowerShell/issues/18989
+  # https://github.com/PowerShell/PowerShell/issues/16914
+  # https://github.com/microsoft/terminal/issues/16051
+  - !run: 
+      exe: 'winget'
+      args: 'install --id Microsoft.PowerShell --source winget --silent --force --accept-source-agreements --accept-package-agreements'
+      runas: currentUserElevated
+      showOutput: false
+      wait: true
+      weight: 100
   - !powerShell:
       command: '.\NGEN-Optimizer.ps1'
       exeDir: true
-      weight: 300
+      weight: 100
 
   # Configure DISM features
   - !writeStatus: {status: 'Configuring DISM Features'} 
   - !powerShell:
-      command: '.\DISM-Optimizer.ps1'
+      command: '.\Feature-Management.ps1'
       exeDir: true
-      weight: 300
+      weight: 100

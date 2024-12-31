@@ -1,0 +1,9 @@
+---
+title: Disable Telemetry Scheduled Tasks
+description: >
+  This modification disables scheduled tasks associated with Microsoft telemetry by adjusting system settings.
+actions:
+  - !powerShell:
+      command: '.\Configure-DataCollection.ps1 -MyArgument disable_telemetry_scheduled_tasks'
+      exeDir: true
+      weight: 100

@@ -2,32 +2,97 @@
 title: Start Menu Configuration
 description: >
   Configures and optimizes the Start Menu layout and functionality.
-privilege: TrustedInstaller
 actions:
-  # Close StartMenuExperienceHost process and clean up start menu pins
-  - !writeStatus: {status: 'Cleaning up Start Menu', option: 'modify-ui'}
-  - !taskKill: {name: 'StartMenuExperienceHost', ignoreErrors: true, option: 'modify-ui'}
-  - !appx: {name: '*StartMenuExperienceHost*', operation: clearCache, option: 'modify-ui'}
-  - !taskKill: {name: 'explorer', ignoreErrors: true, option: 'modify-ui'}
-  - !powerShell:
-      command: '.\StartMenu-Cleanup.ps1'
-      exeDir: true
-      weight: 300
+  # Configure Start Menu pins
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'ConfigureStartPins'
+      type: REG_SZ
+      data: '{"pinnedList":[{"packagedAppId":"Microsoft.WindowsStore_8wekyb3d8bbwe!App"},{"packagedAppId":"windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},{"packagedAppId":"Microsoft.SecHealthUI_8wekyb3d8bbwe!SecHealthUI"},{"packagedAppId":"Microsoft.Paint_8wekyb3d8bbwe!App"},{"packagedAppId":"Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"},{"desktopAppLink":"%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"}]}'
+      option: 'modify-ui'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\providers\B5292708-1619-419B-9923-E5D9F3925E71\default\Device\Start'
+      value: 'ConfigureStartPins'
+      type: REG_SZ
+      data: '{"pinnedList":[{"packagedAppId":"Microsoft.WindowsStore_8wekyb3d8bbwe!App"},{"packagedAppId":"windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},{"packagedAppId":"Microsoft.SecHealthUI_8wekyb3d8bbwe!SecHealthUI"},{"packagedAppId":"Microsoft.Paint_8wekyb3d8bbwe!App"},{"packagedAppId":"Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"},{"desktopAppLink":"%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"}]}'
+      option: 'modify-ui'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\providers\B5292708-1619-419B-9923-E5D9F3925E71\default\Device\Start'
+      value: 'ConfigureStartPins_LastWrite'
+      type: REG_DWORD
+      data: '1'
+      option: 'modify-ui'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'ConfigureStartPins_ProviderSet'
+      type: REG_DWORD
+      data: '1'
+      option: 'modify-ui'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'ConfigureStartPins_WinningProvider'
+      type: REG_SZ
+      data: 'B5292708-1619-419B-9923-E5D9F3925E71'
       option: 'modify-ui'
 
-  # Do not display recent and frequently used items
+  # Close StartMenuExperienceHost process and clean up start menu pins (if selected in Custom Features)
+  - !writeStatus: {status: 'Configuring Start Menu'}
+  - !taskKill: {name: 'StartMenuExperienceHost', ignoreErrors: true, option: 'modify-ui'}
+  - !taskKill: {name: 'explorer', ignoreErrors: true}
+  - !powerShell:
+      command: '.\StartMenu-Cleanup.ps1'
+      option: 'modify-ui'
+      exeDir: true
+      wait: true
+      weight: 200
+  - !appx: {name: '*StartMenuExperienceHost*', operation: clearCache, option: 'modify-ui'}
+
+  # Do not display recent and frequently used items (disable recommendations)
+  - !cmd: 
+      exeDir: true
+      command: 'call "%WinDir%\RapidScripts\UtilityScripts\Recommendations\Schedule_RunHide.cmd"' # https://bit.ly/4f28mkW
+      runas: currentUserElevated
+      builds: [ '>=22000' ]
   - !registryValue: 
       path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer'
       value: 'ShowRecent'
       type: REG_DWORD
       data: '0'
-      option: 'modify-ui'
   - !registryValue: 
       path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer'
       value: 'ShowFrequent'
       type: REG_DWORD
       data: '0'
-      option: 'modify-ui'
+  - !registryValue: 
+      path: 'HKCU\Software\Policies\Microsoft\Windows\Explorer'
+      value: 'HideRecentlyAddedApps'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'NoStartMenuMFUprogramsList'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      value: 'ShowOrHideMostUsedApps'
+      type: REG_DWORD
+      data: '2'
+  - !registryValue:
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'Start_TrackProgs'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'NoStartMenuMorePrograms'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'NoStartMenuMorePrograms'
+      type: REG_DWORD
+      data: '0'
 
   # Ensure more pins than recommendations
   - !registryValue: 
@@ -35,22 +100,17 @@ actions:
       value: 'Start_Layout'
       type: REG_DWORD
       data: '1'
-      option: 'modify-ui'
 
-  # Do not track recently opened documents
+  # Do not track recently opened documents (Recently opened items in Start, Jump Lists, and File Explorer)
   - !registryValue: 
       path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
       value: 'Start_TrackDocs'
       type: REG_DWORD
       data: '0'
-      option: 'modify-ui'
-
-  # Configure Start Menu pins(taken from ReviOS)
-  - !registryValue:
-      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
-      value: 'ConfigureStartPins'
-      type: REG_SZ
-      data: '{"pinnedList":[{"packagedAppId":"Microsoft.WindowsStore_8wekyb3d8bbwe!App"},{"packagedAppId":"windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel"},{"packagedAppId":"Microsoft.WindowsNotepad_8wekyb3d8bbwe!App"},{"packagedAppId":"Microsoft.Paint_8wekyb3d8bbwe!App"},{"desktopAppLink":"%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\File Explorer.lnk"},{"packagedAppId":"Microsoft.WindowsCalculator_8wekyb3d8bbwe!App"}]}'
-      option: 'modify-ui'
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'NoRecentDocsHistory'
+      type: REG_DWORD
+      data: '0'
   
-  - !run: {exe: 'timeout', args: '/t 3 /nobreak', option: 'modify-ui'}
+  - !run: {exe: 'timeout', args: '/t 3 /nobreak'}

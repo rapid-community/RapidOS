@@ -1,0 +1,9 @@
+---
+title: RapidOS Toolbox shortcut
+description: >
+  Script to create RapidOS Toolbox shortcuts on desktop and in the Start menu.
+actions:
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument rapidos_toolbox'
+      exeDir: true
+      weight: 100

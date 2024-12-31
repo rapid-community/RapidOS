@@ -20,237 +20,133 @@ actions:
 
   ## Removing AppX Packages
   # Remove Clipchamp app
-  - !writeStatus: {status: 'Removing Clipchamp...'}
+  - !writeStatus: {status: 'Removing Clipchamp'}
   - !appx: {name: '*Clipchamp.Clipchamp*', type: family}
 
   # Remove Disney app
-  - !writeStatus: {status: 'Removing Disney..'}
+  - !writeStatus: {status: 'Removing Disney'}
   - !appx: {name: '*Disney*', type: family}
   
   # Remove Yandex Music
-  - !writeStatus: {status: 'Removing Yandex Music(RU)...'}
+  - !writeStatus: {status: 'Removing Yandex Music'}
   - !appx: {name: '*Yandex.Music*', type: family}
 
   # Remove Spotify
-  - !writeStatus: {status: 'Removing Spotify...'}
+  - !writeStatus: {status: 'Removing Spotify'}
   - !appx: {name: '*SpotifyAB.SpotifyMusic*', type: family}
 
   # Remove Cortana
-  - !writeStatus: {status: 'Removing Cortana...'}
+  - !writeStatus: {status: 'Removing Cortana'}
   - !appx: {name: '*Microsoft.549981C3F5F10*', type: family}
 
-  # Remove advertising components used by various Microsoft apps
-  - !appx: {name: '*Microsoft.Advertising*', type: family}
-
-  # Remove AV1 Video Extension
-  # - !appx: {name: '*Microsoft.AV1VideoExtension*', type: family}
-
-  # Remove AVC Encoder Extension
-  # - !appx: {name: '*Microsoft.AVCEncoderVideoExtension*', type: family}
-
   # Remove Bing News app
-  - !writeStatus: {status: 'Removing Bing News...'}
+  - !writeStatus: {status: 'Removing Bing News'}
   - !appx: {name: '*Microsoft.BingNews*', type: family}
 
   # Remove Bing Search
-  - !writeStatus: {status: 'Removing Bing Search...'}
+  - !writeStatus: {status: 'Removing Bing Search'}
   - !appx: {name: '*Microsoft.BingSearch*', type: family}
 
   # Remove Bing Weather app
-  - !writeStatus: {status: 'Removing Bing Weather...'}
+  - !writeStatus: {status: 'Removing Bing Weather'}
   - !appx: {name: '*Microsoft.BingWeather*', type: family}
   
   # Remove Family
-  - !writeStatus: {status: 'Removing Family...'}
+  - !writeStatus: {status: 'Removing Family'}
   - !appx: {name: '*MicrosoftCorporationII.MicrosoftFamily*', type: family}
 
-  # Remove Desktop App Installer
-  # - !appx: {name: '*Microsoft.DesktopAppInstaller*', type: family}
+  # Remove Quick Assist
+  - !writeStatus: {status: 'Removing Quick Assist'}
+  - !appx: {name: '*MicrosoftCorporationII.QuickAssist*', type: family}
 
   # Remove Get Help app
-  - !writeStatus: {status: 'Removing Get Help...'}
+  - !writeStatus: {status: 'Removing Get Help'}
   - !appx: {name: '*Microsoft.GetHelp*', type: family}
 
   # Remove Get Started app
+  - !writeStatus: {status: 'Removing Get Started'}
   - !appx: {name: '*Microsoft.Getstarted*', type: family}
-
-  # Remove HEIF Image Extension
-  # - !appx: {name: '*Microsoft.HEIFImageExtension*', type: family}
-
-  # Remove HEVC Video Extension
-  # - !appx: {name: '*Microsoft.HEVCVideoExtension*', type: family}
   
   # Remove Your Phone
-  - !writeStatus: {status: 'Removing Your Phone...'}
+  - !writeStatus: {status: 'Removing Your Phone', option: 'remove-your-phone'}
   - !appx: {name: '*Microsoft.YourPhone*', type: family, option: 'remove-your-phone'}  
-
-  # Remove 3D Viewer
-  - !writeStatus: {status: 'Removing 3DViewer...'}
-  - !appx: {name: '*Microsoft.Microsoft3DViewer*', type: family}
-
-  # Remove MPEG2 Video Extension
-  # - !appx: {name: '*Microsoft.MPEG2VideoExtension*', type: family}
-
-  # Remove Power BI
-  - !appx: {name: '*Microsoft.MicrosoftPowerBIForWindows*', type: family}
+  - !appx: {name: '*MicrosoftWindows.CrossDevice*', type: family, option: 'remove-your-phone'}
 
   # Remove Microsoft Solitaire Collection
-  - !writeStatus: {status: 'Removing Solitaire Collection...'}
+  - !writeStatus: {status: 'Removing Solitaire Collection'}
   - !appx: {name: '*Microsoft.MicrosoftSolitaireCollection*', type: family}
 
-  # Remove Sticky Notes
-  - !writeStatus: {status: 'Removing Sticky Notes...'}
-  - !appx: {name: '*Microsoft.MicrosoftStickyNotes*', type: family}
-
   # Remove Microsoft Teams
-  - !writeStatus: {status: 'Removing Microsoft Teams...'}
+  - !writeStatus: {status: 'Removing Microsoft Teams'}
   - !taskKill: {name: '*teams*', ignoreErrors: true}
   - !appx: {name: '*Microsoft.MicrosoftTeamsforSurfaceHub*', type: family}
   - !appx: {name: '*MicrosoftTeams*', type: family}
   - !appx: {name: '*MSTeams*', type: family}
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications', value: 'ConfigureChatAutoInstall', type: REG_DWORD, data: '0'}
 
-  # Remove Mixed Reality Portal
-  - !writeStatus: {status: 'Removing Mixed Reality...'}
-  - !appx: {name: '*Microsoft.MixedReality.Portal*', type: family}
-
-  # Remove MSPaint(Paint 3D)
-  - !writeStatus: {status: 'Removing Paint 3D...'}
-  - !appx: {name: '*Microsoft.MSPaint*', type: family, weight: 10}
-
   ## Microsoft Office apps
-  - !writeStatus: {status: 'Removing Office-related...'}
+  - !writeStatus: {status: 'Removing Office-related', option: 'remove-office-apps'}
   # Remove Office Hub
-  - !appx: {name: '*Microsoft.MicrosoftOfficeHub*', type: family}
+  - !appx: {name: '*Microsoft.MicrosoftOfficeHub*', type: family, option: 'remove-office-apps'}
   # Remove Excel
-  - !appx: {name: '*Microsoft.Office.Excel*', type: family}
+  - !appx: {name: '*Microsoft.Office.Excel*', type: family, option: 'remove-office-apps'}
   # Remove OneNote
-  - !appx: {name: '*Microsoft.Office.OneNote*', type: family}
+  - !appx: {name: '*Microsoft.Office.OneNote*', type: family, option: 'remove-office-apps'}
   # Remove PowerPoint
-  - !appx: {name: '*Microsoft.Office.PowerPoint*', type: family}
+  - !appx: {name: '*Microsoft.Office.PowerPoint*', type: family, option: 'remove-office-apps'}
   # Remove Word
-  - !appx: {name: '*Microsoft.Office.Word*', type: family}
+  - !appx: {name: '*Microsoft.Office.Word*', type: family, option: 'remove-office-apps'}
   # Remove Outlook
-  - !appx: {name: '*Microsoft.OutlookForWindows*', type: family, option: 'remove-outlook'}
-  - !appx: {name: '*OutlookPWA*', type: family, option: 'remove-outlook'}
+  - !appx: {name: '*OutlookPWA*', type: family, option: 'remove-office-apps'}    
+  - !powerShell: {exeDir: true, command: '.\MultiTool.ps1 -MyArgument remove_outlook', runas: currentUserElevated, option: 'remove-office-apps'} # https://github.com/matej137/OutlookRemover
 
   # Remove People app
-  - !writeStatus: {status: 'Removing People app...'}
+  - !writeStatus: {status: 'Removing People app'}
   - !appx: {name: '*Microsoft.People*', type: family}
+  - !appx: {name: '*Microsoft.Windows.PeopleExperienceHost*', type: family}
+
+  # Remove Skype app
+  - !writeStatus: {status: 'Removing Skype'}
+  - !appx: {name: '*Microsoft.SkypeApp*', type: family}
+
+  # Remove To Do app
+  - !writeStatus: {status: 'Removing To Do'}
+  - !appx: {name: '*Microsoft.Todos*', type: family}
+
+  # Remove Wallet
+  - !writeStatus: {status: 'Removing Wallet'}
+  - !appx: {name: '*Microsoft.Wallet*', type: family}
+
+  # Remove Maps app
+  - !writeStatus: {status: 'Removing Maps'}
+  - !appx: {name: '*Microsoft.WindowsMaps*', type: family}
+
+  # Remove Out-of-Box Experience
+  - !writeStatus: {status: 'Removing OOBE-related'}
+  - !appx: {name: '*Microsoft.Windows.OOBENetworkCaptivePortal*', type: family}
+  - !appx: {name: '*Microsoft.Windows.OOBENetworkConnectionFlow*', type: family}
+
+  # Remove Parental Controls
+  - !writeStatus: {status: 'Removing Parental Controls'}
+  - !appx: {name: '*Microsoft.Windows.ParentalControls*', type: family}
+
+  # Remove Feedback Hub
+  - !writeStatus: {status: 'Removing Feedback Hub'}
+  - !appx: {name: '*Microsoft.WindowsFeedbackHub*', type: family}
+
+  # Remove Mail app
+  - !writeStatus: {status: 'Removing Mail'}
+  - !appx: {name: '*MicrosoftCorporationII.MailforSurfaceHub*', type: family}
+  - !appx: {name: '*microsoft.windowscommunicationsapps*', type: family}
+
+  # Remove advertising components used by various Microsoft apps
+  - !appx: {name: '*Microsoft.Advertising*', type: family}
 
   # Remove Power Automate Desktop
   - !appx: {name: '*Microsoft.PowerAutomateDesktop*', type: family}
 
-  # Remove Skype app
-  - !writeStatus: {status: 'Removing Skype...'}
-  - !appx: {name: '*Microsoft.SkypeApp*', type: family}
-
-  # Remove To Do app
-  - !writeStatus: {status: 'Removing To Do...'}
-  - !appx: {name: '*Microsoft.Todos*', type: family}
-
-  # Remove VP9 Video Extensions
-  # - !appx: {name: '*Microsoft.VP9VideoExtensions*', type: family}
-
-  # Remove Wallet
-  - !writeStatus: {status: 'Removing Wallet...'}
-  - !appx: {name: '*Microsoft.Wallet*', type: family}
-
-  # Remove Web Media Extensions
-  # - !appx: {name: '*Microsoft.WebMediaExtensions*', type: family}
-
-  # Remove Webp Image Extension
-  # - !appx: {name: '*Microsoft.WebpImageExtension*', type: family}
-
-  # Remove Whiteboard
-  - !appx: {name: '*Microsoft.Whiteboard*', type: family}
-
-  # Remove Windows Apprep ChxApp(breaks account control (UAC), so it's commented out)
-  # - !appx: {name: '*Microsoft.Windows.Apprep.ChxApp*', type: family}
-
-  # Remove Capture Picker
-  - !appx: {name: '*Microsoft.Windows.CapturePicker*', type: family}
-
-  # Remove Dev Home
-  - !writeStatus: {status: 'Removing Dev Home...'}
-  - !appx: {name: '*Microsoft.Windows.DevHome*', type: family, option: 'remove-devhome'}
-
-  # Remove Maps app
-  - !writeStatus: {status: 'Removing Maps...'}
-  - !appx: {name: '*Microsoft.WindowsMaps*', type: family}
-
-  # Remove Out-of-Box Experience
-  - !writeStatus: {status: 'Removing OOBE-related...'}
-  # Remove OOBE Captive Portal
-  - !appx: {name: '*Microsoft.Windows.OOBENetworkCaptivePortal*', type: family}
-  # Remove OOBE Network Connection Flow
-  - !appx: {name: '*Microsoft.Windows.OOBENetworkConnectionFlow*', type: family}
-
-  # Remove People Experience Host
-  - !appx: {name: '*Microsoft.Windows.PeopleExperienceHost*', type: family}
-
-  # Remove Photos app
-  # - !appx: {name: '*Microsoft.Windows.Photos*', type: family}
-
-  # Remove Parental Controls
-  - !writeStatus: {status: 'Removing Parental Controls...'}
-  - !appx: {name: '*Microsoft.Windows.ParentalControls*', type: family}
-  
-  # Remove HEIF Image Extension
-  # - !appx: {name: '*Microsoft.RawImageExtension*', type: family}
-
-  # Remove Sound Recorder app
-  - !writeStatus: {status: 'Removing Sound Recorder...'}
-  - !appx: {name: '*Microsoft.WindowsSoundRecorder*', type: family}
-  - !appx: {name: '*Microsoft.Windows.SoundRecorder*', type: family}
-
-  # Remove Alarms app
-  - !writeStatus: {status: 'Removing Alarms...'}
-  - !appx: {name: '*Microsoft.WindowsAlarms*', type: family}
-
-  # Remove Camera app
-  - !writeStatus: {status: 'Removing Camera...'}
-  - !appx: {name: '*Microsoft.WindowsCamera*', type: family}
-
-  # Remove Feedback Hub
-  - !writeStatus: {status: 'Removing Feedback Hub...'}
-  - !appx: {name: '*Microsoft.WindowsFeedbackHub*', type: family}
-
-  # Remove Mail app
-  - !appx: {name: '*MicrosoftCorporationII.MailforSurfaceHub*', type: family, weight: 10}
-  - !appx: {name: '*microsoft.windowscommunicationsapps*', type: family, weight: 10}
-
-  # Remove Web Experience
-  - !appx: {name: '*MicrosoftWindows.Client.WebExperience*', type: family}
-
-  # Remove Cross Device components
-  - !appx: {name: '*MicrosoftWindows.CrossDevice*', type: family, option: 'remove-your-phone'}
-
-  # Remove Undocked Dev Kit
-  - !appx: {name: '*MicrosoftWindows.UndockedDevKit*', type: family}
-
-  # Remove Secure Assessment Browser
-  - !appx: {name: '*SecureAssessmentBrowser*', type: family}
-
-  ## Remove AI-related
-  # Remove Recall
-  - !writeStatus: {status: 'Removing Recall...', option: 'remove-ai'}
-  - !appx: {name: '*MicrosoftWindows.Client.AIX*', type: family, option: 'remove-ai'}
-  - !appx: {name: '*MicrosoftWindows.Client.Photon*', type: family, option: 'remove-ai'}
-  
-  # Remove Copilot
-  - !writeStatus: {status: 'Removing Copilot...', option: 'remove-ai'}
-  - !appx: {name: '*Microsoft.Copilot*', type: family, option: 'remove-ai'}
-  - !appx: {name: '*MicrosoftWindows.Client.CoPilot*', type: family, option: 'remove-ai'}
-  - !appx: {name: '*Microsoft.Windows.Ai.Copilot.Provider*', type: family, option: 'remove-ai'}
-  
-  # Remove Recall screenshots
-  - !powerShell:
-      command: 'Remove-Item -Path "$env:LOCALAPPDATA\CoreAIPlatform*" -Force -Recurse -ErrorAction SilentlyContinue'
-      option: 'remove-ai'
-
   ## Uninstalling Xbox components if they were selected in the AME Wizard
-  - !writeStatus: {status: 'Removing Xbox components...', option: 'remove-xbox'}
+  - !writeStatus: {status: 'Removing Xbox components', option: 'remove-xbox'}
   # Xbox app
   - !appx: {name: '*Microsoft.Xbox*', type: family, option: 'remove-xbox'}
   - !appx: {name: '*Microsoft.XboxApp*', type: family, option: 'remove-xbox'}
@@ -263,10 +159,100 @@ actions:
   # Game Bar
   - !appx: {name: '*Microsoft.XboxGameOverlay*', type: family, option: 'remove-xbox'}
   - !appx: {name: '*Microsoft.XboxGamingOverlay*', type: family, option: 'remove-xbox'}
-  - !task: {path: 'refinements\system\customization\configure-xbox-gamebar.yml'}
 
   ## Additional AppX operations
-  - !writeStatus: {status: 'Clearing AppX...'}
+  - !writeStatus: {status: 'Clearing AppX'}
   - !appx: {name: '*Microsoft.Windows.SecHealthUI*', operation: clearCache}
   - !appx: {name: '*MicrosoftWindows.Client.CBS*', operation: clearCache}
   - !appx: {name: '*Microsoft.Windows.Search*', operation: clearCache}
+
+
+  ### Deprecated
+
+  # Remove AV1 Video Extension
+  # - !appx: {name: '*Microsoft.AV1VideoExtension*', type: family}
+
+  # Remove AVC Encoder Extension
+  # - !appx: {name: '*Microsoft.AVCEncoderVideoExtension*', type: family}
+
+  # Remove HEIF Image Extension
+  # - !appx: {name: '*Microsoft.HEIFImageExtension*', type: family}
+
+  # Remove HEVC Video Extension
+  # - !appx: {name: '*Microsoft.HEVCVideoExtension*', type: family}
+
+  # Remove MPEG2 Video Extension
+  # - !appx: {name: '*Microsoft.MPEG2VideoExtension*', type: family}
+
+  # Remove VP9 Video Extensions
+  # - !appx: {name: '*Microsoft.VP9VideoExtensions*', type: family}
+
+  # Remove Web Media Extensions
+  # - !appx: {name: '*Microsoft.WebMediaExtensions*', type: family}
+
+  # Remove Webp Image Extension
+  # - !appx: {name: '*Microsoft.WebpImageExtension*', type: family}
+
+  # Remove Desktop App Installer
+  # - !appx: {name: '*Microsoft.DesktopAppInstaller*', type: family}
+
+  # Remove 3D Viewer
+  # - !writeStatus: {status: 'Removing 3DViewer'}
+  # - !appx: {name: '*Microsoft.Microsoft3DViewer*', type: family}
+
+  # Remove Sticky Notes
+  # - !writeStatus: {status: 'Removing Sticky Notes'}
+  # - !appx: {name: '*Microsoft.MicrosoftStickyNotes*', type: family}
+
+  # Remove Mixed Reality Portal
+  # - !writeStatus: {status: 'Removing Mixed Reality'}
+  # - !appx: {name: '*Microsoft.MixedReality.Portal*', type: family}
+
+  # Remove MSPaint (Paint 3D)
+  # - !writeStatus: {status: 'Removing Paint 3D'}
+  # - !appx: {name: '*Microsoft.MSPaint*', type: family}
+
+  # Remove Windows Apprep ChxApp (breaks account control (UAC), so it's commented out)
+  # - !appx: {name: '*Microsoft.Windows.Apprep.ChxApp*', type: family}
+
+  # Remove Dev Home
+  # - !writeStatus: {status: 'Removing Dev Home'}
+  # - !appx: {name: '*Microsoft.Windows.DevHome*', type: family}
+
+  # Remove Photos app
+  # - !writeStatus: {status: 'Removing Photos'}
+  # - !appx: {name: '*Microsoft.Windows.Photos*', type: family}
+
+  # Remove Sound Recorder app
+  # - !writeStatus: {status: 'Removing Sound Recorder'}
+  # - !appx: {name: '*Microsoft.WindowsSoundRecorder*', type: family}
+  # - !appx: {name: '*Microsoft.Windows.SoundRecorder*', type: family}
+
+  # Remove Alarms app
+  # - !writeStatus: {status: 'Removing Alarms'}
+  # - !appx: {name: '*Microsoft.WindowsAlarms*', type: family}
+
+  # Remove Camera app
+  # - !writeStatus: {status: 'Removing Camera'}
+  # - !appx: {name: '*Microsoft.WindowsCamera*', type: family}
+
+  # Remove Widgets
+  # - !writeStatus: {status: 'Removing Widgets'}
+  # - !appx: {name: '*MicrosoftWindows.Client.WebExperience*', type: family}
+
+  ## Remove AI-related
+  # Remove Recall
+  # - !writeStatus: {status: 'Removing Recall', option: 'remove-ai'}
+  # - !appx: {name: '*MicrosoftWindows.Client.AIX*', type: family, option: 'remove-ai'}
+  # - !appx: {name: '*MicrosoftWindows.Client.Photon*', type: family, option: 'remove-ai'}
+  
+  # Remove Copilot
+  # - !writeStatus: {status: 'Removing Copilot', option: 'remove-ai'}
+  # - !appx: {name: '*Microsoft.Copilot*', type: family, option: 'remove-ai'}
+  # - !appx: {name: '*MicrosoftWindows.Client.CoPilot*', type: family, option: 'remove-ai'}
+  # - !appx: {name: '*Microsoft.Windows.Ai.Copilot.Provider*', type: family, option: 'remove-ai'}
+  
+  # Remove Recall screenshots
+  # - !powerShell:
+  #     command: 'Remove-Item -Path "$env:LOCALAPPDATA\CoreAIPlatform*" -Force -Recurse -ErrorAction SilentlyContinue'
+  #     option: 'remove-ai'

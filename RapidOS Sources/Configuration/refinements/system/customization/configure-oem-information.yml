@@ -3,7 +3,28 @@ title: RapidOS OEM Information
 description: >
   This script facilitates setting OEM information for RapidOS.
 actions:
-  - !powerShell:
-      command: '.\MultiTool.ps1 -MyArgument set_rapidos_information'
-      exeDir: true
-      weight: 100
+  - !cmd:
+      command: |
+        bcdedit /set description "RapidOS 10 22H2" && reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "RapidOS 10 22H2" /f && reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "RapidOS 10 22H2" /f
+      builds: [ '19045' ] # For build 19045 (Windows 10 22H2)
+
+  - !cmd:
+      command: |
+        bcdedit /set description "RapidOS 11 22H2" && reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "RapidOS 11 22H2" /f && reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "RapidOS 11 22H2" /f
+      builds: [ '22621' ] # For build 22621 (Windows 11 22H2)
+
+  - !cmd:
+      command: |
+        bcdedit /set description "RapidOS 11 23H2" && reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "RapidOS 11 23H2" /f && reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "RapidOS 11 23H2" /f
+      builds: [ '22631' ] # For build 22631 (Windows 11 23H2)
+
+  - !cmd:
+      command: |
+        bcdedit /set description "RapidOS 11 24H2" && reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v Model /t REG_SZ /d "RapidOS 11 24H2" /f && reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v RegisteredOrganization /t REG_SZ /d "RapidOS 11 24H2" /f
+      builds: [ '26100' ] # For build 26100 (Windows 11 24H2)
+
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation'
+      value: 'SupportURL'
+      type: REG_SZ
+      data: 'https://dsc.gg/rapid-community' # Set support URL for all builds
