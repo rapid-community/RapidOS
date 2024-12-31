@@ -28,7 +28,7 @@ rem Disable Aero Peek
 reg add "HKCU\Software\Microsoft\Windows\DWM" /v EnableAeroPeek /t REG_DWORD /d 0 /f > nul 2>&1
 
 rem Enable ClearType font smoothing
-reg add "HKCU\Control Panel\Desktop" /v FontSmoothing /t REG_DWORD /d 2 /f > nul 2>&1
+:: reg add "HKCU\Control Panel\Desktop" /v FontSmoothing /t REG_DWORD /d 2 /f > nul 2>&1
 
 rem Set visual effects and performance balance
 reg add "HKCU\Control Panel\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f > nul 2>&1

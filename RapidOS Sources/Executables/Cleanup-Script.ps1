@@ -76,7 +76,7 @@ function Invoke-CustomFileCleanup {
     $systemTempPaths = @(
         "$env:WinDir\ff*.tmp",
         "$env:WinDir\History\*",
-        "$env:WinDir\Cookies\*",
+        # "$env:WinDir\Cookies\*",
         "$env:WinDir\CbsTemp\*",
         "$env:WinDir\System32\SleepStudy\*",
         "$env:LocalAppData\Microsoft\Windows\INetCache\IE\*",

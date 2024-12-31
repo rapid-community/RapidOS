@@ -219,7 +219,7 @@ function Set-VisualEffects {
     Set-RegistryValue -Path 'HKCU:\Software\Microsoft\Windows\DWM' -Name 'EnableAeroPeek' -Type DWORD -Value 0  
 
     # Enable ClearType font smoothing
-    Set-RegistryValue -Path 'HKCU:\Control Panel\Desktop' -Name 'FontSmoothing' -Type DWORD -Value 2  
+    # Set-RegistryValue -Path 'HKCU:\Control Panel\Desktop' -Name 'FontSmoothing' -Type DWORD -Value 2  
 
     # Set visual effects and performance balance
     reg add "HKCU\Control Panel\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f  
