@@ -3,8 +3,8 @@ title: Autologgers
 description: >
   These configurations modify Windows Autologger settings, which control various system-level event logging mechanisms.
 actions:
-  - !cmd:
-      command: 'RapidScripts\MinSudo.exe -TI -P -NoL powershell.exe -File "MultiTool.ps1" -MyArgument configure_autologgers'
+  - !powerShell:
+      command: '.\MultiTool.ps1 -MyArgument configure_autologgers'
       exeDir: true
       wait: true
       weight: 100

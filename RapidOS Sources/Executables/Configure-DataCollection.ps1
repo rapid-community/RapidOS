@@ -30,101 +30,66 @@ function Disable-DefenderDataCollection {
     )
 
     if ($DisableBlockAtFirstSight) {
-        # Parameters for all function
-        $propertyName = 'DisableBlockAtFirstSeen'
-        $value = [int]$true
-
-        # Check if the setting is already applied
-        $mpPreference = 'Get-MpPreference -ErrorAction Ignore'
-        if ($mpPreference.$propertyName -eq $value) {
-            Write-Host "Skipping. Already found '$propertyName' with '$value' value"
-            return
-        }
-
-        # Disable 'Block at First Sight'
-        try {
-            Set-MpPreference -Force -DisableBlockAtFirstSeen $value -ErrorAction Stop
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet' -Name 'DisableBlockAtFirstSeen' -Type DWord -Value 1
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows Defender\SpyNet' -Name 'DisableBlockAtFirstSeen' -Type DWord -Value 1
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows Defender\Features' -Name $propertyName -Type DWord -Value $value
-            Write-Host "Successfully disabled '$propertyName'"
-        }
-        catch {
-            Write-Host "Failed to configure '$propertyName': $_"
+        if (Get-Service -Name WinDefend -ErrorAction SilentlyContinue) {
+            try {
+                Set-MpPreference -Force -DisableBlockAtFirstSeen 1
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet' -Name 'DisableBlockAtFirstSeen' -Type DWord -Value 1
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows Defender\SpyNet' -Name 'DisableBlockAtFirstSeen' -Type DWord -Value 1
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows Defender\Features' -Name 'DisableBlockAtFirstSeen' -Type DWord -Value 1
+                Write-Host "Successfully disabled 'Block at First Sight'"
+            }
+            catch {
+                Write-Host "Failed to configure 'Block at First Sight': $_"
+            }
+        } else {
+            Write-Host "Windows Defender service is not running. Skipping 'Block at First Sight'."
         }
     }
 
     if ($DisableExtendedCloudCheck) {
-        # Parameters for all function
-        $propertyName = 'CloudExtendedTimeout'
-        $value = 50
-
-        # Check if the setting is already applied
-        $mpPreference = 'Get-MpPreference -ErrorAction Ignore'
-        if ($mpPreference.$propertyName -eq $value) {
-            Write-Host "Skipping. Already found '$propertyName' with '$value' value"
-            return
-        }
-
-        # Disable 'Cloud Extended Timeout'
-        try {
-            Set-MpPreference -Force -CloudExtendedTimeout $value -ErrorAction Stop
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine' -Name 'MpBafsExtendedTimeout' -Type DWord -Value $value
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows Defender\MpEngine' -Name 'MpBafsExtendedTimeout' -Type DWord -Value $value
-            Write-Host "Successfully disabled '$propertyName'"
-        }
-        catch {
-            Write-Host "Failed to configure '$propertyName': $_"
+        if (Get-Service -Name WinDefend -ErrorAction SilentlyContinue) {
+            try {
+                Set-MpPreference -Force -CloudExtendedTimeout 50
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine' -Name 'MpBafsExtendedTimeout' -Type DWord -Value 50
+                Write-Host "Successfully disabled 'Extended Cloud Check'"
+            }
+            catch {
+                Write-Host "Failed to configure 'Extended Cloud Check': $_"
+            }
+        } else {
+            Write-Host "Windows Defender service is not running. Skipping 'Extended Cloud Check'."
         }
     }
 
     if ($DisableAggressiveCloudProtection) {
-        # Parameters for all function
-        $propertyName = 'CloudBlockLevel'
-        $value = '0'
-
-        # Check if the setting is already applied
-        $mpPreference = 'Get-MpPreference -ErrorAction Ignore'
-        if ($mpPreference.$propertyName -eq $value) {
-            Write-Host "Skipping. Already found '$propertyName' with '$value' value"
-            return
-        }
-
-        # Disable CloudBlockLevel (Aggressive Cloud Protection)
-        try {
-            Set-MpPreference -Force -CloudBlockLevel $value -ErrorAction Stop
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine' -Name 'MpCloudBlockLevel' -Type DWord -Value $value
-            Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows Defender\MpEngine' -Name 'MpCloudBlockLevel' -Type DWord -Value 2
-            Write-Host "Successfully disabled '$propertyName'"
-        }
-        catch {
-            Write-Host "Failed to configure '$propertyName': $_"
+        if (Get-Service -Name WinDefend -ErrorAction SilentlyContinue) {
+            try {
+                Set-MpPreference -Force -CloudBlockLevel 0
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine' -Name 'MpCloudBlockLevel' -Type DWord -Value 2
+                Write-Host "Successfully disabled 'Aggressive Cloud Protection'"
+            }
+            catch {
+                Write-Host "Failed to configure 'Aggressive Cloud Protection': $_"
+            }
+        } else {
+            Write-Host "Windows Defender service is not running. Skipping 'Aggressive Cloud Protection'."
         }
     }
 
     if ($DisableCloudProtection) {
-        # Parameters for all function
-        $propertyName = 'MAPSReporting'
-        $value = '0'
-
-        # Check if the setting is already applied
-        $mpPreference = 'Get-MpPreference -ErrorAction Ignore'
-        if ($mpPreference.$propertyName -eq $value) {
-            Write-Host "Skipping. Already found '$propertyName' with '$value' value"
-            return
+        if (Get-Service -Name WinDefend -ErrorAction SilentlyContinue) {
+            try {
+                Set-MpPreference -Force -MAPSReporting 0
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'LocalSettingOverrideSpynetReporting' -Type DWord -Value 0
+                Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\PolicyManager\default\Defender\AllowCloudProtection' -Name 'value' -Type DWord -Value 0
+                Write-Host "Successfully disabled 'Cloud Protection'"
+            }
+            catch {
+                Write-Host "Failed to configure 'Cloud Protection': $_"
+            }
+        } else {
+            Write-Host "Windows Defender service is not running. Skipping 'Cloud Protection'."
         }
-
-        # Disable MapsReporting (Cloud Protection)
-        try {
-            Set-MpPreference -Force -MAPSReporting $value -ErrorAction Stop
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'LocalSettingOverrideSpynetReporting' -Type DWord -Value $value
-            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\PolicyManager\default\Defender\AllowCloudProtection' -Name 'value' -Type DWord -Value 0
-            Write-Host "Successfully disabled '$propertyName'"
-        }
-        catch {
-            Write-Host "Failed to configure '$propertyName': $_"
-        }
-
     }
 
     if ($DisableSignatureNotifications) {
@@ -149,7 +114,7 @@ function Disable-TelemetryRelated {
 
     if ($ManageTelemetryHosts) {
         # Actions for modifying the hosts file
-        $hostspath = "$env:windir\System32\drivers\etc\hosts"
+        $hostspath = "$env:WinDir\System32\drivers\etc\hosts"
         $telemetryHosts = @(
             "vortex.data.microsoft.com",
             "vortex-win.data.microsoft.com",

@@ -4,8 +4,8 @@
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')) { Write-Host "Restarting script with administrator privileges..." -ForegroundColor Yellow; $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"{0}`" -MyArgument {1}" -f $PSCommandPath, $MyArgument; Start-Process PowerShell.exe -ArgumentList $arguments -Verb RunAs; exit }
 
 # Variables
-$windir = [Environment]::GetFolderPath('Windows')
-$settingsExtensions = (Get-ChildItem "$windir\SystemApps" -Recurse).FullName | Where-Object { $_ -like '*wsxpacks\Account\SettingsExtensions.json*' }
+$WinDir = [Environment]::GetFolderPath('Windows')
+$settingsExtensions = (Get-ChildItem "$WinDir\SystemApps" -Recurse).FullName | Where-Object { $_ -like '*wsxpacks\Account\SettingsExtensions.json*' }
 if ($settingsExtensions.Count -eq 0) {
     Write-Host "Settings extensions ($settingsExtensions) not found."
     Write-Host "User is likely on Windows 10, nothing to do. Exiting..."

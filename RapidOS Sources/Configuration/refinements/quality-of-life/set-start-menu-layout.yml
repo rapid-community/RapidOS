@@ -3,7 +3,10 @@ title: Start Menu Configuration
 description: >
   Configures and optimizes the Start Menu layout and functionality.
 actions:
-  # Configure Start Menu pins
+  - !taskKill: {name: 'explorer', ignoreErrors: true}
+
+  - !writeStatus: {status: 'Configuring Shell'}
+  # Set custom Start Menu pins
   - !registryValue:
       path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
       value: 'ConfigureStartPins'
@@ -35,23 +38,19 @@ actions:
       data: 'B5292708-1619-419B-9923-E5D9F3925E71'
       option: 'modify-ui'
 
-  # Close StartMenuExperienceHost process and clean up start menu pins (if selected in Custom Features)
-  - !writeStatus: {status: 'Configuring Start Menu'}
-  - !taskKill: {name: 'StartMenuExperienceHost', ignoreErrors: true, option: 'modify-ui'}
-  - !taskKill: {name: 'explorer', ignoreErrors: true}
+  # Cleanup Start Menu and Taskbar pins (if selected in custom features)
   - !powerShell:
-      command: '.\StartMenu-Cleanup.ps1'
+      command: '.\RapidScripts\UtilityScripts\Configure-Shell.ps1 -MyArgument clear_shell'
       option: 'modify-ui'
       exeDir: true
       wait: true
       weight: 200
-  - !appx: {name: '*StartMenuExperienceHost*', operation: clearCache, option: 'modify-ui'}
 
   # Do not display recent and frequently used items (disable recommendations)
-  - !cmd: 
+  - !powerShell:
+      command: '.\RapidScripts\UtilityScripts\Configure-Shell.ps1 -MyArgument disable_recommendations'
       exeDir: true
-      command: 'call "%WinDir%\RapidScripts\UtilityScripts\Recommendations\Schedule_RunHide.cmd"' # https://bit.ly/4f28mkW
-      runas: currentUserElevated
+      wait: true
       builds: [ '>=22000' ]
   - !registryValue: 
       path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer'
@@ -112,5 +111,3 @@ actions:
       value: 'NoRecentDocsHistory'
       type: REG_DWORD
       data: '0'
-  
-  - !run: {exe: 'timeout', args: '/t 3 /nobreak'}

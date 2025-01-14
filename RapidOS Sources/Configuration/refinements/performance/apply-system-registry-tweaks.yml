@@ -85,11 +85,11 @@ actions:
       data: '0'
 
   # Control the size of the file system cache in the system. A value of 1 indicates the use of a large cache size
-  - !registryValue:
-      path: 'HKLM\SYSTEM\ControlSet001\Control\Session Manager\Memory Management'
-      value: 'LargeSystemCache'
-      type: REG_DWORD
-      data: '1'
+  # - !registryValue:
+  #     path: 'HKLM\SYSTEM\ControlSet001\Control\Session Manager\Memory Management'
+  #     value: 'LargeSystemCache'
+  #     type: REG_DWORD
+  #     data: '1'
 
   # Disable Intel TSX
   - !powerShell: 

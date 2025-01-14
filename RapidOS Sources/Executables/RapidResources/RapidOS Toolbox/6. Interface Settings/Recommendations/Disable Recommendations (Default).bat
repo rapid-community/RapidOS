@@ -1,13 +1,8 @@
 @echo off
 setlocal
 
-set "___args="%~f0" %*"
-fltmc > nul 2>&1 || (
-	powershell -c "Start-Process -Verb RunAs -FilePath 'cmd' -ArgumentList """/c $env:___args"""" 2> nul || (
-		echo You must run this script as admin.
-		if "%*"=="" pause
-		exit /b 1
-	)
+whoami /user | find /i "S-1-5-18" > nul 2>&1 || (
+	call RunAsTI.cmd "%~f0" %*
 	exit /b
 )
 
@@ -19,7 +14,7 @@ echo Still want to proceed?
 pause
 
 if %BuildNumber% GEQ 22000 (
-    call "%WinDir%\RapidScripts\UtilityScripts\Recommendations\Schedule_RunHide.cmd" > nul 2>&1
+    powershell.exe -EP Unrestricted -Command "& "C:\Windows\RapidScripts\UtilityScripts\Configure-Shell.ps1" -MyArgument disable_recommendations" > nul 2>&1
     reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v ShowRecent /t REG_DWORD /d 0 /f > nul 2>&1
     reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v ShowFrequent /t REG_DWORD /d 0 /f > nul 2>&1
     reg add "HKCU\Software\Policies\Microsoft\Windows\Explorer" /v HideRecentlyAddedApps /t REG_DWORD /d 1 /f > nul 2>&1

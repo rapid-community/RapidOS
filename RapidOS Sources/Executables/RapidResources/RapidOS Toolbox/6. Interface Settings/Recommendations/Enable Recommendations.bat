@@ -1,20 +1,15 @@
 @echo off
 setlocal
 
-set "___args="%~f0" %*"
-fltmc > nul 2>&1 || (
-	powershell -c "Start-Process -Verb RunAs -FilePath 'cmd' -ArgumentList """/c $env:___args"""" 2> nul || (
-		echo You must run this script as admin.
-		if "%*"=="" pause
-		exit /b 1
-	)
+whoami /user | find /i "S-1-5-18" > nul 2>&1 || (
+	call RunAsTI.cmd "%~f0" %*
 	exit /b
 )
 
 for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild') do set BuildNumber=%%A
 
 if %BuildNumber% GEQ 22000 (
-    schtasks /delete /tn "HideRecommended" /f > nul 2>&1
+    sc.exe delete HideRecommendedService > nul 2>&1
     reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v ShowRecent /f > nul 2>&1
     reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v ShowFrequent /f > nul 2>&1
     reg delete "HKCU\Software\Policies\Microsoft\Windows\Explorer" /v HideRecentlyAddedApps /f > nul 2>&1

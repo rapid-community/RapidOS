@@ -23,7 +23,7 @@ features:
   # YAML file listed addresses a different aspect of system           #
   # optimization, cleanup, and configuration.                         #
   # Reviewing these files will help understand the changes made and   #
-  # their implications on overall system performance and security.    #
+  # their implications on overall system performance.                 #
   #                                                                   #
   # You can review each YAML file for detailed changes and their      #
   # impact on system.                                                 #
@@ -232,4 +232,4 @@ features:
   # ----------------------------------------------------------------- #
 
   ## End of installation. Set PowerShell execution policy to Windows default
-  - refinements\security\execution-policy\set-execution-policy-restricted.yml
+  # - refinements\security\execution-policy\set-execution-policy-restricted.yml # Useless

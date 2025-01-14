@@ -19,8 +19,8 @@ actions:
   - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection', value: 'AllowBuildPreview', type: REG_DWORD, data: '0'}
 
   # Disable Windows Defender data collection features
-  - !cmd:
-      command: 'RapidScripts\MinSudo.exe -TI -P -NoL powershell.exe -File "Configure-DataCollection.ps1" -MyArgument disable_block_at_first_sight, disable_extended_cloud_check, disable_aggresive_cloud_protection, disable_cloud_protection, disable_signature_notifications, disable_sample_submission'
+  - !powerShell:
+      command: '.\Configure-DataCollection.ps1 -MyArgument disable_block_at_first_sight, disable_extended_cloud_check, disable_aggresive_cloud_protection, disable_cloud_protection, disable_signature_notifications, disable_sample_submission'
       exeDir: true
       wait: true
       weight: 100
