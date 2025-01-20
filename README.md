@@ -6,31 +6,31 @@
 
 ## ❓ Why RapidOS
 
-RapidOS is here to make your Windows experience faster, cleaner, and more secure. We're not just tweaking the system - we're giving you more control over it. Here's why RapidOS could be the right choice for you:
+RapidOS is a Windows modification designed to make your system faster, cleaner, and more secure. Here's why you should consider it:
 
-#### 🔒 **Privacy at It's Core**:
-- Keep your data safe.
+#### 🔒 **Privacy First**:
+- Protect your data.
 - Block unnecessary telemetry.
 - Prevent unwanted access to your system.
 
-#### 🏎️ **Boosted Speed**:
-- Get fast performance.
-- Remove all unnecessary bloatware.
-- Fine-tune system settings for the best results.
+#### 🏎️ **Enhanced Performance**:
+- Boost system speed.
+- Remove unnecessary bloatware.
+- Fine-tune settings for optimal performance.
 
-#### 🖥️ **Simple and Clean**:
-- Enjoy a sleek, minimalist interface.
-- No more clutter or unnecessary features.
+#### 🖥️ **Simple and Clean Interface**:
+- A minimalist, user-friendly design.
+- No clutter or unnecessary features.
 
 #### 💡 **Get Involved**:
-- Share your ideas and influence the development of RapidOS in Discord.
-- Give feedback to help improve the system.
+- Share your ideas and contribute to the development on Discord.
+- Provide feedback to help improve the system.
 
 #### 🛠️ **Community Support**:
-- Access help from a supportive community.
-- Get guidance when things go wrong.
+- Get help from an active and supportive community.
+- Guidance and assistance when things go wrong.
 
-In short, RapidOS enhances your Windows experience by focusing on privacy, speed, simplicity, community, creativity and support.
+RapidOS improves your Windows experience by focusing on privacy, speed, simplicity, and community support.
 
 <!-- 
 
@@ -113,7 +113,7 @@ Any other build **is not** officially supported by RapidOS.
 
 ### 📜 Documentation
 
-In the [**RapidOS Documentation**](docs.rapid-community.ru), you'll find a straightforward guide to help you install Windows and RapidOS:
+In the [**RapidOS Documentation**](https://docs.rapid-community.ru/), you'll find a straightforward guide to help you install Windows and RapidOS:
 
 1. **Installing Windows**:
    - We cover all the methods for installing Windows, whether you're using the Media Creation Tool, MSDL, or UPPDump.
@@ -123,7 +123,7 @@ In the [**RapidOS Documentation**](docs.rapid-community.ru), you'll find a strai
 2. **Installing RapidOS**:
    - We'll show you how to get everything ready before you install RapidOS.
    - You'll get detailed instructions for downloading and running AME Wizard, the tool used to install RapidOS.
-   - Finally, we walk you through the installation of RapidOS itself, with all the steps to make sure everything works smoothly.
+   - Finally, we walk you through the installation of RapidOS itself, covering all the necessary steps.
 
 The guide is designed to be simple and easy to follow, so you won't miss a thing. Everything is laid out clearly, so you can get your system up and running with minimal hassle.
 
