@@ -4,55 +4,26 @@
 
 *RapidOS is an open-source project that aims to revolutionize the Windows experience. RapidOS it's powerful, streamlined and user-centric system that puts you in control.* ⚡
 
-## ❓ Why RapidOS
+## ❓ Why RapidOS?
 
-RapidOS is a Windows modification designed to make your system faster, cleaner, and more secure. Here's why you should consider it:
+RapidOS modifies Windows to make your system faster, cleaner, and more secure. It's not standalone software - just a set of tweaks applied for real, everyday improvements.
 
-#### 🔒 **Privacy First**:
-- Protect your data.
-- Block unnecessary telemetry.
-- Prevent unwanted access to your system.
+#### 🔒 Privacy First
+RapidOS locks down your privacy. It blocks Windows telemetry that tracks you and strengthens security to keep unwanted access out.
 
-#### 🏎️ **Enhanced Performance**:
-- Boost system speed.
-- Remove unnecessary bloatware.
-- Fine-tune settings for optimal performance.
+#### 🏎️ Better Performance
+It's all about speed. RapidOS cuts out bloatware that slows your system and adjusts settings for better performance. No gaming miracles, just faster daily use.
 
-#### 🖥️ **Simple and Clean Interface**:
-- A minimalist, user-friendly design.
-- No clutter or unnecessary features.
+#### 🖥️ Clean and Simple
+The interface gets streamlined. No clutter or unnecessary features - RapidOS keeps it simple and easy to use for anyone who likes things clean.
 
-#### 💡 **Get Involved**:
-- Share your ideas and contribute to the development on Discord.
-- Provide feedback to help improve the system.
+#### 💡 Join the Community
+RapidOS is a project you can jump into. Hit up [Rapid Community](https://dsc.gg/rapid-community) to share ideas, provide feedback to help improve the system, or chat with others who want a better Windows.
 
-#### 🛠️ **Community Support**:
-- Get help from an active and supportive community.
-- Guidance and assistance when things go wrong.
+#### 🛠️ Support When You Need It
+If something goes wrong, community's got you. Developers and active users offer quick tips or help with bigger issues.
 
-RapidOS improves your Windows experience by focusing on privacy, speed, simplicity, and community support.
-
-<!-- 
-
-## ⚙️ RapidOS Versions
-
-### 🔒 Stable RapidOS
-- **What is it**: A tweaked Windows for daily use.
-- **What you get**: Secure, reliable, and easy to use.
-
-### 🏎️ Speed RapidOS
-- **What is it**: Made for power users who want speed without losing a lot of stability.
-- **What you get**: Fast performance while staying stable.
-
-### 🎮 Extreme RapidOS
-- **What is it**: Maxed out for gaming and heavy tasks, but less stable.
-- **What you get**: Top performance with instability.
-
-You can choose any of these versions in the playbook under custom features!
-
-> ❗ **Note**: *The playbook is still in beta, so by default we use the stable version. Once fully released, you'll have access to all options.*
-
--->
+RapidOS turns Windows into something better through AME Beta: private, fast, and simple, backed by a solid crew. Sick of default Windows? Give it a shot - the difference shows.
 
 ## 🔧 System Changes & Enhancements
 
@@ -62,37 +33,23 @@ RapidOS is designed to be smooth and reliable. Every release we're fixing any re
 >
 >If you'd like to customize our project for your personal use, you can deploy it yourself. Instructions on how to do this can be found below.
 
-**For more details, check our GitHub FAQ Readme pages:**
+**For more details, check our GitHub FAQ pages:**
 
 - **[What's Removed from AppX (UWP apps)](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/AppX%20README.md)**: See what's been removed from AppX apps.
 - **[Service Changes Across Versions](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/Services%20README.md)**: Find out which services have been changed or disabled in different versions of RapidOS.
 
-<!--
-
-## 🧰 Versatility & Control
-
-We're enhancing control for advanced users with **RapidOS Toolbox**:
-
-- **General Settings**: Review and undo changes made during RapidOS installation.
-- **Advanced Tweaks**: Access additional Windows configuration options (**use with caution, as these are not used by default to ensure system stability**).
-
-> ❗ **Note**: Some changes, like removing built-in apps, can't be fully recovered.
-
--->
-
 ## 🔓 Open-Source and Safe
 
-This project is fully open-source, meaning you're free to dive into the code, contribute, or suggest improvements. Just like **AME Wizard**, **RapidOS** is designed to be secure and clean from any harmful software.
+This project is fully open-source, meaning you're free to dive into the code, contribute, or suggest improvements. Just like **AME Beta**, **RapidOS** is designed to be secure and clean from any harmful software.
 
-- 🔗 [Check the AME Wizard Codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master/TrustedUninstaller.CLI).
+- 🔗 [Check the AME Beta Codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master/TrustedUninstaller.CLI).
 - 🔗 [Check out RapidOS Code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources).
 
 Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated and trustworthy.
 
 ## 🔨 How to Get Started
 
-RapidOS is now available for download! Built on the powerful **[AME Wizard](https://ameliorated.io/)**, it lets you customize Windows like never before.
-With AME Wizard, you can use custom playbooks scripts and settings that - adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
+RapidOS is now available for download! Built on the powerful **[AME Beta](https://ameliorated.io/)**, it lets you customize Windows like never before. You can use custom playbooks scripts and settings that - adjust your system to fit your needs. In just a few easy steps, **RapidOS** can completely transform your Windows experience.
 
 ---
 
@@ -100,7 +57,7 @@ With AME Wizard, you can use custom playbooks scripts and settings that - adjust
 
 >[!Tip]
 >
->If your computer meets the official system requirements for Windows 11, it's a good idea to go with Windows 11 to get the latest features and updates.
+>If your computer meets the official system requirements for Windows 11, it's a good idea to go with Windows 11 to get the latest features and updates. Also, it is not recommended to install RapidOS on non-Pro versions of Windows.
 
 - **Windows 10 22H2 - `19045`**
 - **Windows 11 22H2 - `22621`**
@@ -122,7 +79,7 @@ In the [**RapidOS Documentation**](https://docs.rapid-community.ru/), you'll fin
 
 2. **Installing RapidOS**:
    - We'll show you how to get everything ready before you install RapidOS.
-   - You'll get detailed instructions for downloading and running AME Wizard, the tool used to install RapidOS.
+   - You'll get detailed instructions for downloading and running AME Beta, the tool used to install RapidOS.
    - Finally, we walk you through the installation of RapidOS itself, covering all the necessary steps.
 
 The guide is designed to be simple and easy to follow, so you won't miss a thing. Everything is laid out clearly, so you can get your system up and running with minimal hassle.
@@ -132,7 +89,7 @@ The guide is designed to be simple and easy to follow, so you won't miss a thing
 If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.ameliorated.io/) to fully understand how the playbooks work.
 
 In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`.
-Our playbooks consist of `.yml` (default AME Wizard configuration files), `.ps1` and `.bat` files.
+Our playbooks consist of `.yml` (default AME Beta configuration files), `.ps1` and `.bat` files.
 
 In most `.yml` files, you can adjust many of RapidOS's changes. For example, you can configure AppX file to prevent the deletion of necessary apps you need. In `custom.yml`, you can also disable specific `.yml` files by commenting them out with `#`.
 
@@ -171,7 +128,7 @@ RapidOS is licensed under the [GNU General Public License v3.0](https://github.c
 
 [![Stargazers repo roster for @rapid-community/RapidOS](https://reporoster.com/stars/dark/rapid-community/RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
 
-## 🌊 Join the RapidOS Community Today!
+## 🌊 Join the Rapid Community Today!
 
 RapidOS is more than just a project. It is a vision, a passion and a community.
 Join us today and unlock a new level of Windows experience with RapidOS! ✨
