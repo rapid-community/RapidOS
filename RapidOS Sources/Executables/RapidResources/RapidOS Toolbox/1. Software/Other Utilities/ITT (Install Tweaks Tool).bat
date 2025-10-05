@@ -16,10 +16,10 @@ echo.
 
 pause
 
-powershell -Command "irm raw.githubusercontent.com/emadadel4/ITT/main/itt.ps1 | iex"
+powershell -Command "irm raw.githubusercontent.com/emadadeldev/ittea/main/itt.ps1 | iex"
 if errorlevel 1 (
     echo Failed to run the script from GitHub. Trying alternative source...
-    powershell -Command "irm bit.ly/ittea | iex"
+    powershell -Command "irm raw.githubusercontent.com/emadadeldev/ittea/main/itt.ps1 | iex"
     if errorlevel 1 (
         echo Failed to run the script from the alternative source.
         pause
