@@ -1,65 +1,44 @@
 @echo off
-setlocal
 
-set "___args="%~f0" %*"
-fltmc > nul 2>&1 || (
-	powershell -c "Start-Process -Verb RunAs -FilePath 'cmd' -ArgumentList """/c $env:___args"""" 2> nul || (
-		echo You must run this script as admin.
-		if "%*"=="" pause
-		exit /b 1
-	)
-	exit /b
+>nul fltmc || (
+    powershell -c "Start-Process '%~f0' -Verb RunAs"
+    exit /b
 )
 
-for /f "delims=" %%G in ('powershell -NoProfile -Command "(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB -as [int]"') do set TotalMemoryGB=%%G
-
-echo Configuring visual effects
-
-rem Show icons with text
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v IconsOnly /t REG_DWORD /d 0 /f > nul 2>&1
-
-rem Enable listview shadows
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ListviewShadow /t REG_DWORD /d 1 /f > nul 2>&1
-
-rem Enable full window drag
-reg add "HKCU\Control Panel\Desktop" /v DragFullWindows /t REG_DWORD /d 1 /f > nul 2>&1
-
-rem Disable Aero Peek
-reg add "HKCU\Software\Microsoft\Windows\DWM" /v EnableAeroPeek /t REG_DWORD /d 0 /f > nul 2>&1
-
-rem Enable ClearType font smoothing
-:: reg add "HKCU\Control Panel\Desktop" /v FontSmoothing /t REG_DWORD /d 2 /f > nul 2>&1
-
-rem Set visual effects and performance balance
-reg add "HKCU\Control Panel\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f > nul 2>&1
-
-rem Set balanced visual effects
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 3 /f > nul 2>&1
-
-if %TotalMemoryGB% LSS 8 (
-    echo System has less than 8GB of RAM. Applying performance settings.
-
-    rem Disable taskbar animations
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAnimations /t REG_DWORD /d 0 /f > nul 2>&1
-
-    rem Disable thumbnail previews
-    reg add "HKCU\Software\Microsoft\Windows\DWM" /v AlwaysHibernateThumbnails /t REG_DWORD /d 0 /f > nul 2>&1
-
-    rem Disable window minimize animations
-    reg add "HKCU\Control Panel\Desktop" /v MinAnimate /t REG_DWORD /d 0 /f > nul 2>&1
-) else (
-    echo System has 8GB or more RAM. Applying aesthetics settings.
-
-    rem Enable taskbar animations
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAnimations /t REG_DWORD /d 1 /f > nul 2>&1
-
-    rem Enable thumbnail previews
-    reg add "HKCU\Software\Microsoft\Windows\DWM" /v AlwaysHibernateThumbnails /t REG_DWORD /d 1 /f > nul 2>&1
-
-    rem Enable window minimize animations
-    reg add "HKCU\Control Panel\Desktop" /v MinAnimate /t REG_DWORD /d 1 /f > nul 2>&1
-)
-
-echo Visual Effects have been applied!
-pause
+powershell -c "$f='%~f0'; $lines=Get-Content $f; $idx=$lines.IndexOf(':PS'); iex ($lines[($idx+1)..($lines.Length-1)] -join [Environment]::NewLine)"
 exit /b
+
+:PS
+$memGB = [math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum) / 1GB)
+
+$visualEffectsPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects'
+$desktopPath = 'HKCU:\Control Panel\Desktop'
+$windowMetricsPath = 'HKCU:\Control Panel\Desktop\WindowMetrics'
+$advancedExplorerPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+$dwmPath = 'HKCU:\Software\Microsoft\Windows\DWM'
+$personalizePath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+
+Set-RegistryValue -Path $visualEffectsPath -Name 'VisualFXSetting' -Type DWORD -Value 3
+Set-RegistryValue -Path $desktopPath -Name 'UserPreferencesMask' -Type Binary -Value ([byte[]](0x90, 0x12, 0x03, 0x80, 0x10, 0x00, 0x00, 0x00))
+Set-RegistryValue -Path $windowMetricsPath -Name 'MinAnimate' -Type String -Value 0
+Set-RegistryValue -Path $advancedExplorerPath -Name 'TaskbarAnimations' -Type DWORD -Value 0
+Set-RegistryValue -Path $dwmPath -Name 'EnableAeroPeek' -Type DWORD -Value 0
+Set-RegistryValue -Path $advancedExplorerPath -Name 'ListviewAlphaSelect' -Type DWORD -Value 1
+Set-RegistryValue -Path $personalizePath -Name 'EnableTransparency' -Type DWORD -Value 0
+Set-RegistryValue -Path $advancedExplorerPath -Name 'ListviewShadow' -Type DWORD -Value 0
+Set-RegistryValue -Path $desktopPath -Name 'DragFullWindows' -Type String -Value 1
+Set-RegistryValue -Path $dwmPath -Name 'AlwaysHibernateThumbnails' -Type DWORD -Value 0
+Set-RegistryValue -Path $advancedExplorerPath -Name 'IconsOnly' -Type DWORD -Value 0
+Set-RegistryValue -Path $desktopPath -Name 'FontSmoothing' -Type String -Value 2
+
+if ($memGB -ge 8) {
+    Set-RegistryValue -Path $desktopPath -Name 'UserPreferencesMask' -Type Binary -Value ([byte[]](0x90, 0x12, 0x07, 0x80, 0x12, 0x00, 0x00, 0x00))
+    Set-RegistryValue -Path $windowMetricsPath -Name 'MinAnimate' -Type String -Value 1
+    Set-RegistryValue -Path $advancedExplorerPath -Name 'TaskbarAnimations' -Type DWORD -Value 1
+    Set-RegistryValue -Path $dwmPath -Name 'EnableAeroPeek' -Type DWORD -Value 1
+    Set-RegistryValue -Path $personalizePath -Name 'EnableTransparency' -Type DWORD -Value 1
+}
+
+Write-Host "Visual Effects have been applied."
+pause
+exit

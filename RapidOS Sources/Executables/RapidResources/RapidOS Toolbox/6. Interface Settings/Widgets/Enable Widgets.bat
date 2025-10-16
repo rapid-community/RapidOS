@@ -1,14 +1,9 @@
 @echo off
 setlocal
 
-set "___args="%~f0" %*"
-fltmc > nul 2>&1 || (
-	powershell -c "Start-Process -Verb RunAs -FilePath 'cmd' -ArgumentList """/c $env:___args"""" 2> nul || (
-		echo You must run this script as admin.
-		if "%*"=="" pause
-		exit /b 1
-	)
-	exit /b
+>nul fltmc || (
+    powershell -c "Start-Process '%~f0' -Verb RunAs"
+    exit /b
 )
 
 echo A component check will now be performed to enable widgets...
@@ -37,10 +32,10 @@ set "enableFeeds=0"
 reg query "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds | find "1" > nul 2>&1 && set enableFeeds=1
 
 set "shellFeedsTaskbarViewMode=0"
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTaskbarViewMode | find "0" > nul 2>&1 && set shellFeedsTaskbarViewMode=1
+reg query "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTaskbarViewMode | find "0" > nul 2>&1 && set shellFeedsTaskbarViewMode=1
 
 set "taskbarDa=0"
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa | find "1" > nul 2>&1 && set taskbarDa=1
+reg query "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarDa | find "1" > nul 2>&1 && set taskbarDa=1
 
 set "allowNewsAndInterests=0"
 reg query "HKLM\SOFTWARE\Policies\Microsoft\Dsh" /v AllowNewsAndInterests | find "1" > nul 2>&1 && set allowNewsAndInterests=1
@@ -71,7 +66,7 @@ echo.
 set /p userChoice="Install components and enable settings (yes/no)? "
 if /i "%userChoice%"=="yes" (
     if %edgeInstalled%==0 (
-        ping -n 1 8.8.8.8 > nul
+        ping -n 1 google.com > nul
         if errorlevel 1 (
             echo No internet connection detected!
             pause
@@ -81,7 +76,7 @@ if /i "%userChoice%"=="yes" (
     )
 
     if %webviewInstalled%==0 (
-        ping -n 1 8.8.8.8 > nul
+        ping -n 1 google.com > nul
         if errorlevel 1 (
             echo No internet connection detected!
             pause
@@ -105,7 +100,7 @@ if /i "%userChoice%"=="yes" (
     )
 
     if %webexperienceInstalled%==0 (
-        ping -n 1 8.8.8.8 > nul
+        ping -n 1 google.com > nul
         if errorlevel 1 (
             echo No internet connection detected!
             pause
@@ -125,12 +120,12 @@ if /i "%userChoice%"=="yes" (
     if %shellFeedsTaskbarViewMode%==0 (
         sc stop UCPD > nul 2>&1
         sc config UCPD start= disabled > nul 2>&1
-        reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds" /v "ShellFeedsTaskbarViewMode" /t REG_DWORD /d 0 /f > nul 2>&1
+        reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds" /v "ShellFeedsTaskbarViewMode" /t REG_DWORD /d 0 /f > nul 2>&1
     )
     if %taskbarDa%==0 (
         sc stop UCPD > nul 2>&1
         sc config UCPD start= disabled > nul 2>&1
-        reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 1 /f > nul 2>&1
+        reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 1 /f > nul 2>&1
     )
     if %allowNewsAndInterests%==0 (
         reg add "HKLM\SOFTWARE\Policies\Microsoft\Dsh" /v "AllowNewsAndInterests" /t REG_DWORD /d 1 /f > nul 2>&1

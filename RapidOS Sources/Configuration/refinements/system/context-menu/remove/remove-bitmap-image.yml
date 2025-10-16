@@ -1,5 +1,0 @@
----
-title: Remove Bitmap Image
-description: The provided command modifies the Windows Registry to remove the "bitmap image" option from the "New" context menu.
-actions:
-  - !registryKey: {path: 'HKCR\.bmp\ShellNew'}

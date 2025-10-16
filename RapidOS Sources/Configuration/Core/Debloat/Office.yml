@@ -1,0 +1,17 @@
+---
+title: Remove Microsoft Office apps
+actions:
+  - !powerShell:
+      option: 'Office'
+      exeDir: true
+      wait: true
+      command: >-
+        .\AppX.ps1 -Packages @(
+          'Microsoft.MicrosoftOfficeHub',
+          'Microsoft.Office.Excel',
+          'Microsoft.Office.OneNote',
+          'Microsoft.Office.PowerPoint',
+          'Microsoft.Office.Word',
+          'Microsoft.OutlookForWindows',
+          'OutlookPWA'
+        )

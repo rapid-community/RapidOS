@@ -1,0 +1,15 @@
+---
+title: Terminate interfering processes
+actions:
+  - !powerShell:
+      wait: true
+      command: |
+        $targets = @(
+          'wuauserv', 'bits', 'SearchApp', 'SearchHost', 'RuntimeBroker',
+          'ShellExperienceHost', 'TextInputHost', 'Widgets', 'msedge',
+          'GamingServices', 'XboxApp', 'CompatTelRunner', 'backgroundTaskHost'
+        )
+        foreach ($t in $targets) {
+          Stop-Service -Name $t -Force -EA 0 *>$null
+          taskkill /f /im ($t + '.exe') *>$null
+        }

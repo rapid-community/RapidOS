@@ -1,0 +1,44 @@
+---
+title: Kernel configuration
+description: Applies TSX toggle and MMCSS settings
+actions:
+  # === Enable TSX ===
+  - !powerShell:
+      runas: currentUserElevated
+      exeDir: true
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        if ($cpuLine -and ($cpuLine -match 'Intel')) {
+          Set-RegistryValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel' -Name 'DisableTsx' -Type DWORD -Value 0
+        } else {
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel' -Name 'DisableTsx' -EA 0 *>$null
+        }
+
+  # ==============================
+  # Configure MMCSS
+  # ==============================
+  # === Backup ===
+  - !powerShell:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        Export-RegState -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile' -JsonPath ($env:WinDir + '\RapidScripts\MMCSS.json')
+
+  # === Setup ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'NoLazyMode', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'NetworkThrottlingIndex', type: REG_DWORD, data: '10'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'SystemResponsiveness', type: REG_DWORD, data: '10'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'LazyModeTimeout', type: REG_DWORD, data: '4294967295'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'SchedulerPeriod', type: REG_DWORD, data: '1000000'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'IdleDetectionCycles', type: REG_DWORD, data: '2'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'MaxThreadsPerProcess', type: REG_DWORD, data: '32'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'MaxThreadsTotal', type: REG_DWORD, data: '256'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile', value: 'SchedulerTimerResolution', type: REG_DWORD, data: '10000'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio', value: 'Priority', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio', value: 'Scheduling Category', type: REG_SZ, data: 'Medium'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Audio', value: 'Priority When Yielded', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Pro Audio', value: 'Priority', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Pro Audio', value: 'Scheduling Category', type: REG_SZ, data: 'Medium'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Pro Audio', value: 'Priority When Yielded', type: REG_DWORD, data: '1'}

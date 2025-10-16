@@ -1,0 +1,64 @@
+---
+title: Security configuration
+actions:
+  # === Disable Microsoft Defender === 
+  - !run:
+      option: 'disable-defender'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Defender.ps1" -disable_av -silent"'
+
+  # === Disable switching to the Secure Desktop when prompting for elevation ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+      value: 'PromptOnSecureDesktop'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Fault Tolerant Heap ===
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\FTH'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\FTH\State'}
+
+  # === Disable VBS ===
+  - !registryValue: 
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard'
+      value: 'EnableVirtualizationBasedSecurity'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue: 
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Smart App Control ===
+  - !registryValue: 
+      path: 'HKLM\SYSTEM\ControlSet001\Control\CI\Policy'
+      value: 'VerifiedAndReputablePolicyState'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Defender signature updates on battery ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Signature Updates'
+      value: 'DisableScheduledSignatureUpdateOnBattery'
+      type: REG_DWORD
+      data: '1'
+
+  # === Do not mark downloaded files from the Internet as unsafe ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments'
+      value: 'SaveZoneInformation'
+      type: REG_DWORD
+      data: '1'
+
+  # === Sets passwords to never expire ===
+  - !run:
+      exe: 'net'
+      args: 'accounts /maxpwage:unlimited'
+      showOutput: 'false'

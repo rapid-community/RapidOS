@@ -1,0 +1,16 @@
+---
+title: Finalize installation
+actions:
+  # === Pin AME Beta window ===
+  - !powerShell:
+      exeDir: true
+      command: '.\AME.ps1 -Pin'
+
+  # === Re-enable UCPD driver ===
+  - !service:
+      name: 'UCPD'
+      operation: change
+      startup: '4'
+
+  # === Update group policy ===
+  - !cmd: {command: 'gpupdate /force'}

@@ -1,6 +1,0 @@
----
-title: PowerShell Telemetry
-description: >
-  This modification prevents PowerShell collecting and sending telemetry data, enhancing user privacy.
-actions:
-  - !run: {exe: 'setx', args: 'POWERSHELL_TELEMETRY_OPTOUT 1'}

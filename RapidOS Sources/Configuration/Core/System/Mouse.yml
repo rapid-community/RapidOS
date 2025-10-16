@@ -1,0 +1,19 @@
+---
+title: Mouse acceleration
+description: Disables the 'Enhance pointer precision' mouse option
+actions: 
+  - !registryValue:
+      path: 'HKCU\Control Panel\Mouse'
+      value: 'MouseSpeed'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\Control Panel\Mouse'
+      value: 'MouseThreshold1'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\Control Panel\Mouse'
+      value: 'MouseThreshold2'
+      type: REG_DWORD
+      data: '0'

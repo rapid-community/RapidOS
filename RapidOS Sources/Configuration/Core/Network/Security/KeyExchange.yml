@@ -1,0 +1,14 @@
+---
+title: Enforce strong Diffie-Hellman keys
+description: Requires 2048-bit minimum key length for Diffie-Hellman key exchange in TLS/SSL connections
+actions:
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman'
+      value: 'ServerMinKeyBitLength'
+      type: REG_DWORD
+      data: '2048'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman'
+      value: 'ClientMinKeyBitLength'
+      type: REG_DWORD
+      data: '2048'

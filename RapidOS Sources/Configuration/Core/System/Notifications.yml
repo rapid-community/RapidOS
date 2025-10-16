@@ -1,0 +1,38 @@
+---
+title: Configure notifications
+description: Re-enable notifications after disabling it in "Preparation stage" and show notification bell icon
+actions:
+  # === Enable notifications ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications'
+      value: 'ToastEnabled'
+      operation: delete
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'
+      value: 'NOC_GLOBAL_SETTING_TOASTS_ENABLED'
+      operation: delete
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'
+      value: 'NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK'
+      operation: delete
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      value: 'DisableNotificationCenter'
+      operation: delete
+  
+  # === Restart notification services ===
+  - !service:
+      ignoreErrors: true
+      name: "WpnService"
+      operation: start
+  - !service:
+      ignoreErrors: true
+      name: "WpnUserService*"
+      operation: start
+    
+  # === Show notification bell icon ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'ShowNotificationIcon'
+      type: REG_DWORD
+      data: '1'

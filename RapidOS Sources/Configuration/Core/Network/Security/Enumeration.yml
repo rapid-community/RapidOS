@@ -1,0 +1,9 @@
+---
+title: Prevent anonymous enumeration
+description: Stops unauthorized users from discovering network accounts and shared resources
+actions:
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\Lsa'
+      value: 'RestrictAnonymous'
+      type: REG_DWORD
+      data: '1'

@@ -1,0 +1,22 @@
+---
+title: Remove Microsoft Edge
+actions:
+  - !run:
+      runas: currentUserElevated
+      option: 'Edge'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Remove-Edge"'
+
+  # === If removal is not selected, Edge will be optimized ===
+  - !service: {name: 'MicrosoftEdgeElevationService', operation: change, startup: 3, option: '!Edge'}
+  - !service: {name: 'edgeupdate', operation: change, startup: 3, option: '!Edge'}
+  - !service: {name: 'edgeupdatem', operation: change, startup: 3, option: '!Edge'}
+  - !run:
+      runas: currentUserElevated
+      option: '!Edge'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Optimize-Edge"'

@@ -1,0 +1,65 @@
+---
+title: Start Menu configuration
+actions:
+  # === Start Menu cleanup ===
+  - !run:
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Shell.ps1 -Cleanup StartMenu"'
+  - !appx: {name: '*Microsoft.Windows.StartMenuExperienceHost*', operation: clearCache}
+
+  # === Ensure more pins than recommendations ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'Start_Layout'
+      type: REG_DWORD
+      data: '1'
+
+  # === Hide pinned Documents folder ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderDocuments'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderDocuments_ProviderSet'
+      type: REG_DWORD
+      data: '0'
+
+  # === Hide pinned Pictures folder ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderPictures'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderPictures_ProviderSet'
+      type: REG_DWORD
+      data: '0'
+
+  # === Show Settings folder ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderSettings'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderSettings_ProviderSet'
+      type: REG_DWORD
+      data: '1'
+
+  # === Show File Explorer folder ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderFileExplorer'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      value: 'AllowPinnedFolderFileExplorer_ProviderSet'
+      type: REG_DWORD
+      data: '1'

@@ -1,23 +1,21 @@
-; Copyright � Microsoft Corp.
-
 [Theme]
-; Windows - IDS_THEME_DISPLAYNAME_AERO
+; Windows
 DisplayName=Rapid Dark
 SetLogonBackground=0
 
-; Computer - SHIDI_SERVER
+; Computer
 [CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}\DefaultIcon]
 DefaultValue=%SystemRoot%\System32\imageres.dll,-109
 
-; UsersFiles - SHIDI_USERFILES
+; UsersFiles
 [CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}\DefaultIcon]
 DefaultValue=%SystemRoot%\System32\imageres.dll,-123
 
-; Network - SHIDI_MYNETWORK
+; Network
 [CLSID\{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}\DefaultIcon]
 DefaultValue=%SystemRoot%\System32\imageres.dll,-25
 
-; Recycle Bin - SHIDI_RECYCLERFULL SHIDI_RECYCLER
+; Recycle Bin
 [CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\DefaultIcon]
 Full=%SystemRoot%\System32\imageres.dll,-54
 Empty=%SystemRoot%\System32\imageres.dll,-55
@@ -42,13 +40,13 @@ DefaultValue=Windows Default
 DefaultValue.MUI=@main.cpl,-1020
 
 [Control Panel\Desktop]
-Wallpaper=%WinDir%\RapidScripts\rapid-dark.png
+Wallpaper=%WinDir%\RapidScripts\Wallpapers\rapid-dark.png
 TileWallpaper=0
 WallpaperStyle=10
 Pattern=
 
 [LockScreen]
-Wallpaper=%WinDir%\RapidScripts\rapid-dark.png
+Wallpaper=%WinDir%\RapidScripts\Wallpapers\lockscreen-rapid-dark.png
 
 [VisualStyles]
 Path=%ResourceDir%\Themes\Aero\Aero.msstyles
@@ -66,6 +64,4 @@ AppMode=Dark
 MTSM=RJSPBS
 
 [Sounds]
-; IDS_SCHEME_DEFAULT
 SchemeName=@%SystemRoot%\System32\mmres.dll,-800
-

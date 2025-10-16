@@ -1,0 +1,18 @@
+---
+title: Firefox installation
+actions:
+  - !run:
+      runas: currentUserElevated
+      option: 'Firefox'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Install-Firefox"'
+
+  - !run:
+      runas: currentUserElevated
+      option: 'Firefox'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Optimize-Firefox"'

@@ -1,26 +1,21 @@
 @echo off
 setlocal
 
-set "___args="%~f0" %*"
-fltmc > nul 2>&1 || (
-	powershell -c "Start-Process -Verb RunAs -FilePath 'cmd' -ArgumentList """/c $env:___args"""" 2> nul || (
-		echo You must run this script as admin.
-		if "%*"=="" pause
-		exit /b 1
-	)
-	exit /b
+>nul fltmc || (
+    powershell -c "Start-Process '%~f0' -Verb RunAs"
+    exit /b
 )
 
 for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuild') do set BuildNumber=%%A
 
 if %BuildNumber% lss 22000 (
-    echo Your build number is %BuildNumber%. This script doesn't support Windows 10.
+    echo Likely, you are on Windows 10, Windows 11 is required to run this script.
     pause
     exit /b
 )
 
-reg delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f > nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f > nul 2>&1
 
-echo New Context Menu has been enabled!
+echo New Context Menu has been enabled.
 pause
 exit /b

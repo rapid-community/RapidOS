@@ -1,9 +1,0 @@
----
-title: Add .ps1 in context menu
-description: >
-  The provided commands modify the Windows Registry to add custom context menu items for '.ps1' (PowerShell) files.
-actions:
-  - !registryValue: {path: 'HKCR\.ps1', value: '', type: REG_SZ, data: 'Microsoft.PowerShellScript.1'}
-  - !registryValue: {path: 'HKCR\.ps1\ShellNew', value: 'NullFile', type: REG_SZ, data: ''}
-  - !registryValue: {path: 'HKCR\Microsoft.PowerShellScript.1', value: '', type: REG_SZ, data: 'Windows PowerShell Script'}
-  - !registryValue: {path: 'HKCR\Microsoft.PowerShellScript.1', value: 'FriendlyTypeName', type: REG_SZ, data: 'Windows PowerShell Script'}

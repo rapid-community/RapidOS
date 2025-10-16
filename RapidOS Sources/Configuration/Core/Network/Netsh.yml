@@ -1,0 +1,12 @@
+---
+title: Netsh configuration
+description: Adjusts TCP retransmission and congestion control for improved network
+actions:
+  - !run: {exe: 'netsh', args: 'int tcp set global initialRto=2000', showOutput: 'false'}
+  - !run: {exe: 'netsh', args: 'int tcp set global MaxSynRetransmissions=2', showOutput: 'false'}
+  - !run: {exe: 'netsh', args: 'int tcp set global pacingprofile=off', showOutput: 'false'}
+  - !run: {exe: 'netsh', args: 'int tcp set heuristics disabled', showOutput: 'false'}
+
+  # === Newer Windows 11 builds introduced a bug that causes certain applications, notably CEF applications, to instantly crash or hang when using BBR2 congestion provider ===
+  # https://sites.google.com/view/melodystweaks/windows-11-basic-optimizer
+  - !run: {exe: 'netsh', args: 'int tcp set supplemental internet congestionprovider=cubic', showOutput: 'false', builds: ['26100']}

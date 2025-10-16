@@ -1,0 +1,111 @@
+---
+title: Sync configuration
+description: Disables all Windows cloud sync features, clipboard sharing, and messaging backup
+actions:
+  # === Disable synchronization of all settings ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync'
+      value: 'SyncPolicy'
+      type: REG_DWORD
+      data: '5'
+      option: 'disable-sync'
+
+  # === Disable synchronization of design settings ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Personalization'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable synchronization of browser settings ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\BrowserSettings'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable synchronization of credentials (passwords) ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Credentials'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable synchronization of language settings ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Language'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable synchronization of accessibility settings ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Accessibility'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable synchronization of advanced Windows settings ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Windows'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable backup of text messages into the cloud ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Messaging'
+      value: 'AllowMessageSync'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable the transfer of the clipboard to other devices via the cloud ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System'
+      value: 'AllowCrossDeviceClipboard'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+
+  # === Disable Cross Device Resume ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration'
+      value: 'IsResumeAllowed'
+      type: REG_DWORD
+      data: '0'
+      option: 'disable-sync'
+  - !registryValue:
+      path: 'HKLM\System\CurrentControlSet\Control\FeatureManagement\Overrides\8\1387020943'
+      value: 'EnabledState'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-sync'
+
+  # === Disable Microsoft Edge syncing ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge'
+      value: 'SyncDisabled'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-sync'
+
+  # === Forces Sync Center (mobsync.exe) to terminate immediately ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mobsync.exe'
+      value: 'Debugger'
+      type: REG_SZ
+      data: '%WinDir%\System32\taskkill.exe'
+      option: 'disable-sync'
+
+  # === Disables the OneSyncSvc service (responsible for syncing mail, contacts, calendar, and other user data) ===
+  - !service: 
+      name: 'OneSyncSvc'
+      operation: change
+      startup: '4'

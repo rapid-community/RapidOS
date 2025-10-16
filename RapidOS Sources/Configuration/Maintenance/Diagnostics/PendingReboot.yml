@@ -1,0 +1,11 @@
+---
+title: Validate pending reboot state before proceeding
+description: Checks if a reboot is pending and stops setup until the PC is restarted to prevent problems
+actions:
+  - !powerShell:
+      handleExitCodes: {'!0': halt}
+      exeDir: true
+      wait: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        PendingReboot

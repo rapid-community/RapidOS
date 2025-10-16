@@ -1,7 +1,0 @@
----
-title: Add .reg in context menu
-description: >
-  The provided commands modify the Windows Registry to add custom context menu items for '.reg' (registry) files.
-actions:
-  - !registryValue: {path: 'HKCR\.reg\ShellNew', value: 'ItemName', type: REG_EXPAND_SZ, data: '@C:\Windows\regedit.exe,-309'}
-  - !registryValue: {path: 'HKCR\.reg\ShellNew', value: 'NullFile', type: REG_SZ, data: ''}

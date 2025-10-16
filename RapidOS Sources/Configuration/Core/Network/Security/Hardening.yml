@@ -1,0 +1,9 @@
+---
+title: Network security hardening
+description: Strengthens system security by securing remote management, disabling legacy protocols, and enforcing safer authentication settings
+actions:
+  - !run:
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Security.ps1"'

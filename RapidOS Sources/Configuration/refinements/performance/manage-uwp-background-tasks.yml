@@ -1,9 +1,0 @@
----
-title: UWP Background apps
-description: >
-  These registry parameters disable the ability of UWP apps to run in the background.
-actions:
-  # Disable background access
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications', value: 'GlobalUserDisabled', type: REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Search', value: 'BackgroundAppGlobalToggle', type: REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Search', value: 'BackgroundAppGlobalToggle', type: REG_DWORD, data: '0'}

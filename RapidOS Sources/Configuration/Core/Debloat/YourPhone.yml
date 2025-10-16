@@ -1,0 +1,13 @@
+---
+title: Remove Your Phone app
+actions:
+  - !taskKill: {name: '*Phone*', ignoreErrors: true}
+  - !powerShell:
+      option: 'YourPhone'
+      exeDir: true
+      wait: true
+      command: >-
+        .\AppX.ps1 -Packages @(
+          'Microsoft.YourPhone',
+          'MicrosoftWindows.CrossDevice'
+        )

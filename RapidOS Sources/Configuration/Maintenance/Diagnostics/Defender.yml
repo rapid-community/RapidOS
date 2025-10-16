@@ -1,0 +1,9 @@
+---
+title: Check for Microsoft Defender status
+actions:
+  - !powerShell:
+      exeDir: true
+      wait: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        Defender

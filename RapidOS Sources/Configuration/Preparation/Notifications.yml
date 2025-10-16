@@ -1,0 +1,34 @@
+---
+title: Disable Notifications
+actions:
+  # === Disable notifications during installation ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications'
+      value: 'ToastEnabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'
+      value: 'NOC_GLOBAL_SETTING_TOASTS_ENABLED'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings'
+      value: 'NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      value: 'DisableNotificationCenter'
+      type: REG_DWORD
+      data: '1'
+
+  # === Restart notification services ===
+  - !service:
+      ignoreErrors: true
+      name: "WpnService"
+      operation: stop
+  - !service:
+      ignoreErrors: true
+      name: "WpnUserService*"
+      operation: stop

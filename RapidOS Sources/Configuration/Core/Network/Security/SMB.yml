@@ -1,0 +1,9 @@
+---
+title: Disable SMB bandwidth throttling
+description: Removes speed limits on SMB file transfers to improve network performance
+actions:
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters'
+      value: 'DisableBandwidthThrottling'
+      type: REG_DWORD
+      data: '1'

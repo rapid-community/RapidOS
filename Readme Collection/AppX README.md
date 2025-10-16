@@ -1,4 +1,4 @@
-# Removed AppX Apps in RapidOS
+# Removed AppX apps in RapidOS
 
 When installing RapidOS, the following default Windows apps are removed:
 
@@ -8,11 +8,9 @@ When installing RapidOS, the following default Windows apps are removed:
 - **Spotify**
 - **Cortana**
 - **Bing News**
-- **Bing Search**
 - **Bing Weather**
 - **Microsoft Family**
 - **Quick Assist**
-- **Get Help**
 - **Get Started**
 - **Microsoft Solitaire Collection**
 - **Microsoft Teams**
@@ -22,9 +20,7 @@ When installing RapidOS, the following default Windows apps are removed:
 - **Wallet**
 - **Whiteboard**
 - **Maps**
-- **OOBE (Out-of-Box Experience) components**
 - **Parental Controls**
-- **Feedback Hub**
 - **Mail**
 
 Here's section, explaining what can be kept in the system using **Custom Features** in RapidOS:
@@ -34,9 +30,9 @@ Here's section, explaining what can be kept in the system using **Custom Feature
 Using the Custom Features in RapidOS, you can select which default Windows apps to remove or keep. Below are the apps that can be retained if desired:
 
 - **Microsoft Edge**
+- **Microsoft Teams**
 - **OneDrive**
 - **Microsoft Office** and individual Office apps (**Excel**, **OneNote**, **PowerPoint**, **Word**, **Outlook**)
-- **Xbox** and related components (**Game Bar**, **Xbox Services**, etc.)
 - **Your Phone**
 
 These options allow for more flexibility during installation, letting you customize the system according to your needs.

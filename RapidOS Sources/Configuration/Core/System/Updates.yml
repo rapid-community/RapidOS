@@ -1,0 +1,52 @@
+---
+title: Windows Update configuration
+description: Blocks Windows Update executables, pauses updates for 500 days, forces WSUS usage, and hides the Windows Update page in Settings
+actions:
+  - !powerShell:
+      runas: currentUserElevated
+      exeDir: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        # === Block using IFEO ===
+        $noop = Join-Path $env:WinDir 'system32\systray.exe'
+        $ifeo = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options'
+        $exe = 'Windows10UpgraderApp', 'setupprep', 'Windows10Upgrade', 'WindowsUpdateElevatedInstaller',
+               'WindowsUpdateBox', 'Windows11InstallationAssistant', 'SetupHost', 'wuauclt',
+               'MoUsoCoreWorker', 'sedlauncher', 'sedsvc', 'updateassistant', 'usoclient'
+
+        foreach ($item in $exe) {
+          Set-RegistryValue -Path "$ifeo\$item.exe" -Name 'Debugger' -Type String -Value $noop *>$null
+          taskkill /im "$item.exe" /t /f *>$null
+        }
+
+        # === Pause updates for 500 days ===
+        $pause = (Get-Date).AddDays(500).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+        $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+        $regPath = 'HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings'
+
+        Set-RegistryValue -Path $regPath -Name 'PauseFeatureUpdatesStartTime' -Type String -Value $today
+        Set-RegistryValue -Path $regPath -Name 'PauseFeatureUpdatesEndTime' -Type String -Value $pause
+        Set-RegistryValue -Path $regPath -Name 'PauseQualityUpdatesStartTime' -Type String -Value $today
+        Set-RegistryValue -Path $regPath -Name 'PauseQualityUpdatesEndTime' -Type String -Value $pause
+        Set-RegistryValue -Path $regPath -Name 'PauseUpdatesStartTime' -Type String -Value $today
+        Set-RegistryValue -Path $regPath -Name 'PauseUpdatesExpiryTime' -Type String -Value $pause
+
+        # === Enforce WSUS server ===
+        Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Name 'UseWUServer' -Type DWORD -Value 1
+
+        # === Hide Windows Update page in Settings ===
+        & "RapidScripts\Set-Pages.cmd" -add windowsupdate *>$null
+
+  # === Disable Reserved Storage for more control over disk space ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager', value: 'ShippedWithReserves', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager', value: 'PassedPolicy', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager', value: 'MiscPolicyInfo', type: REG_DWORD, data: '2'}
+
+  # === Prevent updates for DevHome and Outlook ===
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\DevHomeUpdate', operation: 'delete'}
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate', operation: 'delete'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator\UScheduler\DevHomeUpdate', value: 'workCompleted', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Orchestrator\UScheduler\OutlookUpdate', value: 'workCompleted', type: REG_DWORD, data: '1'}
+
+  # === Disable Microsoft Store autoupdates ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\WindowsStore', value: 'AutoDownload', type: REG_DWORD, data: '4'}

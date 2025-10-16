@@ -1,0 +1,9 @@
+---
+title: Network configuration
+description: Improves adapters performance by tuning offload features, disabling power saving, and applying vendor-specific optimizations
+actions:
+  - !run:
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Devices.ps1 -Device Configure-Adapters"'

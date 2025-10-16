@@ -1,0 +1,33 @@
+---
+title: Boot configuration
+description: Adjusts system boot settings for optimized startup
+actions:
+  # === Disable startup delay for autostart apps ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize'
+      value: 'StartupDelayInMSec'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize'
+      value: 'WaitforIdleState'
+      type: REG_DWORD
+      data: '0'
+ 
+  # === Use classic boot menu style ===
+  - !run:
+      exe: 'bcdedit'
+      args: '/set bootmenupolicy Legacy'
+      showOutput: false
+
+  # === Disable debugging ===
+  - !run:
+      exe: 'bcdedit'
+      args: '/set debug no'
+      showOutput: false
+
+  # === Set boot menu timeout to 15 seconds ===
+  - !run:
+      exe: 'bcdedit'
+      args: '/timeout 15'
+      showOutput: false

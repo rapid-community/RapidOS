@@ -1,0 +1,15 @@
+---
+title: CLI telemetry configuration
+description: Disables data collection in PowerShell and the .NET CLI
+actions:
+  # === PowerShell ===
+  - !run: 
+      exe: 'setx'
+      args: 'POWERSHELL_TELEMETRY_OPTOUT 1'
+      showOutput: 'false'
+
+  # === .NET ===
+  - !run: 
+      exe: 'setx' 
+      args: 'DOTNET_CLI_TELEMETRY_OPTOUT 1'
+      showOutput: 'false'

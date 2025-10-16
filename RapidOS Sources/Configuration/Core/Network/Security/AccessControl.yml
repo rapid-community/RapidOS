@@ -1,0 +1,9 @@
+---
+title: Block Anonymous Shares
+description: Prevents unauthorized users from accessing shared folders and files on the network
+actions:
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters'
+      value: 'RestrictNullSessAccess'
+      type: REG_DWORD
+      data: '1'

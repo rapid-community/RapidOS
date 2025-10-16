@@ -1,235 +1,114 @@
 ---
-title: Main Playbook Configuration file
-description: Initiates scripts of RapidOS Playbook
-privilege: Admin
-actions: []
-features:
-  ## Recommendation                                                                                                 
-  # ----------------------------------------------------------------- #
-  # The commented lines are left that way on purpose for reasons like #
-  # QoL, stability, and user convenience. RapidOS devs pay close      #
-  # attention to every change in the code. If you want to use any of  #
-  # the commented options, feel free to uncomment them.               #
-  # ----------------------------------------------------------------- #
-
-  ## Pre-installation Setup
-  - refinements\system\prepare-initial-playbook.yml
+title: Main playbook configuration file
+actions:
+  # ===========================
+  # Prepairing stage
+  # ===========================
+  - !status: {status: 'Prepairing...'}
  
-  ## Main System Refinements
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This section includes various configuration files designed to     #
-  # refine system performance and customize the user experience. Each #
-  # YAML file listed addresses a different aspect of system           #
-  # optimization, cleanup, and configuration.                         #
-  # Reviewing these files will help understand the changes made and   #
-  # their implications on overall system performance.                 #
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  - refinements\performance\tune-power-efficiency.yml
-  - refinements\system\cleanup-system.yml
-  - refinements\debloat\remove-appx-apps.yml
-  - refinements\debloat\remove-update-health.yml
-  - refinements\debloat\remove-windows-installation-assistant.yml
-  - refinements\debloat\configure-deprovisioned-apps.yml
-  - refinements\system\optimize-services.yml
-  - additionals\configure-appx-apps.yml 
-  - additionals\configure-3rdparty-software.yml
-  # ----------------------------------------------------------------- #
+  - !task: {path: 'Preparation\Environment.yml'}
+  - !task: {path: 'Preparation\UI.yml'}
+  - !task: {path: 'Maintenance\Main.yml'}
+  - !task: {path: 'Preparation\RestorePoint.yml'}
+  - !task: {path: 'Preparation\Taskkill.yml'}
+  - !task: {path: 'Preparation\PowerShell.yml'}
+  - !task: {path: 'Preparation\Notifications.yml'}
 
-  ## Further System Optimizations
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This section encompasses a range of advanced system optimizations #
-  # and customizations aimed at improving overall performance,        #
-  # functionality, and user experience. It includes detailed settings #
-  # adjustments, context menu modifications, and personal adjustments.#   
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  # System Fine-Tuning
-  - refinements\system\configure-boot-settings.yml
-  - refinements\system\configure-crash-control.yml
-  - refinements\system\configure-dxgkrnl.yml
-  - refinements\system\configure-mouse-settings.yml
-  - refinements\system\configure-sync.yml
-  - refinements\system\configure-windows-updates.yml
-  - refinements\system\optimize-drive.yml
-  - refinements\system\reduce-startmenu-delay.yml
-  - refinements\system\set-shutdown-timeout.yml
-  - refinements\system\clean-environment-path.yml
-  # - refinements\system\set-timer-resolution.yml
+  # ===========================
+  # Software stage
+  # ===========================
+  - !status: {status: 'Installing software...'}
 
-  - additionals\statuses\configuring-windows-status.yml
-  # Personal Adjustments
-  # - refinements\system\customization\explorer\add-this-pc-shortcut.yml
-  - refinements\system\customization\explorer\config-file-explorer.yml
-  - refinements\system\customization\audio-communications.yml
-  # - refinements\system\customization\bypass-installation-requirements.yml
-  - refinements\system\customization\configure-autoplay-settings.yml
-  - refinements\system\customization\configure-ease-of-access.yml
-  - refinements\system\customization\configure-multitasking.yml
-  - refinements\system\customization\configure-oem-information.yml
-  - refinements\system\customization\configure-environment.yml
-  - refinements\system\customization\customize-settings-page.yml
-  - refinements\system\customization\customize-text-input.yml
-  - refinements\system\customization\disable-activity-feed.yml
-  - refinements\system\customization\disable-ai-features.yml
-  # - refinements\system\customization\disable-clipboard-history.yml
-  - refinements\system\customization\disable-input-personalization.yml
-  - refinements\system\customization\disable-offline-maps.yml
-  - refinements\system\customization\disable-system-restore.yml
-  # - refinements\system\customization\disable-tablet-mode.yml
-  # - refinements\system\customization\disable-windows-startup-sound.yml
-  # - refinements\system\customization\configure-xbox-gamebar.yml
-  - refinements\system\customization\enhance-user-experience.yml
-  - refinements\system\customization\optimize-windows-search.yml
+  # === Browsers ===
+  - !task: {path: 'Software\Browsers\Brave.yml'}
+  - !task: {path: 'Software\Browsers\Chrome.yml'}
+  - !task: {path: 'Software\Browsers\Firefox.yml'}
+  - !task: {path: 'Software\Browsers\Thorium.yml'}
 
-  # Context Menu Changes
-  - additionals\statuses\context-menu-status.yml
-  - refinements\system\context-menu\revert-old-context-menu.yml
-  - refinements\system\context-menu\add\add-batch-file.yml
-  - refinements\system\context-menu\add\add-powershell-script.yml
-  - refinements\system\context-menu\add\add-registry-file.yml
-  - refinements\system\context-menu\remove\remove-bitmap-image.yml
-  - refinements\system\context-menu\remove\remove-cast-to-device.yml
-  - refinements\system\context-menu\remove\remove-extract-all.yml
-  - refinements\system\context-menu\remove\remove-give-access-to.yml
-  - refinements\system\context-menu\remove\remove-include-in-library.yml
-  - refinements\system\context-menu\remove\remove-modern-sharing.yml
-  # - refinements\system\context-menu\remove\remove-open-in-terminal.yml
-  - refinements\system\context-menu\remove\remove-paint-3d.yml
-  - refinements\system\context-menu\remove\remove-restore-previous-versions.yml
-  - refinements\system\context-menu\remove\remove-rich-text.yml
-  - refinements\system\context-menu\remove\remove-share.yml
-  - refinements\system\context-menu\remove\remove-shortcut.yml
-  - refinements\system\context-menu\remove\remove-troubleshoot-compatibility.yml
-  # ----------------------------------------------------------------- #
+  # === Components ===
+  - !task: {path: 'Software\Components\DirectX.yml'}
+  - !task: {path: 'Software\Components\NET3.5.yml'}
+  - !task: {path: 'Software\Components\VCRedist.yml'}
 
-  ## Security Changes
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This section includes refinements related to various security     #
-  # settings on the system. Each YAML file listed here corresponds    #
-  # to a specific aspect of security, such as Windows Defender        #
-  # settings, User Account Control, Spectre and Meltdown mitigations, #
-  # risk types management, core isolation configurations, and         #
-  # vulnerable driver blocklist.                                      #
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  - refinements\security\configure-windows-defender.yml
-  - refinements\security\configure-user-account-control.yml
-  - refinements\security\configure-mitigations.yml
-  - refinements\security\configure-core-isolation.yml
-  - refinements\security\configure-fth-settings.yml
-  # - refinements\security\vulnerable-driver-blocklist.yml
-  - refinements\security\configure-risk-types.yml
-  - refinements\security\configure-security-settings.yml
-  # ----------------------------------------------------------------- #
+  # ===========================
+  # Debloat stage
+  # ===========================
+  - !status: {status: 'Removing UWP...'}
 
-  ## Advanced Network Configurations
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This configuration section outlines advanced network settings     #
-  # and security enhancements to optimize and secure network          #
-  # operations. Each YAML file listed here corresponds to a specific  #
-  # aspect of security, such as Netsh settings, TCP/IP changes, and   # 
-  # security hardening.                                               #
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  - additionals\statuses\network-status.yml
-  - refinements\network\configure-netsh.yml
-  # - refinements\network\configure-default-ttl.yml
-  - refinements\network\configure-irp-stack-size.yml
-  # - refinements\network\configure-max-free-tcbs.yml
-  # - refinements\network\configure-max-user-port.yml
-  # - refinements\network\configure-sizereqbuf.yml
-  # - refinements\network\configure-tcp1323-options.yml
-  - refinements\network\configure-firewall.yml
-  - refinements\network\security\block-anonymous-access.yml
-  - refinements\network\security\disable-insecure-ciphers.yml
-  - refinements\network\security\disable-insecure-dotnet-apps-connections.yml
-  - refinements\network\security\disable-insecure-renegotiation.yml
-  - refinements\network\security\disable-smb-speed-limit.yml
-  - refinements\network\security\enable-strong-key-requirement.yml
-  - refinements\network\security\prevent-anonymous-enumeration.yml
-  # ----------------------------------------------------------------- #
+  - !task: {path: 'Core\Debloat\AppX.yml'}
+  - !task: {path: 'Core\Debloat\Edge.yml'}
+  - !task: {path: 'Core\Debloat\HealthCheck.yml'}
+  - !task: {path: 'Core\Debloat\InstallationAssistant.yml'}
+  - !task: {path: 'Core\Debloat\Office.yml'}
+  - !task: {path: 'Core\Debloat\OneDrive.yml'}
+  - !task: {path: 'Core\Debloat\Teams.yml'}
+  - !task: {path: 'Core\Debloat\YourPhone.yml'}
 
-  ## Performance Improvements
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This section details the improvements made to enhance system      #
-  # performance. Each YAML file listed here contains configurations   #
-  # and optimizations designed to fine-tune various aspects of system #
-  # operation, from registry settings to file system configurations,  #
-  # task management, and background processes.                        #
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  - additionals\statuses\performance-status.yml  
-  - refinements\performance\apply-system-registry-tweaks.yml
-  - refinements\performance\configure-file-system.yml
-  - refinements\performance\configure-multi-plane-overlay.yml
-  - refinements\performance\enhance-task-priority.yml
-  # - refinements\performance\manage-uwp-background-tasks.yml
-  - refinements\performance\optimize-svchost.yml
-  - refinements\performance\set-resource-management-policy.yml
-  # ----------------------------------------------------------------- #
+  # ===========================
+  # Network stage
+  # ===========================
+  - !status: {status: 'Hardening network...'}
 
-  ## Enhanced Privacy Settings
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This section focuses on improving privacy by configuring various  #
-  # settings related to data collection, app permissions, and         #
-  # advertising preferences. Each YAML file addresses specific        #
-  # privacy concerns and adjustments.                                 #
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  - additionals\statuses\privacy-status.yml
-  - refinements\privacy\configure-ads-settings.yml
-  - refinements\privacy\configure-app-permissions.yml
-  - refinements\privacy\configure-autologgers.yml
-  - refinements\privacy\configure-data-collection.yml
-  # - refinements\privacy\configure-hosts.yml
-  - refinements\privacy\configure-scheduled-tasks.yml
-  - refinements\privacy\disable-dotnet-telemetry.yml
-  - refinements\privacy\disable-office-telemetry.yml
-  - refinements\privacy\disable-telemetry-collection.yml
-  - refinements\privacy\remove-defaultuser0.yml
-  # ----------------------------------------------------------------- #
+  # === Core ===
+  - !task: {path: 'Core\Network\Adapters.yml'}
+  - !task: {path: 'Core\Network\Firewall.yml'}
+  - !task: {path: 'Core\Network\Netsh.yml'}
 
-  ## Quality of Life Enhancements
-  # ----------------------------------------------------------------- #
-  # Description:                                                      #
-  # This section covers enhancements that improve user experience     #
-  # and system usability. Each YAML file addresses different aspects  #
-  # of the user interface, including themes, notifications, and       #
-  # customization options.                                            #
-  #                                                                   #
-  # You can review each YAML file for detailed changes and their      #
-  # impact on system.                                                 #
-  # ----------------------------------------------------------------- #
-  # Themes configuration
-  - refinements\quality-of-life\themes\install-themes.yml
-  - refinements\quality-of-life\set-start-menu-layout.yml
-  - refinements\quality-of-life\configure-pinned-features.yml
-  - refinements\quality-of-life\configure-visual-settings.yml
-  - refinements\quality-of-life\customize-notifications.yml
-  - refinements\quality-of-life\customize-taskbar.yml
-  - refinements\quality-of-life\set-desktop-preferences.yml
-  - refinements\quality-of-life\create-post-install-folder.yml
-  # - refinements\quality-of-life\activate-classic-photo-viewer.yml
-  # ----------------------------------------------------------------- #
+  # === Security ===
+  - !task: {path: 'Core\Network\Security\Hardening.yml'}
+  - !task: {path: 'Core\Network\Security\AccessControl.yml'}
+  - !task: {path: 'Core\Network\Security\Ciphers.yml'}
+  - !task: {path: 'Core\Network\Security\Enumeration.yml'}
+  - !task: {path: 'Core\Network\Security\KeyExchange.yml'}
+  - !task: {path: 'Core\Network\Security\NETSecurity.yml'}
+  - !task: {path: 'Core\Network\Security\Renegotiation.yml'}
+  - !task: {path: 'Core\Network\Security\SMB.yml'}
 
-  ## End of installation. Set PowerShell execution policy to Windows default
-  # - refinements\security\execution-policy\set-execution-policy-restricted.yml # Useless
+  # ===========================
+  # Customizations stage
+  # ===========================
+  - !status: {status: 'Customizing system...'}
+
+  - !task: {path: 'Core\Customizations\Advertising.yml'}
+  - !task: {path: 'Core\Customizations\ContextMenu.yml'}
+  - !task: {path: 'Core\Customizations\Explorer.yml'}
+  - !task: {path: 'Core\Customizations\StartMenu.yml'}
+  - !task: {path: 'Core\Customizations\Taskbar.yml'}
+  - !task: {path: 'Core\Customizations\TaskManager.yml'}
+  - !task: {path: 'Core\Customizations\Themes.yml'}
+  - !task: {path: 'Core\Customizations\VisualEffects.yml'}
+
+  # ===========================
+  # Privacy stage
+  # ===========================
+  - !status: {status: 'Improving privacy...'}
+
+  - !task: {path: 'Core\Privacy\Core.yml'}
+  - !task: {path: 'Core\Privacy\AppCompat.yml'}
+  - !task: {path: 'Core\Privacy\Console.yml'}
+  - !task: {path: 'Core\Privacy\IFEO.yml'}
+  - !task: {path: 'Core\Privacy\Location.yml'}
+  - !task: {path: 'Core\Privacy\Recall.yml'}
+  - !task: {path: 'Core\Privacy\Tasks.yml'}
+  - !task: {path: 'Core\Privacy\WER.yml'}
+
+  # ===========================
+  # System stage
+  # ===========================
+  - !status: {status: 'Applying systemwide changes...'}
+
+  - !task: {path: 'Core\System\Boot.yml'}
+  - !task: {path: 'Core\System\Devices.yml'}
+  - !task: {path: 'Core\System\Filesystem.yml'}
+  - !task: {path: 'Core\System\IFEO.yml'}
+  - !task: {path: 'Core\System\Kernel.yml'}
+  - !task: {path: 'Core\System\Mouse.yml'}
+  - !task: {path: 'Core\System\Power.yml'}
+  - !task: {path: 'Core\System\Security.yml'}
+  - !task: {path: 'Core\System\Services.yml'}
+  - !task: {path: 'Core\System\SvcGroup.yml'}
+  - !task: {path: 'Core\System\Synchronization.yml'}
+  - !task: {path: 'Core\System\Updates.yml'}
+  - !task: {path: 'Core\System\Notifications.yml'}
+  - !task: {path: 'Core\System\Finalize.yml'}
+  - !task: {path: 'Core\System\Cleanup.yml'}

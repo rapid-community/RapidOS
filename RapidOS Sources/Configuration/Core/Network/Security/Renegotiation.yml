@@ -1,0 +1,29 @@
+---
+title: Disable insecure TLS renegotiation
+description: Blocks vulnerable TLS handshake renegotiation methods to prevent specific cryptographic attacks
+actions:
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'AllowInsecureRenegoClients'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'AllowInsecureRenegoServers'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'DisableRenegoOnServer'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'DisableRenegoOnClient'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL'
+      value: 'UseScsvForTls'
+      type: REG_DWORD
+      data: '1'

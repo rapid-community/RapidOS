@@ -1,0 +1,18 @@
+---
+title: Network reset and repair actions
+actions:
+  # === Reset TCP/IP settings to default ===
+  - !run: {exe: 'netsh', args: 'int ip reset', showOutput: 'false'}
+
+  # === Reset Winsock settings ===
+  - !run: {exe: 'netsh', args: 'winsock reset', showOutput: 'false'}
+
+  # === Clear DNS cache ===
+  - !run: {exe: 'ipconfig', args: '/flushdns', showOutput: 'false'}
+
+  # === Fix missing Internet Options dialog (re-register control panel component) ===
+  - !run: {exe: 'regsvr32', args: '/n /i /s inetcpl.cpl', showOutput: 'false'}
+
+  # === Fix Wi-Fi issue after upgrading to Windows 11 ===
+  - !registryKey: {path: 'HKCR\\CLSID\\{988248f3-a1ad-49bf-9170-676cbbc36ba3}', operation: delete}
+  - !run: {exe: 'netcfg', args: '-v -u dni_dne', showOutput: 'false'}

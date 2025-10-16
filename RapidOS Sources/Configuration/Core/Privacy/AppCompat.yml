@@ -1,0 +1,24 @@
+---
+title: AppCompat telemetry configuration
+description: Disables Windows Application Compatibility (AppCompat) checks
+actions:
+  # === Disable Inventory Collector ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat'
+      value: 'DisableInventory'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable user steps recorder ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat'
+      value: 'DisableUAR'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable application telemetry ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat'
+      value: 'AITEnable'
+      type: REG_DWORD
+      data: '0'

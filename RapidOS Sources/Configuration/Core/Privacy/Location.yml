@@ -1,0 +1,14 @@
+---
+title: Geolocation privacy configuration
+description: Blocks apps from getting your location, even when they ask for it
+actions:
+  # === Disable location services ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors', value: 'DisableWindowsLocationProvider', type: REG_DWORD, data: 1}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors', value: 'DisableLocationScripting', type: REG_DWORD, data: 1}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors', value: 'DisableLocation', type: REG_DWORD, data: 1}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides{BFA794E4-F964-4FDB-90F6-51056BFE4B44}', value: 'SensorPermissionState', type: REG_DWORD, data: 0}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides{BFA794E4-F964-4FDB-90F6-51056BFE4B44}', value: 'Value', type: REG_SZ, data: 'Deny'}
+
+  # === Deny location access ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location', value: 'Value', type: REG_SZ, data: 'Deny'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location', value: 'ShowGlobalPrompts', type: REG_DWORD, data: 0}

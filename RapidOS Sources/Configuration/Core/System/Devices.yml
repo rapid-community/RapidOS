@@ -1,0 +1,19 @@
+---
+title: Device configuration
+description: Enables MSI mode for core hardware and applies specific optimizations for SSDs
+actions:
+  # === Drive-specific optimizations ===
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Devices.ps1 -Device Configure-Drives"'
+
+  # === Message Signaled Interrupt (MSI) ===
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Devices.ps1 -Device Configure-DeviceInterrupts"'

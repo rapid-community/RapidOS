@@ -1,0 +1,85 @@
+---
+title: Removing unnecessary AppX packages
+description: >
+  This section focuses on the removal of specific AppX packages from the system, optimizing storage and enhancing cleanliness.
+  Unwanted packages related to various Microsoft applications, as well as third-party software, are targeted for removal
+actions:
+  # === Removing AppX packages ===
+  - !powerShell:
+      exeDir: true
+      wait: true
+      command: |
+        .\AppX.ps1 -Packages @(
+          # Productivity / Automation
+          'Microsoft.MicrosoftPowerBIForWindows',
+          'Microsoft.PowerAutomateDesktop',
+          'MicrosoftCorporationII.MailforSurfaceHub',
+          'Microsoft.Todos',
+
+          # Communication
+          'Microsoft.SkypeApp',
+          'Microsoft.People',
+          'Microsoft.Windows.PeopleExperienceHost',
+          'Microsoft.549981C3F5F10',
+          'microsoft.windowscommunicationsapps',
+
+          # Games / Ads
+          'Microsoft.MicrosoftSolitaireCollection',
+          'Disney.37853FC22C684',
+          'SpotifyAB.SpotifyMusic',
+          'Yandex.Music',
+          'Flipgrid',
+
+          # System / Tools
+          'Microsoft.Windows.DevHome',
+          'Microsoft.WindowsFeedbackHub',
+          # 'Microsoft.GetHelp',
+          'Microsoft.Getstarted',
+          'MicrosoftCorporationII.QuickAssist',
+          'Microsoft.Windows.ParentalControls',
+          'Microsoft.Microsoft3DViewer',
+
+          # Preinstalled apps
+          'Microsoft.MSPaint',
+          'MixedReality.Portal',
+          'Clipchamp.Clipchamp',
+          'Microsoft.Whiteboard',
+          'Microsoft.Windows.SecureAssessmentBrowser',
+          'Microsoft.ZuneVideo',
+
+          # Bing / News / Ads
+          'Microsoft.Advertising',
+          'Microsoft.BingNews',
+          # 'Microsoft.BingSearch',
+          'Microsoft.BingWeather',
+
+          # Maps
+          'Microsoft.WindowsMaps',
+
+          # Family / Education
+          'MicrosoftCorporationII.MicrosoftFamily'
+        )
+  
+  # === Xbox Gamebar ===
+  - !powerShell:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        $cpuLine = Get-Specs | ? {$_ -match 'CPU:'};
+        $dualCCD = @('7900X3D', '7950X3D', '9900X3D', '9950X3D');
+
+        if ($cpuLine -and ($dualCCD | ? {$cpuLine -match $_})) {
+            Write-Host 'AMD Dual-CCD processor with 3D-Cache found'
+        } else {
+            Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
+            Get-AppxPackage *Microsoft.Edge.GameAssist* | Remove-AppxPackage
+            Set-RegistryValue -Path 'HKCU:\Software\Microsoft\GameBar' -Name 'ShowStartupPanel' -Type DWORD -Value 0;
+            Write-Host 'Xbox Game Bar disabled'
+        }
+
+  # === Additional AppX operations ===
+  - !appx: {name: '*Microsoft.Windows.SecHealthUI*', operation: clearCache}
+  - !appx: {name: '*MicrosoftWindows.Client.CBS*', operation: clearCache}
+  - !appx: {name: '*Microsoft.Windows.Search*', operation: clearCache}

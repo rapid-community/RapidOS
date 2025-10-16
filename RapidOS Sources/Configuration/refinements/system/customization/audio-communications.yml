@@ -1,7 +1,0 @@
----
-title: Audio Communications
-description: >
-  This registry modification changes audio settings, specifically concerning audio ducking behavior for audio communications.
-  Audio ducking is the temporary reduction of the volume of one audio source to allow another, such as audio communications, to be heard clearly.
-actions:
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Multimedia\Audio', value: 'UserDuckingPreference', type: REG_DWORD, data: '3'}

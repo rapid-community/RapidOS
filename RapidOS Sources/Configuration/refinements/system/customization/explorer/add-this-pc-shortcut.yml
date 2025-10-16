@@ -1,8 +1,0 @@
----
-title: This Computer icon
-description: >
-  The provided commands configure the visibility of the 'This Computer' desktop icon on desktop.
-actions:
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel', value: '{20D04FE0-3AEA-1069-A2D8-08002B30309D}', type: REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu', value: '{20D04FE0-3AEA-1069-A2D8-08002B30309D}', type: REG_DWORD, data: '0'}
-

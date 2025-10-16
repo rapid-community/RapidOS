@@ -1,9 +1,0 @@
----
-title: Deprovisioned Applications
-description: >
-  These registry commands are designed to deprovision specific pre-installed Windows apps.
-actions:
-  - !powerShell:
-      command: '.\MultiTool.ps1 -MyArgument set_deprovisioned_apps'
-      exeDir: true
-      weight: 100

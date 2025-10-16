@@ -1,0 +1,229 @@
+---
+title: Core telemetry configuration
+description: Disables Windows' global telemetry, Cortana, activity tracking, and data sharing
+actions:
+  # ==============================
+  # Privacy
+  # ==============================
+  # === Disable access to local language for browsers ===
+  - !registryValue:
+      path: 'HKCU\Control Panel\International\User Profile'
+      value: 'HttpAcceptLanguageOptOut'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable transmission of typing information ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Input\TIPC'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable sharing of handwriting data ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\TabletPC'
+      value: 'PreventHandwritingDataSharing'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable sharing of handwriting error reports ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports'
+      value: 'PreventHandwritingErrorReports'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable the Windows Customer Experience Improvement Program ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\SQMClient\Windows'
+      value: 'CEIPEnable'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Windows tracking of app starts ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'Start_TrackProgs'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable app access to diagnostics information ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics'
+      value: 'Value'
+      type: REG_SZ
+      data: 'Deny'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics'
+      value: 'Value'
+      type: REG_SZ
+      data: 'Deny'
+
+  # === Disable app access to user account information ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation'
+      value: 'Value'
+      type: REG_SZ
+      data: 'Deny'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation'
+      value: 'Value'
+      type: REG_SZ
+      data: 'Deny'
+
+  # ==============================
+  # Cortana
+  # ==============================
+  # === Disable Cortana ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Windows Search'
+      value: 'CortanaConsent'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Input Personalization ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Personalization\Settings'
+      value: 'AcceptedPrivacyPolicy'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\InputPersonalization'
+      value: 'RestrictImplicitInkCollection'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\InputPersonalization'
+      value: 'RestrictImplicitTextCollection'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore'
+      value: 'HarvestContacts'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable online speech recognition ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\InputPersonalization'
+      value: 'AllowInputPersonalization'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable download and updates of speech recognition and speech synthesis models ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Speech_OneCore\Preferences'
+      value: 'ModelDownloadAllowed'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Cortana above lock screen ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
+      value: 'AllowCortanaAboveLock'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable the search highlights in the taskbar ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search'
+      value: 'EnableDynamicContentInWSB'
+      type: REG_DWORD
+      data: '0'
+
+  # ==============================
+  # Activity History
+  # ==============================
+  # === Disable recordings of user activity ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System'
+      value: 'EnableActivityFeed'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable storing users' activity history ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System'
+      value: 'PublishUserActivities'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable the submission of user activities to Microsoft ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System'
+      value: 'UploadUserActivities'
+      type: REG_DWORD
+      data: '0'
+
+  # ==============================
+  # User Behavior
+  # ==============================
+  # === Disable application telemetry ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
+      value: 'AllowTelemetry'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection'
+      value: 'AllowTelemetry'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Diagtrack-Listener'
+      value: 'Start'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\CloudExperienceHostOobe'
+      value: 'Start'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\LwtNetLog'
+      value: 'Start'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable diagnostic log collection ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
+      value: 'LimitDiagnosticLogCollection'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable downloading of OneSettings configuration setting ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
+      value: 'DisableOneSettingsDownloads'
+      type: REG_DWORD
+      data: '1'
+
+  # ==============================
+  # Miscellaneous
+  # ==============================
+  # === Disable feedback reminders ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Siuf\Rules'
+      value: 'NumberOfSIUFInPeriod'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Siuf\Rules'
+      value: 'PeriodInNanoSeconds'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable Windows Media Player Diagnostics ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\MediaPlayer\Preferences'
+      value: 'UsageTracking'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable reminders ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection'
+      value: 'DoNotShowFeedbackNotifications'
+      type: REG_DWORD
+      data: '1'

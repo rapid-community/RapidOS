@@ -1,0 +1,83 @@
+---
+title: Taskbar configuration
+actions:
+  # === Taskbar cleanup ===
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Shell.ps1 -Cleanup Taskbar"'
+
+  # === Show 'End task' option ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings'
+      value: 'TaskbarEndTask'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable Windows Chat icon ===
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Chat'
+      value: 'ChatIcon'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'TaskbarMn'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications'
+      value: 'ConfigureChatAutoInstall'
+      type: REG_DWORD
+      data: '0'
+
+  # === Remove People Bar ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      value: 'HidePeopleBar'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable News and Interests widgets ===
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds'
+      value: 'EnableFeeds'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Feeds'
+      value: 'ShellFeedsTaskbarViewMode'
+      type: REG_DWORD
+      data: '2'
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'TaskbarDa'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Dsh'
+      value: 'AllowNewsAndInterests'
+      type: REG_DWORD
+      data: '0'
+
+  # === Remove Meet Now icon ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'HideSCAMeetNow'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer'
+      value: 'HideSCAMeetNow'
+      type: REG_DWORD
+      data: '1'
+
+  # === Show search icon instead of search box ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search'
+      value: 'SearchboxTaskbarMode'
+      type: REG_DWORD
+      data: '1'
+      builds: ['<22000']

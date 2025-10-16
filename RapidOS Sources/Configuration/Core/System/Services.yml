@@ -1,0 +1,70 @@
+---
+title: Services configuration
+actions:
+  # ================================================================================================ #
+  # These services unnecessary for typical operation or are rarely used in most environments.        #
+  # By disabling them or setting them to Manual startup, system resources are conserved, potentially #
+  # improving Windows speed.                                                                         #
+  #                                                                                                  #
+  # These changes are safe for most users, as these services are either related to legacy            #
+  # features, specific hardware or software configurations, or are otherwise redundant in            #
+  # the current system setup. They can be re-enabled if specific functionality is required.          #
+  # ================================================================================================ #
+  
+  # ===========================
+  # Streamline services
+  # ===========================
+  - !service: {name: 'AppMgmt', operation: change, startup: 4}
+  - !service: {name: 'DoSvc', operation: change, startup: 3}
+  - !service: {name: 'LanmanServer', operation: change, startup: 3}
+  - !service: {name: 'MapsBroker', operation: change, startup: 3}
+  - !service: {name: 'MSDTC', operation: change, startup: 4}
+  - !service: {name: 'PcaSvc', operation: change, startup: 4}
+  - !service: {name: 'SEMgrSvc', operation: change, startup: 4}
+  - !service: {name: 'ShellHWDetection', operation: change, startup: 4}
+  - !service: {name: 'SSDPSRV', operation: change, startup: 4}
+  - !service: {name: 'TrkWks', operation: change, startup: 4}
+
+  # === Restrict telemetry-related services ===
+  - !service: {name: 'DiagTrack', operation: change, startup: 4}
+  - !service: {name: 'diagsvc', operation: change, startup: 4}
+  - !service: {name: 'NvTelemetryContainer', operation: change, startup: 4}
+  - !service: {name: 'Telemetry', operation: change, startup: 4}
+  - !service: {name: 'TroubleshootingSvc', operation: change, startup: 4}
+  - !service: {name: 'uhssvc', operation: change, startup: 4}
+  - !powerShell:
+      exeDir: true
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        LimitNetwork -Services @(
+          'UdkUserSvc',
+          'pla',
+          'Wecsvc',
+          'WerSvc',
+          'wercplsupport'
+        )
+
+  # ===========================
+  # Streamline drivers
+  # ===========================
+  - !powerShell:
+      exeDir: true
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        if (!(Test-Laptop)) {
+          Set-Service "GpuEnergyDrv" -StartupType Disabled *>$null
+        }
+
+  - !service:
+      name: 'NetBT'
+      operation: change
+      startup: '4'
+
+  # === Disable it to be able to change reg values for ShellFeedsTaskbarViewMode/IsFeedsAvailable/TaskbarDa/DeviceRegion ===
+  - !service: 
+      name: 'UCPD'
+      operation: change
+      startup: '4'
+  - !scheduledTask:
+      path: '\Microsoft\Windows\AppxDeploymentClient\UCPD velocity'
+      operation: disable

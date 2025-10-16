@@ -1,0 +1,20 @@
+---
+title: Windows Recall configuration
+description: Completely disables the Recall feature, preventing the recording and analysis of your on-screen activity
+actions:
+  # === Disable Windows Copilot+ Recall ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsAI'
+      value: 'DisableAIDataAnalysis'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI'
+      value: 'DisableAIDataAnalysis'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI'
+      value: 'AllowRecallEnablement'
+      type: REG_DWORD
+      data: '0'

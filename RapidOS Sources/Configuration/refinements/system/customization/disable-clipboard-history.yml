@@ -1,8 +1,0 @@
----
-title: Clipboard History
-description: >
-  This script is designed to enhance your system's privacy and security by disabling clipboard history and cross-device clipboard functionality.
-actions:
-  - !registryValue: {path: 'HKCU\Software\Microsoft\Clipboard', value: 'EnableClipboardHistory', type: REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System', value: 'AllowClipboardHistory', type: REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\System', value: 'AllowCrossDeviceClipboard', type: REG_DWORD, data: '0'}

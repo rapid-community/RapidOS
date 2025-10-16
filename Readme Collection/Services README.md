@@ -1,45 +1,36 @@
-# Streamlined Services in RapidOS
+# Streamlined services in RapidOS
 
-In **RapidOS Stable**, several services are adjusted or disabled to optimize system performance. Below is a list of streamlined services:
+Below is a list of streamlined services:
 
-### Core Services:
-- **App Management (AppMgmt)** - Disabled: `Startup 4`
-- **ActiveX Installer (AxInstSV)** - Disabled: `Startup 4`
+### Core services:
+
+- **Application Management (AppMgmt)** - Disabled: `Startup 4`
 - **Delivery Optimization (DoSvc)** - Manual: `Startup 3`
-- **Font Cache (FontCache)** - Manual: `Startup 3`
 - **Server (LanmanServer)** - Manual: `Startup 3`
-- **Distributed Transaction Coordinator (MSDTC)** - Manual: `Startup 3`
-- **Program Compatibility Assistant (PcaSvc)** - Disabled: `Startup 4`
-- **Sign-in Manager (SEMgrSvc)** - Disabled: `Startup 4`
+- **Distributed Transaction Coordinator (MSDTC)** - Disabled: `Startup 4`
+- **Program Compatibility Assistant Service (PcaSvc)** - Disabled: `Startup 4`
+- **Payments and NFC/SE Manager (SEMgrSvc)** - Disabled: `Startup 4`
 - **Shell Hardware Detection (ShellHWDetection)** - Disabled: `Startup 4`
 - **SSDP Discovery (SSDPSRV)** - Disabled: `Startup 4`
 - **Distributed Link Tracking Client (TrkWks)** - Disabled: `Startup 4`
-- **UserChoice Protection Driver (UCPD)** - Disabled: `Startup 4`
-- **Windows Event Log (WEPHOSTSVC)** - Disabled: `Startup 4`
-- **Windows Remote Management (WinRM)** - Disabled: `Startup 4`
-- **Print Workflow User Service (PrintWorkflowUserSvc)** - Disabled: `Startup 4`
+- **User Choice Protection Driver (UCPD)** - Disabled: `Startup 4`
+- **Offline Maps Broker (MapsBroker)** - Manual: `Startup 3`
 
-### Telemetry-related Services (Disabled):
-- **Assigned Access Manager (AssignedAccessManagerSvc)** 
-- **Diagnostic Hub Standard Collector (diagnosticshub.standardcollector.service)**
-- **Connected User Experiences and Telemetry (DiagTrack)**
-- **Diagnostic Service Host (diagsvc)**
-- **WAP Push Message Routing Service (dmwappushservice)**
-- **NVIDIA Telemetry Container (NvTelemetryContainer)**
-- **Performance Logs and Alerts (pla)**
-- **Telemetry Service (Telemetry)**
-- **Troubleshooting Service (TroubleshootingSvc)**
-- **User Device Registration Service (UdkUserSvc)**
-- **Update Health Services (uhssvc)**
-- **Warp JIT Service (WarpJITSvc)**
-- **Windows Diagnostic Infrastructure (WdiServiceHost, WdiSystemHost)**
-- **Windows Event Collector (Wecsvc)**
-- **Windows Error Reporting Service (WerSvc, wercplsupport)**
+### Telemetry-related services (Disabled or Internet-restricted):
 
-### Streamlined Drivers:
+- **Connected User Experiences and Telemetry (DiagTrack)** - Disabled
+- **Diagnostic Service Host (diagsvc)** - Disabled
+- **NVIDIA Telemetry Container (NvTelemetryContainer)** - Disabled
+- **Telemetry Service (Telemetry)** - Disabled
+- **Troubleshooting Service (TroubleshootingSvc)** - Disabled
+- **Update Health Service (uhssvc)** - Disabled
+- **User Device Registration (UdkUserSvc)** - Network access restricted
+- **Performance Logs & Alerts (pla)** - Network access restricted
+- **Windows Event Collector (Wecsvc)** - Network access restricted
+- **Windows Error Reporting Service (WerSvc)** - Network access restricted
+- **Problem Reports and Solutions Control Panel Support (wercplsupport)** - Network access restricted
+
+### Streamlined drivers:
+
 - **NetBIOS over TCP/IP (NetBT)** - Disabled: `Startup 4`
-- **GPU Energy Driver (GpuEnergyDrv)** - Disabled: `Startup 4`
-
->[!Important]
->
->These changes only apply to **RapidOS Stable**. The **Speed** and **Extreme** versions are still in development and will have different service configurations.
+- **GPU Energy Driver (GpuEnergyDrv)** - Disabled: `Startup 4` (applied only if not a laptop)

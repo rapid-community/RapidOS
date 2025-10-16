@@ -1,0 +1,10 @@
+---
+title: .NET 3.5 Framework installation
+actions:
+  - !run:
+      runas: currentUserElevated
+      option: '.NET3.5'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Install-NET3.5"'

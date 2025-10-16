@@ -1,0 +1,13 @@
+---
+title: Remove third-party hosts and firewall entries  
+description: >
+  Removes third-party hosts and firewall rules that block system features (in this case - telemetry);
+  this cleanup is necessary as these third-party modifications may interfere with our methods
+actions:
+  - !powerShell:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        ExternalBlocks

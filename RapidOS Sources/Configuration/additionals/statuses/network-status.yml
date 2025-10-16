@@ -1,6 +1,0 @@
----
-title: AME Wizard status
-description: >
-  The given command triggers a status that will be displayed in the AME Wizard.
-actions:
-  - !writeStatus: {status: 'Configuring network settings'}

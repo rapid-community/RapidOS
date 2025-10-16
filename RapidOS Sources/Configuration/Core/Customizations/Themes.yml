@@ -1,0 +1,20 @@
+---
+title: Themes configuration
+actions:
+  # === Apply dark theme ===
+  - !run:
+      runas: currentUserElevated
+      option: 'dark-theme'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Shell.ps1 -Theme \"$env:WinDir\Resources\Themes\rapid-dark.theme\" -Lockscreen \"$env:WinDir\RapidScripts\Wallpapers\lockscreen-rapid-dark.png\""'
+
+  # === Apply light theme ===
+  - !run:
+      runas: currentUserElevated
+      option: 'light-theme'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Shell.ps1 -Theme \"$env:WinDir\Resources\Themes\rapid-light.theme\" -Lockscreen \"$env:WinDir\RapidScripts\Wallpapers\lockscreen-rapid-light.png\""'

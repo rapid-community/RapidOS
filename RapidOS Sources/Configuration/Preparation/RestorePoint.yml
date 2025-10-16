@@ -1,0 +1,8 @@
+---
+title: Create restore point
+actions:
+  - !run:
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\RestorePoint.ps1 -Name \"RapidOS restore point - rollback all tweaks\""'

@@ -1,0 +1,14 @@
+---
+title: File system configuration
+actions:
+  # === Stop using NTFS compression ===
+  - !run:
+      exe: 'fsutil'
+      args: 'behavior set disablecompression 1'
+      showOutput: false
+
+  # === Stop creating 8.3 short filenames ===
+  - !run:
+      exe: 'fsutil'
+      args: 'behavior set disable8dot3 1'
+      showOutput: false

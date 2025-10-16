@@ -1,28 +1,22 @@
 @echo off
-setlocal
 
-whoami /user | find /i "S-1-5-18" > nul 2>&1 || (
-	call RunAsTI.cmd "%~f0" %*
-	exit /b
+>nul fltmc || (
+    powershell -c "Start-Process '%~f0' -Verb RunAs"
+    exit /b
 )
 
-echo Disabling these Game Bar features might affect performance on AMD Ryzen 7000 and 9000 series processors. However, this does not mean it won't affect other processors. Proceed with caution.
+powershell -c "$f='%~f0'; $lines=Get-Content $f; $idx=$lines.IndexOf(':PS'); iex ($lines[($idx+1)..($lines.Length-1)] -join [Environment]::NewLine)"
+exit /b
+
+echo Disabling Game Bar will definitely reduce performance on Dual-CCD AMD Ryzen 7000 and 9000 series processors. However, this does not mean it won't affect other processors. Proceed with caution.
 echo.
 echo Still want to proceed?
 pause
 
-reg add "HKCU\System\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 0 /f > nul 2>&1
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v AppCaptureEnabled /t REG_DWORD /d 0 /f > nul 2>&1
+:PS
+Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.Edge.GameAssist* | Remove-AppxPackage
 
-reg add "HKCU\Software\Microsoft\GameBar" /v GamePanelStartupTipIndex /t REG_DWORD /d 3 /f > nul 2>&1
-reg add "HKCU\Software\Microsoft\GameBar" /v ShowStartupPanel /t REG_DWORD /d 0 /f > nul 2>&1
-reg add "HKCU\Software\Microsoft\GameBar" /v UseNexusForGameBarEnabled /t REG_DWORD /d 0 /f > nul 2>&1
-
-reg add "HKLM\SOFTWARE\Microsoft\WindowsRuntime\ActivatableClassId\Windows.Gaming.GameBar.PresenceServer.Internal.PresenceWriter" /v ActivationType /t REG_DWORD /d 0 /f > nul 2>&1
-
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f > nul 2>&1
-reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v value /t REG_DWORD /d 0 /f > nul 2>&1
-
-echo Game Bar features have been disabled!
+Write-Host "Game Bar has been disabled."
 pause
-exit /b
+exit

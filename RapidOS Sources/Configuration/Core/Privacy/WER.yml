@@ -1,0 +1,17 @@
+---
+title: Windows Error Reporting (WER) configuration
+description: Blocks the sending of error reports, but leaves the service fully functional
+actions:
+  # === Disable WER data collection by setting the default user consent to 'never send' ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting'
+      value: 'DefaultConsent'
+      type: REG_DWORD
+      data: '0'
+    
+  # === Redirect all WER uploads to a non-existent server ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting'
+      value: 'CorporateWERServer'
+      type: REG_SZ
+      data: ''

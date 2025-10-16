@@ -1,0 +1,24 @@
+---
+title: Enforce .NET strong cryptography
+description: Forces .NET applications to use secure encryption protocols for all network connections
+actions:
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\.NETFramework\v2.0.50727'
+      value: 'SchUseStrongCrypto'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\.NETFramework\v2.0.50727'
+      value: 'SchUseStrongCrypto'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
+      value: 'SchUseStrongCrypto'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\.NETFramework\v4.0.30319'
+      value: 'SchUseStrongCrypto'
+      type: REG_DWORD
+      data: '1'

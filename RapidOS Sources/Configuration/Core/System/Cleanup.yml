@@ -1,0 +1,10 @@
+---
+title: Windows cleanup
+description: Automates system cleanup by removing temporary files
+actions:
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Cleanup.ps1"'

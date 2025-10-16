@@ -1,0 +1,9 @@
+---
+title: Remove PC Health Check
+actions:
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Remove-PCHealthCheck"'

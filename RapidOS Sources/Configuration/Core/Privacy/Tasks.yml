@@ -1,0 +1,61 @@
+---
+title: Telemetry scheduled tasks configuration
+description: Disables various telemetry and data collection tasks
+actions:
+  # === Customer Experience Improvement Program (CEIP / SQM) ===
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Customer Experience Improvement Program\Consolidator'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Customer Experience Improvement Program\BthSQM'
+      operation: disable
+
+  # === Application Experience & Compatibility ===
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Application Experience\MareBackup'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Application Experience\ProgramDataUpdater'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Application Experience\StartupAppTask'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Application Experience\AitAgent'
+      operation: disable
+
+  # === Diagnostics & Feedback ===
+  - !scheduledTask:
+      path: '\Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Autochk\Proxy'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Feedback\Siuf\DmClient'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload'
+      operation: disable
+
+  # === Windows Error Reporting ===
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Windows Error Reporting\QueueReporting'
+      operation: disable
+
+  # === Device Information ===
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Device Information\Device'
+      operation: disable
+  - !scheduledTask:
+      path: '\Microsoft\Windows\Device Information\Device User'
+      operation: disable

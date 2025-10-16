@@ -1,0 +1,29 @@
+---
+title: IFEO configuration
+description: Reduce process priority for EXEs
+actions:
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MoUsoCoreWorker.exe\PerfOptions'
+      value: 'CpuPriorityClass'
+      type: REG_DWORD
+      data: '5'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\PhoneExperienceHost.exe\PerfOptions'
+      value: 'CpuPriorityClass'
+      type: REG_DWORD
+      data: '5'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\spoolsv.exe\PerfOptions'
+      value: 'CpuPriorityClass'
+      type: REG_DWORD
+      data: '1'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SearchProtocolHost.exe\PerfOptions'
+      value: 'CpuPriorityClass'
+      type: REG_DWORD
+      data: '5'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\SearchIndexer.exe\PerfOptions'
+      value: 'CpuPriorityClass'
+      type: REG_DWORD
+      data: '5'

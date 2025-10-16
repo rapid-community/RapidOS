@@ -1,14 +1,9 @@
 @echo off
 setlocal
 
-set "___args="%~f0" %*"
-fltmc > nul 2>&1 || (
-	powershell -c "Start-Process -Verb RunAs -FilePath 'cmd' -ArgumentList """/c $env:___args"""" 2> nul || (
-		echo You must run this script as admin.
-		if "%*"=="" pause
-		exit /b 1
-	)
-	exit /b
+>nul fltmc || (
+    powershell -c "Start-Process '%~f0' -Verb RunAs"
+    exit /b
 )
 
 :: Re-enable anonymous access
@@ -69,6 +64,6 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExc
 echo Re-enabling Anonymous Enumeration...
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v RestrictAnonymous /t REG_DWORD /d 0 /f > nul 2>&1
 
-echo All protocols have been restored to their default settings!
+echo All protocols have been restored to their default settings.
 pause
 exit /b

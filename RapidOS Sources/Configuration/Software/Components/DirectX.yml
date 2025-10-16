@@ -1,0 +1,10 @@
+---
+title: DirectX installation
+actions:
+  - !run:
+      runas: currentUserElevated
+      option: 'DirectX'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Install-DirectX"'

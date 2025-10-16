@@ -1,0 +1,42 @@
+---
+title: Configure environment and register PowerShell modules
+actions:
+  - !powerShell:
+      handleExitCodes: {'!0': halt}
+      exeDir: true
+      wait: true
+      command: |
+        $w = $env:WinDir
+        robocopy 'RapidScripts' ($w + '\RapidScripts') /E /NP /NFL /NDL *>$null
+        robocopy 'RapidResources\RapidOS Toolbox' ($w + '\RapidOS Toolbox') /E /NP /NFL /NDL *>$null
+        copy 'RapidScripts\RapidOS Toolbox.lnk' ($env:USERPROFILE + '\Desktop\RapidOS Toolbox.lnk') *>$null
+        xcopy 'RapidResources\Themes' ($w + '\Resources\Themes') /E /I /H /Y *>$null
+        $dest = Join-Path $w 'RapidScripts\Playbook'; [System.IO.Directory]::CreateDirectory($dest) *>$null
+        $files = [System.IO.Directory]::GetFiles((Get-Location), '*.ps1')
+        foreach ($f in $files) {
+          $target = Join-Path $dest ([System.IO.Path]::GetFileName($f))
+          [System.IO.File]::Copy($f, $target, $true)
+        }
+        if (!(Test-Path ($w + '\RapidScripts\Modules'))) {Write-Host 'Failed to copy modules'; exit 1}
+        $envVars = @{}
+        $envVars.PATH = $w + '\RapidScripts'
+        $envVars.PSModulePath = $w + '\RapidScripts\Modules'
+        foreach ($e in $envVars.GetEnumerator()) {
+          $c = [Environment]::GetEnvironmentVariable($e.Name, 'Machine')
+          if (!$c -or $c -notmatch [regex]::Escape($e.Value)) {[Environment]::SetEnvironmentVariable($e.Name, ($e.Value + ';' + $c), 'Machine')}
+        }
+        if (Test-Path ($w + '\RapidScripts\Modules')) {gci ($w + '\RapidScripts\Modules') -Filter '*.psm1' | ? {Test-Path $_.FullName} | % {ipmo $_.FullName -Force -Global}}
+        $profilePath = $PSHOME + '\profile.ps1'
+        $importCmd = 'if (Test-Path $env:WinDir\RapidScripts\Modules) {gci $env:WinDir\RapidScripts\Modules -Filter *.psm1 | % {ipmo $_.FullName -Force -Global}}'
+        $currentProfile = gc $profilePath -Raw -EA 0
+        if ([string]::IsNullOrWhiteSpace($currentProfile) -or $currentProfile -ne $importCmd) {
+          sc $profilePath $importCmd -EA 1 -ErrorVariable setError
+          if ($setError) {Write-Host 'Error writing to profile: $setError'; exit 1}
+          if (!(Test-Path $profilePath) -or [string]::IsNullOrWhiteSpace((gc $profilePath -Raw))) {Write-Host 'File is empty or not created'; exit 1}
+        }
+        $regPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+        $currentPSPath = (Get-ItemProperty -Path $regPath -Name PSModulePath).PSModulePath
+        if ($currentPSPath -notmatch [regex]::Escape($w + '\RapidScripts\Modules')) {
+          $newPSPath = $w + '\RapidScripts\Modules;' + $currentPSPath;
+          Set-ItemProperty -Path $regPath -Name PSModulePath -Value $newPSPath -EA 1
+        }

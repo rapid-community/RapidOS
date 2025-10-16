@@ -1,0 +1,24 @@
+---
+title: Task Manager configuration
+description: Enables 'Always on Top' for persistent window priority
+actions:
+  - !powerShell:
+      builds: ['<22000']
+      runas: currentUserElevated
+      command: >-
+        $regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager';
+        $valueName = 'Preferences';
+
+        $regVal = Get-ItemPropertyValue -Path $regPath -Name $valueName -EA 1;
+        if (!$regVal) {throw};
+        $regVal[48] = 0x01;
+        Set-ItemProperty -Path $regPath -Name $valueName -Value $regVal -Type Binary -Force
+
+  - !powerShell:
+      builds: ['>=22000']
+      runas: currentUserElevated
+      command: >-
+        $settingsFile = $env:LOCALAPPDATA + '\Microsoft\Windows\TaskManager\settings.json';
+        $json = Get-Content -Path $settingsFile -Raw | ConvertFrom-Json;
+        $json | Add-Member -NotePropertyName 'AlwaysOnTop' -NotePropertyValue $true -Force;
+        $json | ConvertTo-Json -Depth 10 | Set-Content -Path $settingsFile

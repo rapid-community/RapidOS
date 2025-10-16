@@ -1,0 +1,118 @@
+---
+title: Disable Windows ads
+description: Disables advertisements, suggestions, and promotional content across Start Menu, Settings, and system interfaces
+actions:
+  # =======================================
+  # Turn off suggestions in Start Menu
+  # =======================================
+  # === Turn off Content Delivery Manager suggested content ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'ContentDeliveryAllowed', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'FeatureManagementEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'OemPreInstalledAppsEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'PreInstalledAppsEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'PreInstalledAppsEverEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SilentInstalledAppsEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContentEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-314563Enabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-353698Enabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SystemPaneSuggestionsEnabled', type: REG_DWORD, data: '0'}
+  - !registryKey: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\SuggestedApps', operation: delete}
+  - !registryKey: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions', operation: delete}
+
+  # === "Show recommendations for tips, shortcuts, new apps, and more" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'Start_IrisRecommendations', type: REG_DWORD, data: '0'}
+
+  # === "Show account-related notifications" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'Start_AccountNotifications', type: REG_DWORD, data: '0'}
+
+  # === "Show suggestions occasionally" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-338388Enabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SystemPaneSuggestionsEnabled', type: REG_DWORD, data: '0'}
+
+  # === "Show me the best of what's new in Windows" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SoftLandingEnabled', type: REG_DWORD, data: '0'}
+
+  # === "Feature discovery and tips across Windows" ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudContent', value: 'DisableSoftLanding', type: REG_DWORD, data: '1'}
+
+  # === "Show recommended websites" ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'HideRecommendedPersonalizedSites', type: REG_DWORD, data: '1'}
+
+  # =======================================
+  # Remove advertisements from Settings app
+  # =======================================
+  - !taskKill: {name: 'SystemSettings', ignoreErrors: true}
+
+  # === "Show me tips and suggestions as I use Windows" ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'AllowOnlineTips', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\default\Settings\AllowOnlineTips', value: 'value', type: REG_DWORD, data: '0'}
+
+  # === "Show me suggested content" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-338393Enabled', type: REG_DWORD, data: '0'}
+
+  # === "Show me recommended content - Apps & features" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-353694Enabled', type: REG_DWORD, data: '0'}
+
+  # === "Show me recommended content - Personalization" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-353696Enabled', type: REG_DWORD, data: '0'}
+
+  # === Remove Windows 11 banner with advertisements ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsRuntime\ActivatableClassId\ValueBanner.IdealStateFeatureControlProvider', value: 'ActivationType', type: REG_DWORD, data: '0', builds: ['>=22000']}
+
+  # === Remove promotional cards and sign-in prompts 'Home' and 'Accounts' pages ===
+  - !run:
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Advertisements.ps1"'
+  - !appx: {name: '*Microsoft.Windows.ImmersiveControlPanel*', operation: clearCache}
+
+  # =======================================
+  # Disable all remaining ads & promos
+  # =======================================
+  # === "Let apps show me personalized ads by using my advertising ID" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo', value: 'Enabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo', value: 'Enabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo', value: 'DisabledByGroupPolicy', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth', value: 'AllowAdvertising', type: REG_DWORD, data: '0'}
+
+  # === "Get fun facts, tips, tricks, and more on your lock screen" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-338387Enabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'RotatingLockScreenEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'RotatingLockScreenOverlayEnabled', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent', value: 'DisableWindowsSpotlightFeatures', type: REG_DWORD, data: '1'}
+
+  # === "Show me notifications in the Settings app" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications', value: 'EnableAccountNotifications', type: REG_DWORD, data: '0'}
+
+  # === "Get tips and suggestions when using Windows" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-338389Enabled', type: REG_DWORD, data: '0'}
+
+  # === "Show me the Windows welcome experience after updates" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SubscribedContent-310093Enabled', type: REG_DWORD, data: '0'}
+
+  # === "Suggest ways to get the most out of Windows" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement', value: 'ScoobeSystemSettingEnabled', type: REG_DWORD, data: '0'}
+
+  # === "Tailored experiences" ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy', value: 'TailoredExperiencesWithDiagnosticDataEnabled', type: REG_DWORD, data: '0'}
+
+  # === "Include account-based insights in File Explorer" ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'DisableGraphRecentItems', type: REG_DWORD, data: '1'}
+
+  # === Disable suggested apps in Windows Ink Workspace ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace', value: 'AllowSuggestedAppsInWindowsInkWorkspace', type: REG_DWORD, data: '0'}
+
+  # === Dismiss Microsoft Defender offer in the Windows Security about signing in Microsoft account ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows Security Health\State', value: 'AccountProtection_MicrosoftAccount_Disconnected', type: REG_DWORD, data: '1'}
+
+  # === Dismiss Microsoft Defender offer in the Windows Security about turning on the SmartScreen filter for Microsoft Edge ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows Security Health\State', value: 'AppAndBrowser_EdgeSmartScreenOff', type: REG_DWORD, data: '0'}
+
+  # === Bing pop-up ads ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BingChatInstaller.exe', value: 'Debugger', type: REG_SZ, data: '%WinDir%\System32\taskkill.exe'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BGAUpsell.exe', value: 'Debugger', type: REG_SZ, data: '%WinDir%\System32\taskkill.exe'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BCILauncher.exe', value: 'Debugger', type: REG_SZ, data: '%WinDir%\System32\taskkill.exe'}
+
+  # === Block Outlook desktop ads ===
+  - !cmd: {command: 'findstr /c:"m.adnxs.com" %WinDir%\System32\drivers\etc\hosts >nul || echo 0.0.0.0 m.adnxs.com >> %WinDir%\System32\drivers\etc\hosts', runas: currentUserElevated}

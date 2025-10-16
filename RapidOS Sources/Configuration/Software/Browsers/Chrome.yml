@@ -1,0 +1,18 @@
+---
+title: Chrome installation
+actions:
+  - !run:
+      runas: currentUserElevated
+      option: 'Chrome'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Install-Chrome"'
+
+  - !run:
+      runas: currentUserElevated
+      option: 'Chrome'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Optimize-Chrome"'

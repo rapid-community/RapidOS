@@ -1,0 +1,68 @@
+---
+title: Context Menu configuration
+actions:
+  # === Windows 10 classic context menu ===
+  - !registryValue: {path: 'HKCU\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32', value: '', type: REG_SZ, data: '', option: 'classic-context-menu'}
+
+  # === "Bitmap image" ===
+  - !registryKey: 
+      path: 'HKCR\.bmp\ShellNew'
+      operation: delete
+
+  # === "Rich Text Document" ===
+  - !registryKey: 
+      path: 'HKCR\.rtf\ShellNew'
+      operation: delete
+
+  # === "Cast to Device" ===
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked'
+      value: '{7AD84985-87B4-4a16-BE58-8B72A5B390F7}'
+      type: REG_SZ
+      data: ''
+
+  # === "Give access to" ===
+  - !registryKey: {path: 'HKCR\*\shellex\ContextMenuHandlers\Sharing', operation: delete}
+  - !registryKey: {path: 'HKCR\Directory\Background\shellex\ContextMenuHandlers\Sharing', operation: delete}
+  - !registryKey: {path: 'HKCR\Directory\shellex\ContextMenuHandlers\Sharing', operation: delete}
+  - !registryKey: {path: 'HKCR\Drive\shellex\ContextMenuHandlers\Sharing', operation: delete}
+  - !registryKey: {path: 'HKCR\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing', operation: delete}
+  - !registryKey: {path: 'HKCR\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing', operation: delete}
+
+  # === "Include in library" ===
+  - !registryKey: 
+      path: 'HKCR\Folder\ShellEx\ContextMenuHandlers\Library Location'
+      operation: delete
+  - !registryKey: 
+      path: 'HKLM\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location'
+      operation: delete
+
+  # === "Share" ===
+  - !registryKey:
+      path: 'HKCR\AllFileSystemObjects\ShellEx\ContextMenuHandlers\ModernSharing'
+      operation: delete
+
+  # === "Troubleshooting compatibility" ===
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked'
+      value: '{1d27f844-3a1f-4410-85ac-14651078412d}'
+      type: REG_SZ
+      data: ''
+  - !registryValue: 
+      path: 'HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked'
+      value: '{1d27f844-3a1f-4410-85ac-14651078412d}'
+      type: REG_SZ
+      data: ''
+
+  # === "Edit with Paint 3D" ===
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.3mf\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.bmp\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.fbx\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.gif\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.jfif\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.jpe\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.jpeg\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.jpg\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.png\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.tif\Shell\3D Edit', operation: delete}
+  - !registryKey: {path: 'HKCR\SystemFileAssociations\.tiff\Shell\3D Edit', operation: delete}

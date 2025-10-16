@@ -1,6 +1,0 @@
----
-title: Old Context Menu
-description: The provided command reverts the context menu in Windows 11 to the appearance and functionality of the context menu in Windows 10.
-builds: [ '>=22000' ]
-actions:
-  - !registryValue: {path: 'HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32', value: '', type: REG_SZ, data: '', option: 'classic-context-menu'}

@@ -1,0 +1,16 @@
+---
+title: Remove Microsoft Teams
+actions:
+  - !taskKill: {name: '*teams*', ignoreErrors: true}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications', value: 'ConfigureChatAutoInstall', type: REG_DWORD, data: '0'}
+  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Office\Teams', value: 'PreventInstallationFromMsi', type: REG_DWORD, data: '1'}
+  - !powerShell:
+      option: 'Teams'
+      exeDir: true
+      wait: true
+      command: >-
+        .\AppX.ps1 -Packages @(
+          'Microsoft.MicrosoftTeamsforSurfaceHub',
+          'MicrosoftTeams',
+          'MSTeams'
+        )

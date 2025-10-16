@@ -1,8 +1,0 @@
----
-title: Delete defaultuser0
-description: >
-  This single command deletes the built-in user account "defaultuser0", commonly created during Windows installation for initial setup and preparation.
-actions:
-  - !cmd:
-      command: 'net user defaultuser0 /delete'
-      ignoreErrors: true

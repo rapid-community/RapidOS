@@ -1,6 +1,0 @@
----
-title: Start Menu Instant Appearance
-description: > 
-  Modifies the system to instantly display the Start Menu upon clicking the Windows icon in the Taskbar.
-actions:
-  - !registryValue: {path: 'HKCU\Control Panel\Desktop', value: 'MenuShowDelay', type: REG_SZ, data: '0'}

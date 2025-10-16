@@ -1,0 +1,10 @@
+---
+title: Thorium installation
+actions:
+  - !run:
+      runas: currentUserElevated
+      option: 'Thorium'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Software Install-Thorium"'

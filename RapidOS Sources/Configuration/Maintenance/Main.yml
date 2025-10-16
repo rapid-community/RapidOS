@@ -1,0 +1,34 @@
+---
+title: Maintenance configuration file
+privilege: Admin
+actions:
+  # === IMPORTANT FOR ANYONE MODIFYING THIS CONFIGURATION! ===
+  # THE DEVELOPER WILL NOT INVEST TIME IN DEBUGGING ISSUES CAUSED BY DISABLED,
+  # COMMENTED OUT, OR ALTERED TASKS IN THIS FILE. MODIFY AT YOUR OWN RISK.
+  
+  # DIAGNOSTICS
+  # =============================================================== #
+  # Purpose:                                                        #
+  # Logs system state to understand what kind of Windows setup      #
+  # RapidOS is being installed on - stock, modified, or tweaked.    #
+  # These logs are critical for diagnosing user-reported issues.    #
+  # =============================================================== #
+  - !task: {path: 'Maintenance\Diagnostics\PendingReboot.yml'}
+  - !task: {path: 'Maintenance\Diagnostics\Specifications.yml'}
+  - !task: {path: 'Maintenance\Diagnostics\EventLogs.yml'}
+  - !task: {path: 'Maintenance\Diagnostics\Tweakers.yml'}
+  - !task: {path: 'Maintenance\Diagnostics\Defender.yml'}
+
+  # REPAIRS
+  # =============================================================== #
+  # Purpose:                                                        #
+  # Verifies and prepares the Windows environment. Fixes common     #
+  # issues from non-clean installs: broken system components,       #
+  # Windows 10 → 11 upgrade leftovers, and problems caused by       #
+  # previous tweaks.                                                #
+  # Also prepares the system if RapidOS is being installed on a     #
+  # used or previously tweaked Windows installation.                #
+  # =============================================================== #
+  - !task: {path: 'Maintenance\Repairs\ComponentStore.yml'}
+  - !task: {path: 'Maintenance\Repairs\ExternalBlocks.yml'}
+  - !task: {path: 'Maintenance\Repairs\Network.yml'}

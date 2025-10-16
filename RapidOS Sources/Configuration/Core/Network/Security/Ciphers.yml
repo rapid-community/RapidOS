@@ -1,0 +1,68 @@
+---
+title: Disable weak ciphers
+description: Enhances security by disabling outdated and vulnerable encryption algorithms like RC4, DES, and NULL ciphers
+actions:
+  # === Disable insecure RC2 ciphers ===
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  
+  # === Disable insecure RC4 ciphers ===
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable insecure DES cipher ===
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable insecure Triple DES cipher ===
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168/168'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+
+  # === Disable insecure NULL cipher ===
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\NULL'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'

@@ -1,0 +1,112 @@
+---
+title: Explorer configuration
+actions:
+  # === Open File Explorer to - This PC ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'LaunchTo'
+      type: REG_DWORD
+      data: '1'
+
+  # === Show hidden folders ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'Hidden'
+      type: REG_DWORD
+      data: '1'
+
+  # === Always show more details in a file copy dialog ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager'
+      value: 'EnthusiastMode'
+      type: REG_DWORD
+      data: '1'
+
+  # === Search indexer respect device power mode ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex'
+      value: 'RespectPowerModes'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable web search results (Bing Search) ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      value: 'DisableSearchBoxSuggestions'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disable wallpaper compression ===
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'JPEGImportQuality'
+      type: REG_DWORD
+      data: '100'
+
+  # === Remove '- Shortcut' text added onto shortcuts ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer'
+      value: 'link'
+      type: REG_BINARY
+      data: '00000000'
+
+  # === Hide removable drives from sidebar to prevent duplication ===
+  - !registryKey: 
+      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}' 
+      operation: delete
+
+  # === Do not show sync provider notifications ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'ShowSyncProviderNotifications'
+      type: REG_DWORD
+      data: '0'
+
+  # === Do not hide extensions for known file types ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'HideFileExt'
+      type: REG_DWORD
+      data: '0'
+
+  # === Show tooltips faster, 150 ms instead of 400 ===
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Mouse'
+      value: 'MouseHoverTime'
+      type: REG_SZ
+      data: '150'
+
+  # === Open submenus quicker, 100 ms instead of 400 ===
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'MenuShowDelay'
+      type: REG_SZ
+      data: '100'
+
+  # === Activate window on hover after 200 ms to avoid misclicks ===
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'ActiveWndTrkTimeout'
+      type: REG_DWORD
+      data: '200'
+
+  # === Mark app as not responding after 3 sec instead of 5 ===
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'HungAppTimeout'
+      type: REG_SZ
+      data: '3000'
+
+  # === Kill apps on shutdown after 5 sec instead of 20 ===
+  - !registryValue: 
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'WaitToKillAppTimeout'
+      type: REG_SZ
+      data: '5000'
+
+  # === Kill services on shutdown after 3 sec instead of 5 ===
+  - !registryValue:
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control'
+      value: 'WaitToKillServiceTimeout'
+      type: REG_SZ
+      data: '3000'

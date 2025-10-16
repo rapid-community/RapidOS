@@ -1,0 +1,34 @@
+---
+title: Svchost service grouping
+description: > 
+  Prevents services from creating their own separate processes, forcing them to stay grouped to save memory. 
+  Doing this for ALL services will break many things (including XboxGipSvc), so this list is SHOULD be stable. We'll see how it works in the future
+actions:
+  - !powerShell:
+      exeDir: true
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        $regPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\';
+
+        $sysSvcs = @(
+          'DisplayEnhancementService', 'PcaSvc', 'WdiSystemHost', 'WdiServiceHost',
+          'AudioEndpointBuilder', 'DeviceAssociationService', 'NcbService', 'StorSvc',
+          'SysMain', 'TextInputManagementService', 'TrkWks', 'hidserv', 'Appinfo',
+          'BITS', 'LanmanServer', 'SENS', 'Schedule', 'ShellHWDetection', 'Themes',
+          'TokenBroker', 'UserManager', 'ProfSvc', 'UsoSvc', 'WpnService', 'gpsvc',
+          'iphlpsvc', 'wuauserv', 'WinHttpAutoProxySvc', 'EventLog', 'TimeBrokerSvc',
+          'lmhosts', 'Dhcp', 'FontCache', 'nsi', 'netprofm', 'SstpSvc', 'DispBrokerDesktopSvc',
+          'CDPSvc', 'EventSystem', 'LicenseManager', 'SystemEventsBroker', 'Power', 'AppXSvc',
+          'ClipSVC', 'camsvc', 'StateRepository', 'FDResPub', 'SSDPSRV', 'Dnscache', 'NlaSvc',
+          'LanmanWorkstation', 'CoreMessagingRegistrar', 'DPS', 'NcdAutoSetup', 'bthserv',
+          'WbioSrvc', 'TabletInputService', 'WlanSvc', 'Wecsvc', 'wscsvc'
+        );
+
+        $sysSvcs | % {Set-RegistryValue -Path "$regPath$_" -Name 'SvcHostSplitDisable' -Type DWORD -Value 1};
+
+        $userSvcs = @('CDPUserSvc_*', 'OneSyncSvc_*', 'WpnUserService_*');
+        $userSvcs | % {
+          $p = $_;
+          $matches = Get-Service | ? {$_.Name -like $p};
+          $matches | % {Set-RegistryValue -Path "$regPath$($_.Name)" -Name 'SvcHostSplitDisable' -Type DWORD -Value 1}
+        }

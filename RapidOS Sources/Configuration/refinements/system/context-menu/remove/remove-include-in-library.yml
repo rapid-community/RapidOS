@@ -1,6 +1,0 @@
----
-title: Remove Include In Library
-description: The provided command modifies the Windows Registry to remove the "Rich Text Format (RTF)" option from the "New" context menu.
-actions:
-  - !registryKey: {path: 'HKCR\Folder\ShellEx\ContextMenuHandlers\Library Location'}
-  - !registryKey: {path: 'HKLM\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location'}

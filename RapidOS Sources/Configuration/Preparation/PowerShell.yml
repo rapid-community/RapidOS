@@ -1,0 +1,20 @@
+---
+title: Allow scripts & Speed up PS
+actions:
+  # === Set PS execution policy to allow all scripts ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell'
+      value: 'ExecutionPolicy'
+      type: REG_SZ
+      data: 'Bypass'
+
+  # === Speed up PowerShell startup ===
+  - !powerShell:
+      wait: true
+      command: |
+        $env:PATH = [Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()
+        [AppDomain]::CurrentDomain.GetAssemblies() | ? Location | % {ngen install $_.Location /nologo *>$null}
+        Get-ScheduledTask | ? {$_.TaskName -like '*NGEN*' -and $_.TaskPath -like '*\\.NET Framework*'} | % {
+          if ($_.State -eq 'Disabled') {Enable-ScheduledTask -TaskName $_.TaskName -TaskPath $_.TaskPath *>$null}
+          Start-ScheduledTask -TaskName $_.TaskName -TaskPath $_.TaskPath *>$null
+        }

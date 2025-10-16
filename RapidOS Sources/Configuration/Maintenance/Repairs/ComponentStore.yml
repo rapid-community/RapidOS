@@ -1,0 +1,12 @@
+---
+title: Detect and repair component store corruption
+description: Checks the health of the Windows component store and repairs it if necessary to fix problems that can happen with ISO images created using tools like UUPDump
+actions:
+  - !powerShell:
+      handleExitCodes: {'!0': halt}
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        ComponentStore

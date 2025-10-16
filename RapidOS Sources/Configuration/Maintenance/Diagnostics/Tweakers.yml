@@ -1,0 +1,14 @@
+---
+title: Check for third-party tweakers
+description: >
+  Checks for common third-party tweakers, custom OS builds, and modifications (via logs, registry, power plans, etc.); 
+  if detected, shows a warning to discourage installing RapidOS on a modified system, as it may lead to issues
+actions:
+  - !powerShell:
+      handleExitCodes: {'!0': halt}
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        Tweakers

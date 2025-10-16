@@ -1,0 +1,9 @@
+---
+title: Collect latest error logs for diagnostics
+actions:
+  - !powerShell:
+      exeDir: true
+      wait: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        EventLogs
