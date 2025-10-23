@@ -1,7 +1,6 @@
-# Removed AppX apps in RapidOS
+# Removed UWP apps
 
-When installing RapidOS, the following default Windows apps are removed:
-
+## Core apps:
 - **Clipchamp**
 - **Disney+**
 - **Yandex Music** (Russian regions)
@@ -23,16 +22,12 @@ When installing RapidOS, the following default Windows apps are removed:
 - **Parental Controls**
 - **Mail**
 
-Here's section, explaining what can be kept in the system using **Custom Features** in RapidOS:
+## Custom Features:
 
-## Custom Features in RapidOS
-
-Using the Custom Features in RapidOS, you can select which default Windows apps to remove or keep. Below are the apps that can be retained if desired:
+Using the Custom Features, you can select which default Windows apps to remove or keep. Below are the apps that can be retained if desired.
 
 - **Microsoft Edge**
 - **Microsoft Teams**
 - **OneDrive**
 - **Microsoft Office** and individual Office apps (**Excel**, **OneNote**, **PowerPoint**, **Word**, **Outlook**)
 - **Your Phone**
-
-These options allow for more flexibility during installation, letting you customize the system according to your needs.

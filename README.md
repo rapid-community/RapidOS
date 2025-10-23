@@ -2,7 +2,7 @@
 <h1 align="center">RapidOS</h1>
 <p align="center">Turning dreams into reality</p>
 
-*RapidOS is an open-source project that aims to revolutionize the Windows experience. RapidOS it's powerful, streamlined and user-centric system that puts you in control.* ⚡
+*RapidOS is an open-source project that aims to revolutionize the Windows experience - a powerful, streamlined, user-centric system that puts you in control.* ⚡
 
 ## ❓ Why RapidOS?
 
@@ -18,12 +18,12 @@ It's all about speed. RapidOS cuts out bloatware that slows your system and adju
 The interface gets streamlined. No clutter or unnecessary features - RapidOS keeps it simple and easy to use for anyone who likes things clean.
 
 #### 💡 Join the community
-RapidOS is a project you can jump into. Hit up [Rapid Community](https://dsc.gg/rapid-community) to share ideas, provide feedback to help improve the system, or chat with others who want a better Windows.
+RapidOS is a project you can jump into. Hit up [Rapid Community](https://discord.rapid-community.ru) to share ideas, provide feedback to help improve the system, or chat with others who want a better Windows.
 
 #### 🛠️ Support when you need it
 If something goes wrong, community's got you. Developers and active users offer quick tips or help with bigger issues.
 
-*RapidOS turns Windows into something better through AME Beta: private, fast, and simple, backed by a solid crew.*
+*RapidOS turns Windows into something better: private, fast, and simple, backed by a solid crew.*
 
 ## 🔧 System changes & enhancements
 
@@ -35,15 +35,15 @@ RapidOS is designed to be smooth and reliable. Every release we're fixing any re
 
 **For more details, check our GitHub FAQ pages:**
 
-- **[What's removed from AppX (UWP apps)](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/AppX%20README.md)**: See what's been removed from AppX apps
-- **[Service changes across versions](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/Services%20README.md)**: Find out which services have been changed or disabled in different versions of RapidOS
+- [What's removed from UWP apps](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/UWP%20README.md): See what's been removed from UWP apps
+- [Service adjustments](https://github.com/rapid-community/RapidOS/blob/main/Readme%20Collection/Services%20README.md): Find out which services have been changed, disabled or internet-restricted
 
 ## 🔓 Open-source and safe
 
 This project is fully open-source, meaning you're free to dive into the code, contribute, or suggest improvements. Just like **AME Beta**, **RapidOS** is designed to be secure and clean from any harmful software.
 
-- 🔗 [Check the AME Beta codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/master/TrustedUninstaller.CLI)
-- 🔗 [Check out RapidOS code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources)
+🔗 [Check the AME Beta codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/public/TrustedUninstaller.CLI)
+🔗 [Check out RapidOS code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources)
 
 Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated and trustworthy.
 
@@ -63,6 +63,7 @@ RapidOS is available for download! Built on the powerful **[AME Beta](https://am
 - **Windows 11 22H2 - `22621`**
 - **Windows 11 23H2 - `22631`**
 - **Windows 11 24H2 - `26100`**
+- **Windows 11 25H2 - `26200`**
 
 Any other build **is not** officially supported by RapidOS.
 
@@ -103,14 +104,14 @@ You'll need a text editor to deploy the project:
 
 For any questions, feedback or suggestions, you can:
 
-- **Join our [Discord server](http://discord.rapid-community.ru)**
-  Connect with the RapidOS community and interact with developers.
+- **Join our [Discord server](http://discord.rapid-community.ru)**  
+  Connect with the Rapid Community and interact with developers.
 
-- **Follow us on [X.com](https://x.com/community_rapid)**
+- **Follow us on [X.com](https://x.com/community_rapid)**  
   Stay updated with the latest news and announcements.
 
-- **Follow us on [Telegram](https://telegram.rapid-community.ru)**
-  Stay up to date with exclusive news, discussions, and updates about the docs, the site, and the Playbook.
+- **Follow us on [Telegram](https://telegram.rapid-community.ru)**  
+  Stay up to date with exclusive news, discussions, and updates about the docs, the website, and the Playbook.
 
 Feel free to reach out - we're here to help!
 

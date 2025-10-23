@@ -1,8 +1,6 @@
-# Streamlined services in RapidOS
+# Streamlined services
 
-Below is a list of streamlined services:
-
-### Core services:
+## Core services:
 
 - **Application Management (AppMgmt)** - Disabled: `Startup 4`
 - **Delivery Optimization (DoSvc)** - Manual: `Startup 3`
@@ -13,10 +11,9 @@ Below is a list of streamlined services:
 - **Shell Hardware Detection (ShellHWDetection)** - Disabled: `Startup 4`
 - **SSDP Discovery (SSDPSRV)** - Disabled: `Startup 4`
 - **Distributed Link Tracking Client (TrkWks)** - Disabled: `Startup 4`
-- **User Choice Protection Driver (UCPD)** - Disabled: `Startup 4`
 - **Offline Maps Broker (MapsBroker)** - Manual: `Startup 3`
 
-### Telemetry-related services (Disabled or Internet-restricted):
+## Telemetry-related services (Disabled or internet-restricted):
 
 - **Connected User Experiences and Telemetry (DiagTrack)** - Disabled
 - **Diagnostic Service Host (diagsvc)** - Disabled
@@ -30,7 +27,7 @@ Below is a list of streamlined services:
 - **Windows Error Reporting Service (WerSvc)** - Network access restricted
 - **Problem Reports and Solutions Control Panel Support (wercplsupport)** - Network access restricted
 
-### Streamlined drivers:
+## Streamlined drivers:
 
 - **NetBIOS over TCP/IP (NetBT)** - Disabled: `Startup 4`
 - **GPU Energy Driver (GpuEnergyDrv)** - Disabled: `Startup 4` (applied only if not a laptop)
