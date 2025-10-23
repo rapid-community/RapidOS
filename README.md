@@ -42,7 +42,7 @@ RapidOS is designed to be smooth and reliable. Every release we're fixing any re
 
 This project is fully open-source, meaning you're free to dive into the code, contribute, or suggest improvements. Just like **AME Beta**, **RapidOS** is designed to be secure and clean from any harmful software.
 
-🔗 [Check the AME Beta codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/public/TrustedUninstaller.CLI)
+🔗 [Check the AME Beta codebase](https://github.com/Ameliorated-LLC/trusted-uninstaller-cli/tree/public/TrustedUninstaller.CLI)  
 🔗 [Check out RapidOS code](https://github.com/rapid-community/RapidOS/tree/main/RapidOS%20Sources)
 
 Open-source projects thrive on community involvement, ensuring that they remain transparent, regularly updated and trustworthy.
