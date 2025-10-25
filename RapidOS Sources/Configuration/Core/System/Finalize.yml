@@ -13,4 +13,6 @@ actions:
       startup: '4'
 
   # === Update group policy ===
-  - !cmd: {command: 'gpupdate /force'}
+  - !run: 
+      exe: "gpupdate.exe"
+      showOutput: false

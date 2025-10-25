@@ -13,6 +13,7 @@ actions:
   - !task: {path: 'Preparation\Taskkill.yml'}
   - !task: {path: 'Preparation\PowerShell.yml'}
   - !task: {path: 'Preparation\Notifications.yml'}
+  - !task: {path: 'Core\System\Power.yml'}
 
   # ===========================
   # Software stage
@@ -103,7 +104,6 @@ actions:
   - !task: {path: 'Core\System\IFEO.yml'}
   - !task: {path: 'Core\System\Kernel.yml'}
   - !task: {path: 'Core\System\Mouse.yml'}
-  - !task: {path: 'Core\System\Power.yml'}
   - !task: {path: 'Core\System\Security.yml'}
   - !task: {path: 'Core\System\Services.yml'}
   - !task: {path: 'Core\System\SvcGroup.yml'}

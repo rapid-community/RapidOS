@@ -4,6 +4,7 @@ actions:
   # === Taskbar cleanup ===
   - !run:
       runas: currentUserElevated
+      option: 'modify-templates'
       exeDir: true
       wait: true
       exe: 'powershell'

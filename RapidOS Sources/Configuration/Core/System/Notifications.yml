@@ -1,6 +1,6 @@
 ---
 title: Configure notifications
-description: Re-enable notifications after disabling it in "Preparation stage" and show notification bell icon
+description: Re-enable notifications after disabling it in "Preparation stage", show notification bell icon and disable Security & Maintenance pop-ups
 actions:
   # === Enable notifications ===
   - !registryValue:
@@ -19,7 +19,21 @@ actions:
       path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer'
       value: 'DisableNotificationCenter'
       operation: delete
-  
+    
+  # === Show notification bell icon ===
+  - !registryValue: 
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+      value: 'ShowNotificationIcon'
+      type: REG_DWORD
+      data: '1'
+
+  # === Disables Security and Maintenance pop-ups (e.g., firewall alerts) ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
+      value: 'Enabled'
+      type: REG_DWORD
+      data: '0'
+
   # === Restart notification services ===
   - !service:
       ignoreErrors: true
@@ -29,10 +43,3 @@ actions:
       ignoreErrors: true
       name: "WpnUserService*"
       operation: start
-    
-  # === Show notification bell icon ===
-  - !registryValue: 
-      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
-      value: 'ShowNotificationIcon'
-      type: REG_DWORD
-      data: '1'

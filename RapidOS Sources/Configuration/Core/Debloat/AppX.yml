@@ -10,27 +10,27 @@ actions:
       wait: true
       command: |
         .\AppX.ps1 -Packages @(
-          # Productivity / Automation
+          # === Productivity / Automation ===
           'Microsoft.MicrosoftPowerBIForWindows',
           'Microsoft.PowerAutomateDesktop',
           'MicrosoftCorporationII.MailforSurfaceHub',
           'Microsoft.Todos',
 
-          # Communication
+          # === Communication ===
           'Microsoft.SkypeApp',
           'Microsoft.People',
           'Microsoft.Windows.PeopleExperienceHost',
           'Microsoft.549981C3F5F10',
           'microsoft.windowscommunicationsapps',
 
-          # Games / Ads
+          # === Games / Ads ===
           'Microsoft.MicrosoftSolitaireCollection',
           'Disney.37853FC22C684',
           'SpotifyAB.SpotifyMusic',
           'Yandex.Music',
           'Flipgrid',
 
-          # System / Tools
+          # === System / Tools ===
           'Microsoft.Windows.DevHome',
           'Microsoft.WindowsFeedbackHub',
           # 'Microsoft.GetHelp',
@@ -39,7 +39,7 @@ actions:
           'Microsoft.Windows.ParentalControls',
           'Microsoft.Microsoft3DViewer',
 
-          # Preinstalled apps
+          # === Preinstalled apps ===
           'Microsoft.MSPaint',
           'MixedReality.Portal',
           'Clipchamp.Clipchamp',
@@ -47,16 +47,16 @@ actions:
           'Microsoft.Windows.SecureAssessmentBrowser',
           'Microsoft.ZuneVideo',
 
-          # Bing / News / Ads
+          # === Bing / News / Ads ===
           'Microsoft.Advertising',
           'Microsoft.BingNews',
           # 'Microsoft.BingSearch',
           'Microsoft.BingWeather',
 
-          # Maps
+          # === Maps ===
           'Microsoft.WindowsMaps',
 
-          # Family / Education
+          # === Family / Education ===
           'MicrosoftCorporationII.MicrosoftFamily'
         )
   
@@ -76,7 +76,7 @@ actions:
             Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
             Get-AppxPackage *Microsoft.Edge.GameAssist* | Remove-AppxPackage
             Set-RegistryValue -Path 'HKCU:\Software\Microsoft\GameBar' -Name 'ShowStartupPanel' -Type DWORD -Value 0;
-            Write-Host 'Xbox Game Bar disabled'
+            Write-Host 'Xbox Game Bar removed'
         }
 
   # === Additional AppX operations ===

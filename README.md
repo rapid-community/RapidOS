@@ -62,7 +62,6 @@ RapidOS is available for download! Built on the powerful **[AME Beta](https://am
 - **Windows 10 22H2 - `19045`**
 - **Windows 11 22H2 - `22621`**
 - **Windows 11 23H2 - `22631`**
-- **Windows 11 24H2 - `26100`**
 - **Windows 11 25H2 - `26200`**
 
 Any other build **is not** officially supported by RapidOS.
@@ -71,7 +70,7 @@ Any other build **is not** officially supported by RapidOS.
 
 ### 📜 Documentation
 
-In the [**RapidOS documentation**](https://docs.rapid-community.ru/), you'll find a straightforward guide to help you install Windows and RapidOS:
+In the **[RapidOS documentation](https://docs.rapid-community.ru/)**, you'll find a straightforward guide to help you install Windows and RapidOS:
 
 1. **Installing Windows**:
    - We cover all the methods for installing Windows, whether you're using the Media Creation Tool, MSDL, or uppdump.
@@ -87,7 +86,7 @@ The guide is designed to be simple and easy to follow, so you won't miss a thing
 
 ## 🛠️ Want to deploy?
 
-If you're looking to deploy, make sure to read the [official documentation by Ameliorated](https://docs.amelabs.net/) to fully understand how the playbooks work.
+If you're looking to deploy, make sure to read the **[official documentation by Ameliorated](https://docs.amelabs.net/)** to fully understand how the playbooks work.
 
 In short, while the playbooks are in `.apbx` format, they are actually `7z` archives protected with the password `malte`.
 Our playbooks consist of `.yml` (default AME Beta configuration files), `.ps1` and `.bat` files.
@@ -117,7 +116,7 @@ Feel free to reach out - we're here to help!
 
 ## 📝 License
 
-RapidOS is licensed under the [GNU Affero General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE). By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
+RapidOS is licensed under the **[GNU Affero General Public License v3.0](https://github.com/rapid-community/RapidOS/blob/main/LICENSE)**. By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
 
 >[!Warning]
 >
@@ -125,7 +124,7 @@ RapidOS is licensed under the [GNU Affero General Public License v3.0](https://g
 
 ## 🌟 Support us
 
-**Love the project?** Show your support by clicking the ⭐ (top right) and joining our community of [stargazers](https://github.com/rapid-community/RapidOS/stargazers)!
+**Love the project?** Show your support by clicking the ⭐ (top right) and joining our community of **[stargazers](https://github.com/rapid-community/RapidOS/stargazers)**!
 
 [![Stargazers repo roster for @rapid-community/RapidOS](https://reporoster.com/stars/dark/rapid-community/RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
 

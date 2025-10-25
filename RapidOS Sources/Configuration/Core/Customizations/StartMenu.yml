@@ -3,6 +3,7 @@ title: Start Menu configuration
 actions:
   # === Start Menu cleanup ===
   - !run:
+      option: 'modify-templates'
       exeDir: true
       wait: true
       exe: 'powershell'

@@ -2,6 +2,22 @@
 title: Power configuration
 description: Optimizes Balanced power plan for AC performance only
 actions:
+  # === Delete existing RapidOS power plan if it exists ===
+  - !powerShell:
+      runas: currentUserElevated
+      command: >-
+        $oldScheme = powercfg -list | Select-String -Quiet '12111111-1211-1211-1211-121111111111';
+        if ($oldScheme) {
+          powercfg -s 381b4222-f694-41f0-9685-ff5bb260df2e *>$null;
+
+          if ($LASTEXITCODE -ne 0) {
+            powercfg -restoreindividualdefaultscheme 381b4222-f694-41f0-9685-ff5bb260df2e *>$null;
+            powercfg -s 381b4222-f694-41f0-9685-ff5bb260df2e *>$null
+          };
+
+          powercfg -delete 12111111-1211-1211-1211-121111111111 *>$null
+        }
+
   # === Duplicate Balanced scheme ===
   - !run: {exe: "powercfg", args: "-duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e 12111111-1211-1211-1211-121111111111", showOutput: "false"}
   - !run: {exe: "powercfg", args: "-changename 12111111-1211-1211-1211-121111111111 \"Balanced\" \"Balanced scheme modified for RapidOS: AC tuned for optimal performance; DC unchanged.\""}
@@ -19,19 +35,30 @@ actions:
   # === Delay lowering performance after load ===
   - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PERFDECTHRESHOLD 8"}
 
-  # === Keep cores unparked ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES 100"}
-
-  # === Keep P-cores active on hybrid CPUs ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES1 100"}
-
   # === Allow maximum CPU frequency ===
   - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PROCTHROTTLEMAX 100"}
 
-  # === Enable short automatic boost if supported ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PERFBOOSTMODE 1"}
+  # === Tweak CPU сore parking & PCIe power settings based on chassis type ===
+  - !powerShell:
+      runas: currentUserElevated
+      exeDir: true
+      command: |
+        .\RapidScripts\EnvSetup.ps1
+        if (Test-Laptop) {
+          # === Keep 60% of cores unparked ===
+          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES 60
 
-  # === Disable PCIe ASPM ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0"}
+          # === Keep 80% of P-cores active on hybrid CPUs ===
+          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES1 80
+        } else {
+          # === Keep cores unparked ===
+          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES 100
 
-  - !run: {exe: "powercfg", args: "/setactive scheme_current"}
+          # === Keep P-cores active on hybrid CPUs ===
+          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES1 100
+
+          # === Disable PCIe power saving for minimum latency ===
+          powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
+        }
+
+  - !run: {exe: "powercfg", args: "-setactive scheme_current"}

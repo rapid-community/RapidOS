@@ -6,20 +6,6 @@ param (
     [string]$Lockscreen
 )
 
-Add-Type -TypeDefinition @"
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
-public static class WinAPI {
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-    public static extern IntPtr GetModuleHandle(string lpModuleName);
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    public static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
-    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-    public static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
-}
-"@ -EA 0
-
 function Clear-Taskbar {
     $unpinVerbBuilder = (New-Object System.Text.StringBuilder 255)
     [WinAPI]::LoadString([WinAPI]::GetModuleHandle('shell32.dll'), 5387, $unpinVerbBuilder, $unpinVerbBuilder.Capacity) *>$null
@@ -38,6 +24,12 @@ function Clear-Taskbar {
 
         $outlook = $taskbar.Items() | ? {$_.Name -match 'Outlook'}
         if ($outlook) {($outlook.Verbs() | ? {$_.Name -eq $unpinVerb}) | % {$_.DoIt()}}
+
+        $copilot = $taskbar.Items() | ? {$_.Name -match 'Copilot'}
+        if ($copilot) {($copilot.Verbs() | ? {$_.Name -eq $unpinVerb}) | % {$_.DoIt()}}
+
+        $office = $taskbar.Items() | ? {$_.Name -match 'Office'}
+        if ($office) {($office.Verbs() | ? {$_.Name -eq $unpinVerb}) | % {$_.DoIt()}}
     }
 }
 
@@ -86,7 +78,7 @@ function Clear-StartMenu {
 function Set-Theme {
     $themePath = [System.IO.Path]::GetFullPath($Theme)
 
-    if (!('ThemeManagerAPI' -as [type])) {
+if (!('ThemeManagerAPI' -as [type])) {
 Add-Type @'
 using System;
 using System.Runtime.CompilerServices;
@@ -121,7 +113,7 @@ public static class ThemeManagerAPI {
     }
 }
 '@
-    }
+}
 
     try {
         [ThemeManagerAPI]::ApplyTheme($themePath)
@@ -130,6 +122,15 @@ public static class ThemeManagerAPI {
         "SystemSettings", "control" | % {taskkill /f /im "$_.exe" *>$null}
         Start-Process -FilePath $themePath
         Start-Sleep -s 10
+    }
+
+    if ([System.Environment]::OSVersion.Version.Build -ge 22000) {
+        Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" -Name "ThemeMRU" -Value "$((@(
+            "rapid-dark.theme",
+            "rapid-light.theme",
+            "dark.theme",
+            "aero.theme"
+        ) | % {Join-Path $env:WinDir "Resources\Themes\$_"}) -join ';');" -Type String -Force
     }
 
     "SystemSettings", "control" | % {taskkill /f /im "$_.exe" *>$null}
@@ -156,6 +157,22 @@ function Set-Lockscreen {
     finally {
         del $temp -Force -EA 0
     }
+}
+
+if ($Cleanup) {
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
+public static class WinAPI {
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+    public static extern IntPtr GetModuleHandle(string lpModuleName);
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    public static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    public static extern int SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr pszPath);
+}
+"@ -EA 0
 }
 
 # ===========================

@@ -702,7 +702,23 @@ function Install-NET3.5 {
 
     # === Installation ===
     Write-Host "Enabling feature..." -F DarkGray
-    Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -NoRestart *>$null
+    try {
+        Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -NoRestart *>$null
+    } catch {
+        $tempDir = $env:TEMP
+        $netfx = Join-Path $tempDir 'NetFx3.cab'
+        $build = (Get-WmiObject Win32_OperatingSystem).BuildNumber
+        switch ($build) {
+            19045 {$url = "https://download.rapid-community.ru/download/files/components/NetFx3_amd64_19045.cab"}
+            22621 {$url = "https://download.rapid-community.ru/download/files/components/NetFx3_amd64_22621.cab"}
+            22631 {$url = "https://download.rapid-community.ru/download/files/components/NetFx3_amd64_22631.cab"}
+            26100 {$url = "https://download.rapid-community.ru/download/files/components/NetFx3_amd64_26100.cab"}
+            26200 {$url = "https://download.rapid-community.ru/download/files/components/NetFx3_amd64_26200.cab"}
+            default {Write-Host "Build is not supported"; return}
+        }
+        Invoke-WebRequest -Uri $url -OutFile $netfx -EA 0
+        Add-WindowsPackage -Online -PackagePath $netfx -NoRestart -IgnoreCheck *>$null
+    }
 
     $status = Get-WindowsOptionalFeature -Online -FeatureName NetFx3
     if ($status.State -eq 'Enabled') {
@@ -778,8 +794,8 @@ function Install-MediaExtensions {
     # === Configuration ===
     $config = [PSCustomObject]@{
         Apps = @{
-            HEIF = @{Name = "Microsoft.HEIFImageExtension_8wekyb3d8bbwe"; <#Id = "9PMMSR1CGPWG"#>}
-            HEVC = @{Name = "Microsoft.HEVCVideoExtension_8wekyb3d8bbwe"; <#Id = "9N4WGH0Z6VHQ"#>}
+            HEIF = @{Name = "Microsoft.HEIFImageExtension_8wekyb3d8bbwe"}
+            HEVC = @{Name = "Microsoft.HEVCVideoExtension_8wekyb3d8bbwe"}
         }
         Photos = "Microsoft.Windows.Photos_8wekyb3d8bbwe"
         TempDir = $env:TEMP
@@ -849,13 +865,13 @@ function Install-MediaExtensions {
         if (!$pkg) {
             if ($app.Name -like "Microsoft.HEIFImageExtension*") {
                 $pkg = @{
-                    Url  = 'https://download.rapid-community.ru/download/files/other/Microsoft.HEIFImageExtension.appxbundle'
+                    Url  = 'https://download.rapid-community.ru/download/files/extensions/Microsoft.HEIFImageExtension.appxbundle'
                     File = 'Microsoft.HEIFImageExtension.appxbundle'
                 }
             }
             elseif ($app.Name -like "Microsoft.HEVCVideoExtension*") {
                 $pkg = @{
-                    Url  = 'https://download.rapid-community.ru/download/files/other/Microsoft.HEVCVideoExtension.appxbundle'
+                    Url  = 'https://download.rapid-community.ru/download/files/extensions/Microsoft.HEVCVideoExtension.appxbundle'
                     File = 'Microsoft.HEVCVideoExtension.appxbundle'
                 }
             }
@@ -911,7 +927,7 @@ function Uninstall-Edge {
 
     # === Uninstall methods ===
     $setup = @()
-    "LocalApplicationData","ProgramFilesX86","ProgramFiles" | % {
+    "LocalApplicationData", "ProgramFilesX86", "ProgramFiles" | % {
         $installDir = [Environment]::GetFolderPath($_)
         $setup += gci "$installDir\Microsoft\Edge*\setup.exe" -Recurse -EA 0 |
                   ? {$_ -like "*Edge\Application*" -or $_ -like "*SxS\Application*"}
@@ -972,7 +988,7 @@ function Uninstall-Edge {
                 Write-Host "Method 2: bypass WinDir feature..." -F DarkGray
                 $envKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment"
                 Set-RegistryValue -Path $envKey -Name "WinDir" -Type ExpandString -Value ""
-                $env:WinDir = [Environment]::GetEnvironmentVariable("WinDir","Machine")
+                $env:WinDir = [Environment]::GetEnvironmentVariable("WinDir", "Machine")
                 foreach ($id in $msi) {
                     Start-Process "msiexec.exe" -ArgumentList "/qn /X$id REBOOT=ReallySuppress /norestart" -Wait
                 }
@@ -1030,7 +1046,7 @@ function Uninstall-Edge {
                         icacls $jsonFile /grant *S-1-5-32-544:F /t /q *>$null
                         $data = type $jsonFile | ConvertFrom-Json
                         foreach ($policy in $data.policies) {
-                            if ($policy."$comment" -like "*Edge*" -and $policy."$comment" -like "*uninstall*") {
+                            if ($policy.'$comment' -like "*Edge*" -and $policy.'$comment' -like "*uninstall*") {
                                 $policy.defaultState = "enabled"
                             }
                         }
@@ -1072,6 +1088,7 @@ function Uninstall-Edge {
 
     if ($fail -and $i -gt 4) {
         Write-Host "All uninstall methods failed." -F Red
+        return
     }
 
     # === Final cleanup ===
@@ -1088,36 +1105,36 @@ function Uninstall-Edge {
     $eolRoot = Join-Path (Join-Path $appxRoot 'EndOfLife') $sid
 
     gci $inboxPath -EA 0 | ? {$_.PSChildName -like '*Edge*'} | % {reg delete "HKLM$appx\InboxApplications\$($_.PSChildName)" /f *>$null}
-    $edgePkgs = Get-AppxPackage -AllUsers -EA 0 | ? {$_.Name -like '*Edge*' -or $_.PackageFamilyName -like '*Edge*'} | Select PackageFullName, PackageFamilyName, NonRemovable, PackageUserInformation
+    
+    $edgePkgs = Get-AppxPackage -AllUsers -EA 0 | ? {
+        $_.Name -like '*Edge*' -or 
+        $_.PackageFamilyName -like '*Edge*' -or 
+        $_.Name -like '*Microsoft.Edge.GameAssist*'
+    } | Select PackageFullName, PackageFamilyName, NonRemovable, PackageUserInformation
+
     if ($edgePkgs) {
         $families = $edgePkgs | Select -Expand PackageFamilyName | Sort-Object -Unique
         $families | % {mkdir (Join-Path $eolRoot $_) -Force *>$null}
     }
 
     $ErrorActionPreference = 'SilentlyContinue'
-    if (Get-Command Get-AppxPackage -EA 0) {
-        if ($edgePkgs) {
-            if (Get-Command Set-NonRemovableAppsPolicy -EA 0) {
-                ($edgePkgs | Select -Expand PackageFamilyName | Sort-Object -Unique) | % {Set-NonRemovableAppsPolicy -Online -PackageFamilyName $_ -NonRemovable 0 *>$null}
-            }
-            $prov = Get-AppxProvisionedPackage -Online -EA 0 | ? {$_.PackageName -like '*Edge*' -or $_.DisplayName -like '*Edge*'}
-            if ($prov) {$prov | % {Remove-AppxProvisionedPackage -Online -PackageName $_.PackageName *>$null}}
-            $edgePkgs | % {
-                $pkgName = $_.PackageFullName
-                if ($pkgName -and $pkgName.Trim() -ne '') {Remove-AppxPackage -Package $pkgName -AllUsers *>$null}
-                $pui = $_.PackageUserInformation
-                if ($pui) {
-                    $pui | % {
-                        $sidUser = $_.UserSecurityID.SID
-                        if (!$sidUser) {$sidUser = $_.UserSecurityId}
-                        if (!$sidUser -or $sidUser -match '^S-1-5-(18|19|20)$') {return}
-                        Remove-AppxPackage -Package $pkgName -User $sidUser *>$null
-                    }
+    if ($edgePkgs) {
+        ($edgePkgs | Select -Expand PackageFamilyName | Sort-Object -Unique) | % {Set-NonRemovableAppsPolicy -Online -PackageFamilyName $_ -NonRemovable 0 *>$null}
+        $prov = Get-AppxProvisionedPackage -Online -EA 0 | ? {$_.PackageName -like '*Edge*' -or $_.DisplayName -like '*Edge*' -or $_.DisplayName -like '*Microsoft.Edge.GameAssist*'}
+        if ($prov) {$prov | % {Remove-AppxProvisionedPackage -Online -PackageName $_.PackageName *>$null}}
+        $edgePkgs | % {
+            $pkgName = $_.PackageFullName
+            if ($pkgName -and $pkgName.Trim() -ne '') {Remove-AppxPackage -Package $pkgName -AllUsers *>$null}
+            $pui = $_.PackageUserInformation
+            if ($pui) {
+                $pui | % {
+                    $sidUser = $_.UserSecurityID.SID
+                    if (!$sidUser) {$sidUser = $_.UserSecurityId}
+                    if (!$sidUser -or $sidUser -match '^S-1-5-(18|19|20)$') {return}
+                    Remove-AppxPackage -Package $pkgName -User $sidUser *>$null
                 }
             }
         }
-    } else {
-        Write-Host "AppX not available, skipping AppX cleanup." -F DarkGray
     }
     $ErrorActionPreference = 'Continue'
 
@@ -1268,6 +1285,8 @@ function Uninstall-InstallationAssistant {
 
     Write-Host "`nDone."
 }
+
+gci -Path $env:TEMP | ? {$_.Name -ne 'AME'} | del -Recurse -Force -EA 0
 
 # ===========================
 # Function call based on the argument

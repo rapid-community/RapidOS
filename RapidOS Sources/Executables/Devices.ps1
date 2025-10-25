@@ -315,7 +315,7 @@ function Set-DrivesConfiguration {
 
 # === Disables device power saving on desktops ===
 if (!(Test-Laptop)) {
-    Set-CimInstance -Namespace 'root\wmi' -Query 'SELECT * FROM MSPower_DeviceEnable' -Property @{Enable = $false} *>$null
+    Set-CimInstance -Namespace 'root\wmi' -Query 'SELECT * FROM MSPower_DeviceEnable' -Property @{Enable = $false}
 }
 
 # === Function call based on the argument ===

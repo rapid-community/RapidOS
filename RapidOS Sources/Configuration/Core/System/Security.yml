@@ -2,12 +2,12 @@
 title: Security configuration
 actions:
   # === Disable Microsoft Defender === 
-  - !run:
-      option: 'disable-defender'
+  - !powerShell:
       exeDir: true
       wait: true
-      exe: 'powershell'
-      args: '-EP Bypass -C ".\Defender.ps1" -disable_av -silent"'
+      command: >-
+        .\RapidScripts\EnvSetup.ps1;
+        & 'C:\Windows\RapidScripts\Playbook\Defender.ps1' -disable_av -delayedRestart -silent
 
   # === Disable switching to the Secure Desktop when prompting for elevation ===
   - !registryValue:
