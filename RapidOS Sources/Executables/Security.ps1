@@ -83,16 +83,16 @@ if (Get-Service -Name "FDResPub" -EA 0) {
 
 Write-Host "Disabling WPAD..." -F DarkGray
 Set-RegistryValue -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" -Name "WpadOverride" -Type "DWORD" -Value 1
-Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" -Name "WpadOverride" -Type "DWORD" -Value 1
+Set-RegistryValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" -Name "WpadOverride" -Type "DWORD" -Value 1
 
 Write-Host "Disabling WDigest..." -F DarkGray
-Set-RegistryValue -Path "HKLM:\System\CurrentControlSet\Control\SecurityProviders\Wdigest" -Name "UseLogonCredential" -Type "DWORD" -Value 0
+Set-RegistryValue -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\Wdigest" -Name "UseLogonCredential" -Type "DWORD" -Value 0
 
 Write-Host "Disabling Office OLE..." -F DarkGray
 $versions = '16.0', '15.0', '14.0', '12.0'
 foreach ($version in $versions) {
     Set-RegistryValue -Path "HKLM:\SOFTWARE\Microsoft\Office\$version\Outlook\Security" -Name "ShowOLEPackageObj" -Type "DWORD" -Value 0
-    Set-RegistryValue -Path "HKCU:\Software\Microsoft\Office\$version\Outlook\Security" -Name "ShowOLEPackageObj" -Type "DWORD" -Value 0
+    Set-RegistryValue -Path "HKCU:\SOFTWARE\Microsoft\Office\$version\Outlook\Security" -Name "ShowOLEPackageObj" -Type "DWORD" -Value 0
 }
 
 Write-Host "`nDone."

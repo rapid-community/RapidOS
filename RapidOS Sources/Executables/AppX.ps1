@@ -119,7 +119,7 @@ for ($i = 0; $i -lt $Packages.Count; $i++) {
         gci $winApps -Filter "$name*" -EA 0 | % {
             $folder = $_.FullName
             cmd /c takeown /f "$folder" /r /d y *>$null
-            cmd /c icacls "$folder" /grant Administrators:F /t /c /q *>$null
+            cmd /c icacls "$folder" /grant *S-1-5-32-544:F /t /c /q *>$null
             del $folder -Force -Recurse *>$null
         }
 

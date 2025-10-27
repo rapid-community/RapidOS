@@ -109,7 +109,7 @@ if /i "%userChoice%"=="yes" (
         echo Installing Widgets app...
         winget install -e 9MSSGKG348SP --silent --force --accept-source-agreements --accept-package-agreements > nul 2>&1
         timeout /t 3 /nobreak >nul
-        for /f "tokens=*" %%i in ('powershell -Command "Get-AppxPackage -AllUsers *WebExperience* | ForEach-Object { $_.InstallLocation }"') do (
+        for /f "tokens=*" %%i in ('powershell -Command "Get-AppxPackage -AllUsers *WebExperience* | % {$_.InstallLocation}"') do (
             powershell -Command "Add-AppxPackage -DisableDevelopmentMode -Register \"%%i\AppXManifest.xml\""
         )
     )
@@ -131,7 +131,7 @@ if /i "%userChoice%"=="yes" (
         reg add "HKLM\SOFTWARE\Policies\Microsoft\Dsh" /v "AllowNewsAndInterests" /t REG_DWORD /d 1 /f > nul 2>&1
     )
 
-    echo All components and settings have been restored!
+    echo All components and settings have been restored.
 ) else (
     echo Configuration cancelled by user.
 )

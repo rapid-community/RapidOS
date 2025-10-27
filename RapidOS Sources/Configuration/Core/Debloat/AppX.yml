@@ -75,7 +75,7 @@ actions:
         } else {
             Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
             Get-AppxPackage *Microsoft.Edge.GameAssist* | Remove-AppxPackage
-            Set-RegistryValue -Path 'HKCU:\Software\Microsoft\GameBar' -Name 'ShowStartupPanel' -Type DWORD -Value 0;
+            Set-RegistryValue -Path 'HKCU:\SOFTWARE\Microsoft\GameBar' -Name 'ShowStartupPanel' -Type DWORD -Value 0;
             Write-Host 'Xbox Game Bar removed'
         }
 

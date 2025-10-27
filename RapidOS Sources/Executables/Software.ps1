@@ -309,7 +309,7 @@ function Optimize-Browser {
         # Disable Edge tasks
         # ===========================
         Get-ScheduledTask | ? {$_.TaskName -like "*Edge*"} | Disable-ScheduledTask *>$null
-        Get-CimInstance Win32_StartupCommand | ? {$_.Name -like "*Edge*"} | % {Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" -Name $_.Name -Value ([byte[]](0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00)) -EA 0}
+        Get-CimInstance Win32_StartupCommand | ? {$_.Name -like "*Edge*"} | % {Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" -Name $_.Name -Value ([byte[]](0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00)) -EA 0}
 
         Write-Host "Done."
     }
@@ -459,14 +459,14 @@ function Optimize-Browser {
         }
 
         foreach ($setting in $policies.GetEnumerator()) {
-            Set-RegistryValue -Path "HKLM:\Software\Policies\BraveSoftware\Brave" -Name $setting.Key -Type DWORD -Value $setting.Value
+            Set-RegistryValue -Path "HKLM:\SOFTWARE\Policies\BraveSoftware\Brave" -Name $setting.Key -Type DWORD -Value $setting.Value
         }
 
         # ===========================
         # Disable Brave tasks
         # ===========================
         Get-ScheduledTask | ? {$_.TaskName -like "*Brave*"} | Disable-ScheduledTask *>$null
-        Get-CimInstance Win32_StartupCommand | ? {$_.Name -like "*brave*"} | % {Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" -Name $_.Name -Value ([byte[]](0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00)) -EA 0}
+        Get-CimInstance Win32_StartupCommand | ? {$_.Name -like "*brave*"} | % {Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run" -Name $_.Name -Value ([byte[]](0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00)) -EA 0}
 
         Write-Host "Done."
     }

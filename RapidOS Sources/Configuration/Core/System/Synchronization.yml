@@ -82,7 +82,7 @@ actions:
       data: '0'
       option: 'disable-sync'
   - !registryValue:
-      path: 'HKLM\System\CurrentControlSet\Control\FeatureManagement\Overrides\8\1387020943'
+      path: 'HKLM\SYSTEM\CurrentControlSet\Control\FeatureManagement\Overrides\8\1387020943'
       value: 'EnabledState'
       type: REG_DWORD
       data: '1'

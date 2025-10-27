@@ -11,12 +11,12 @@ exit /b
 :PS
 $memGB = [math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum) / 1GB)
 
-$visualEffectsPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects'
+$visualEffectsPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects'
 $desktopPath = 'HKCU:\Control Panel\Desktop'
 $windowMetricsPath = 'HKCU:\Control Panel\Desktop\WindowMetrics'
-$advancedExplorerPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
-$dwmPath = 'HKCU:\Software\Microsoft\Windows\DWM'
-$personalizePath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+$advancedExplorerPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+$dwmPath = 'HKCU:\SOFTWARE\Microsoft\Windows\DWM'
+$personalizePath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
 
 Set-RegistryValue -Path $visualEffectsPath -Name 'VisualFXSetting' -Type DWORD -Value 3
 Set-RegistryValue -Path $desktopPath -Name 'UserPreferencesMask' -Type Binary -Value ([byte[]](0x90, 0x12, 0x03, 0x80, 0x10, 0x00, 0x00, 0x00))

@@ -53,7 +53,7 @@ function Invoke-DiskCleanup {
     
     Write-Host "Setting cleanup keys..." -F DarkGray
     $config.CleanupSettings.GetEnumerator() | % {
-        $keyPath = Join-Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' $_.Key;
+        $keyPath = Join-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' $_.Key;
         if (Test-Path $keyPath) {Set-RegistryValue -Path $keyPath -Name "StateFlags0042" -Type DWORD -Value $_.Value} 
     }
 

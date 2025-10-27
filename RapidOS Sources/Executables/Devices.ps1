@@ -288,7 +288,7 @@ function Set-DrivesConfiguration {
         # === Disable hibernation ===
         if (!(Test-Laptop)) {
             powercfg /h off
-            Set-RegistryValue -Path 'HKLM:\Software\Policies\Microsoft\Windows\System' -Name 'HiberbootEnabled' -Type DWORD -Value 0
+            Set-RegistryValue -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'HiberbootEnabled' -Type DWORD -Value 0
             Set-RegistryValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name 'HiberbootEnabled' -Type DWORD -Value 0
             Set-RegistryValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings' -Name 'ShowHibernateOption' -Type DWORD -Value 0
             Set-RegistryValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name 'HibernateEnabled' -Type DWORD -Value 0

@@ -29,6 +29,6 @@ reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "UseWU
 
 & "$env:WinDir\RapidScripts\Set-Pages.cmd" -remove windowsupdate *>$null
 
-Write-Host "Automatic Updates have been disabled."
+Write-Host "Automatic Updates have been enabled."
 pause
 exit

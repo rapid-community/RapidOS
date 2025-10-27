@@ -531,7 +531,7 @@ function ProcessDefender {
             reg add $regKey /v "Start" /t REG_DWORD /d 4 /f *>$null
         }
 
-        reg delete "HKLM\Software\Microsoft\Windows Security Health\State\Persist" /f *>$null
+        reg delete "HKLM\SOFTWARE\Microsoft\Windows Security Health\State\Persist" /f *>$null
         del (Join-Path $env:ProgramData 'Microsoft\Windows Defender\Scans\mpenginedb.db') -Force -EA 0
         del (Join-Path $env:ProgramData 'Microsoft\Windows Defender\Scans\History\Service') -Recurse -Force -EA 0
 
