@@ -339,7 +339,7 @@ namespace RapidOS
     public class Service : ServiceBase
     {
         public Service() {ServiceName = "RapidOS"; AutoLog = true;}
-        protected override void OnStart(string[] args) {ShellExecuteW(IntPtr.Zero, "open", "powershell.exe", @"{{path}}", null, 0); Stop();}
+        protected override void OnStart(string[] args) {while (System.Diagnostics.Process.GetProcessesByName("logonui").Length == 0) System.Threading.Thread.Sleep(500); ShellExecuteW(IntPtr.Zero, "open", "powershell.exe", @"{{path}}", null, 0); Stop();}
         protected override void OnStop() {}
         public static void Main() {ServiceBase.Run(new Service());}
 
@@ -375,7 +375,7 @@ namespace RapidOS
     }
     else {
         bcdedit /deletevalue safeboot *>$null
-        
+
         sc.exe delete RapidOS *>$null
         del "$env:WinDir\RapidScripts\RapidOS.exe" -Force
         del "$env:WinDir\RapidScripts\startup.bat" -Force
@@ -481,10 +481,6 @@ function ProcessDefender {
             reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v $($entry.Key) /f *>$null
         }
 
-        cd $config.defenderPath
-        $mpcmd = if (Test-Path (Join-Path $config.defenderPath $config.backupExe)) {$config.backupExe} else {$config.exe}
-        & ".\$mpcmd" -EnableService -HighPriority *>$null
-
         reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /v "DisableNotifications" /f *>$null
         reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Virus and threat protection" /v "UILockdown" /f *>$null
 
@@ -516,10 +512,6 @@ function ProcessDefender {
             reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v $entry.Key /t REG_DWORD /d $entry.Value /f *>$null
         }
 
-        cd $config.defenderPath
-        $mpcmd = if (Test-Path (Join-Path $config.defenderPath $config.exe)) {$config.exe} else {$config.backupExe}
-        & ".\$mpcmd" -DisableService -HighPriority *>$null
-
         $svcImagePath = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" -Name ImagePath -EA 0).ImagePath.Trim('"')
         $svcPath = Split-Path $svcImagePath
         if (Test-Path (Join-Path $svcPath $config.exe)) {
@@ -532,8 +524,8 @@ function ProcessDefender {
         }
 
         reg delete "HKLM\SOFTWARE\Microsoft\Windows Security Health\State\Persist" /f *>$null
-        del (Join-Path $env:ProgramData 'Microsoft\Windows Defender\Scans\mpenginedb.db') -Force -EA 0
-        del (Join-Path $env:ProgramData 'Microsoft\Windows Defender\Scans\History\Service') -Recurse -Force -EA 0
+        del (Join-Path $env:ProgramData 'Microsoft\Windows Defender\Scans\mpenginedb.db') -Force -EA 0 *>$null
+        del (Join-Path $env:ProgramData 'Microsoft\Windows Defender\Scans\History\Service') -Recurse -Force -EA 0 *>$null
 
         reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "SmartScreenEnabled" /t REG_SZ /d "Off" /f *>$null
         reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v "SmartScreenEnabled" /t REG_DWORD /d 0 /f *>$null
