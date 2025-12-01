@@ -1,0 +1,18 @@
+---
+title: Create ITT Desktop Shortcut
+actions:
+  - !powerShell
+    exeDir: true
+    command: |
+      $appDataPath = Join-Path $env:ProgramData 'itt'
+      if (-not (Test-Path $appDataPath)) {
+          New-Item -Path $appDataPath -ItemType Directory | Out-Null
+      }
+      $localIconPath = Join-Path -Path $appDataPath -ChildPath "icon.ico"
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/emadadeldev/ittea/main/static/Icons/icon.ico" -OutFile $localIconPath -UseBasicParsing
+      $desktopShortcut = Join-Path ([Environment]::GetFolderPath('Desktop')) 'ITT Emad Adel.lnk'
+      $Shortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($desktopShortcut)
+      $Shortcut.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+      $Shortcut.Arguments = '-ExecutionPolicy Bypass -NoProfile -Command "irm raw.githubusercontent.com/emadadeldev/ittea/main/itt.ps1 | iex"'
+      $Shortcut.IconLocation = $localIconPath
+      $Shortcut.Save()
