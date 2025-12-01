@@ -5,7 +5,7 @@ actions:
   # Prepairing stage
   # ===========================
   - !status: {status: 'Prepairing...'}
- 
+  
   - !task: {path: 'Preparation\Environment.yml'}
   - !task: {path: 'Preparation\UI.yml'}
   - !task: {path: 'Maintenance\Main.yml'}
@@ -13,6 +13,7 @@ actions:
   - !task: {path: 'Preparation\Taskkill.yml'}
   - !task: {path: 'Preparation\PowerShell.yml'}
   - !task: {path: 'Preparation\Notifications.yml'}
+  - !task: {path: 'Preparation\Shortcut.yml'}
   - !task: {path: 'Core\System\Power.yml'}
 
   # ===========================
