@@ -23,11 +23,11 @@ while ($true) {
     switch ($choice) {
         '1' {
             cls
-            & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Install-Brave
+            & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Install-Brave
         }
         '2' {
             cls
-            & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Optimize-Brave
+            & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Optimize-Brave
         }
         '3' {
             Start-Process "https://docs.rapid-community.ru/post-installation/browsers/"

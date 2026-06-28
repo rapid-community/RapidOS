@@ -7,11 +7,11 @@ actions:
       exeDir: true
       command: '.\AME.ps1 -Pin'
 
-  # === Re-enable UCPD driver ===
-  - !service:
-      name: 'UCPD'
-      operation: change
-      startup: '4'
+  # === Save setup user ===
+  - !powerShell:
+      runas: currentUserElevated
+      command: >-
+        Edit-Registry -Path 'HKLM\SOFTWARE\RapidOS\Installation' -Name 'SetupUser' -Value ([Security.Principal.WindowsIdentity]::GetCurrent().User.Value)
 
   # === Propagate configuration to new users ===
   - !run:
@@ -21,7 +21,52 @@ actions:
       exe: 'powershell'
       args: '-EP Bypass -C ".\Template.ps1"'
 
+  # === Filter browsers ===
+  - !powerShell:
+      runas: currentUserElevated
+      oobe: false
+      command: >-
+        $opts = Get-Options; $reg = 'HKLM:\SOFTWARE\RapidOS\Installation\Deferred\Browser'; $install = $env:SystemRoot + '\RapidScripts\Deferred';
+        $apps = 'Brave', 'Chrome', 'Firefox', 'Thorium'; $filters = '*Brave*.exe', '*Chrome*.msi', '*Firefox*.exe', '*Thorium*.exe';
+        $selected = [bool]($opts -match 'install-(brave|chrome|firefox|thorium)');
+        $fallback = if (!$selected) {$f = gci $install -File -EA 0 | ? {$_.Name -match 'Brave|Chrome|Firefox|Thorium'} | Sort LastWriteTime | Select -Last 1; if ($f) {$f.FullName}} else {$null};
+        for ($i = 0; $i -lt $apps.Count; $i++) {
+          $files = @(gci $install -Filter $filters[$i] -EA 0 | Sort LastWriteTime -Desc);
+          if ($files.Count -gt 0) {
+            if ($files.Count -gt 1) {$files[1..($files.Count-1)] | del -Force -EA 0};
+            $latest = $files[0]; $active = $opts -contains ('install-' + $apps[$i].ToLower());
+            if ($active -or (!$selected -and $latest.FullName -eq $fallback)) {Edit-Registry -Path $reg -Name $apps[$i] -Type DWord -Value 1} else {del $latest.FullName -Force -EA 0}
+          }
+        }
+
+  # === Register deferred pipeline ===
+  - !powerShell:
+      runas: currentUserElevated
+      command: >-
+        $q = [char]34; $path = $env:SystemRoot + '\RapidScripts\Playbook\Deferred.ps1'; $vbs = $env:SystemRoot + '\RapidScripts\Deferred\Deferred.vbs';
+        $vbs1 = 'CreateObject(' + $q + 'WScript.Shell' + $q + ').Run ' + $q + 'powershell.exe -NoP -EP Bypass -File ' + $path + $q + ', 0, False';
+        mkdir ($vbs | Split-Path) -Force *>$null; Set-Content $vbs $vbs1 -Encoding Default *>$null;
+        $act = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument ($q + $vbs + $q);
+        $trig = New-CimInstance -CimClass (Get-CimClass MSFT_TaskLogonTrigger Root/Microsoft/Windows/TaskScheduler) -ClientOnly -Property @{Enabled=$true};
+        $prin = New-ScheduledTaskPrincipal -GroupId 'S-1-5-32-545' -RunLevel Highest;
+        $set = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries; $set.Hidden = $true;
+        Register-ScheduledTask -TaskName 'Deferred' -Action $act -Trigger $trig -Principal $prin -Settings $set -Force;
+        $svc = New-Object -ComObject Schedule.Service; $svc.Connect(); $svc.GetFolder('\').GetTask('Deferred').SetSecurityDescriptor('D:(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;AU)', 16)
+  
   # === Update group policy ===
-  - !run: 
+  - !run:
       exe: 'gpupdate.exe'
+      args: '/force'
       showOutput: false
+  - !powerShell:
+      runas: currentUserElevated
+      command: >-
+        $user = whoami; Register-ScheduledTask -TaskName 'gpupdate' -Action (New-ScheduledTaskAction -Execute 'powershell' -Argument ('-win 1 -c ' + [char]34 + 'gpupdate /force; schtasks /delete /tn gpupdate /f' + [char]34)) -Trigger (New-ScheduledTaskTrigger -AtLogon -User $user) -Principal (New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -RunLevel Highest) -Force
+
+  # === Clean up temp files ===
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -File .\Cleanup.ps1 -Manual'

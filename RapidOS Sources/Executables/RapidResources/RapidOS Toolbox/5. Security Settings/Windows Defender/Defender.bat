@@ -1,5 +1,5 @@
 @echo off
 
-powershell.exe -EP Bypass -File "%WinDir%\RapidScripts\Playbook\Defender.ps1"
+powershell.exe -EP Bypass -File "%SystemRoot%\RapidScripts\Playbook\Defender.ps1"
 
 exit /b

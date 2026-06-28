@@ -3,6 +3,7 @@ title: Brave installation
 actions:
   - !run:
       runas: currentUserElevated
+      oobe: false
       option: 'install-brave'
       exeDir: true
       wait: true
@@ -11,8 +12,25 @@ actions:
 
   - !run:
       runas: currentUserElevated
+      oobe: false
       option: 'install-brave'
       exeDir: true
       wait: true
       exe: 'powershell'
       args: '-EP Bypass -C ".\Software.ps1 -Software Optimize-Brave"'
+
+  - !run:
+      runas: currentUserElevated
+      oobe: only
+      option: 'install-brave'
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Software.ps1 -Mode Download -Software Install-Brave"'
+
+  - !registryValue:
+      option: 'install-brave'
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred\Browser'
+      value: 'Brave'
+      type: REG_DWORD
+      data: '1'

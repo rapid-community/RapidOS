@@ -2,7 +2,7 @@
 title: Remove Microsoft Office apps
 actions:
   - !powerShell:
-      option: 'Office'
+      option: 'remove-office'
       exeDir: true
       wait: true
       command: >-

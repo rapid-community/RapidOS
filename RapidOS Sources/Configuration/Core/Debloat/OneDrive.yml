@@ -1,10 +1,33 @@
 ---
 title: Remove Microsoft OneDrive
 actions:
+  # === Run uninstaller ===
   - !run:
       runas: currentUserElevated
-      option: 'OneDrive'
+      option: 'remove-onedrive'
       exeDir: true
       wait: true
       exe: 'powershell'
       args: '-EP Bypass -C ".\Software.ps1 -Software Remove-OneDrive"'
+
+  # === Hide File Explorer sidebar shortcut for ALL users ===
+  - !registryValue: {path: 'HKLM\SOFTWARE\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}', value: 'System.IsPinnedToNameSpaceTree', type: REG_DWORD, data: '0', option: 'remove-onedrive'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Classes\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}', value: 'System.IsPinnedToNameSpaceTree', type: REG_DWORD, data: '0', option: 'remove-onedrive'}
+  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}', operation: delete, option: 'remove-onedrive'}
+  - !registryKey: {path: 'HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}', operation: delete, option: 'remove-onedrive'}
+  - !registryKey: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}', operation: delete, option: 'remove-onedrive'}
+  - !registryKey: {path: 'HKCU\SOFTWARE\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}', operation: delete, option: 'remove-onedrive'}
+
+  # === Propagate sidebar removal to existing per-user hives ===
+  - !powerShell:
+      runas: currentUserElevated
+      option: 'remove-onedrive'
+      command: >-
+        $clsid = '{018D5C66-4533-4307-9B53-224DE2ED1FE6}';
+        Invoke-Profile -All -Action {
+          if ($_.ProfileDir -eq $env:USERPROFILE) {return};
+          del ($_.RegKey + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\' + $clsid) -Recurse -Force -EA 0;
+          del ($_.RegKey + '\SOFTWARE\Classes\CLSID\' + $clsid) -Recurse -Force -EA 0;
+          Edit-Registry -Path ($_.RegKey + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run') -Name 'OneDriveSetup' -Remove;
+          Edit-Registry -Path ($_.RegKey + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run') -Name 'OneDrive' -Remove
+        }

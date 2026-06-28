@@ -4,9 +4,5 @@ description: Checks if a reboot is pending and stops setup until the PC is resta
 actions:
   - !powerShell:
       handleExitCodes: {'!0': halt}
-      exeDir: true
-      oobe: false
       wait: true
-      command: |
-        .\RapidScripts\EnvSetup.ps1
-        PendingReboot
+      command: PendingReboot

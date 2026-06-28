@@ -5,7 +5,7 @@ actions:
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications', value: 'ConfigureChatAutoInstall', type: REG_DWORD, data: '0'}
   - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Office\Teams', value: 'PreventInstallationFromMsi', type: REG_DWORD, data: '1'}
   - !powerShell:
-      option: 'Teams'
+      option: 'remove-teams'
       exeDir: true
       wait: true
       command: >-

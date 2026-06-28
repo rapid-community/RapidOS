@@ -6,9 +6,5 @@ description: >
 actions:
   - !powerShell:
       runas: currentUserElevated
-      exeDir: true
-      oobe: false
       wait: true
-      command: |
-        .\RapidScripts\EnvSetup.ps1
-        ExternalBlocks
+      command: ExternalBlocks

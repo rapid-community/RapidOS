@@ -16,6 +16,7 @@ if "%isArm64%"=="true" (
 	echo Fault Tolerant Heap doesn't exist on ARM64 systems.
 ) else (
 	reg add "HKLM\SOFTWARE\Microsoft\FTH" /v Enabled /t REG_DWORD /d 0 /f > nul 2>&1
+    reg delete "HKLM\SOFTWARE\Microsoft\FTH\State" /f > nul 2>&1
     echo Fault Tolerant Heap has been disabled.
 )
 

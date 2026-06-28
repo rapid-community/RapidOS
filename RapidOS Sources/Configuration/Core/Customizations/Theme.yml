@@ -1,0 +1,56 @@
+---
+title: Theme configuration
+actions:
+  # === Set theme defaults ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes'
+      value: 'CurrentTheme'
+      type: REG_EXPAND_SZ
+      data: '%SystemRoot%\Resources\Themes\RapidOS.theme'
+      option: 'apply-theme'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+      value: 'AppsUseLightTheme'
+      type: REG_DWORD
+      data: '0'
+      option: 'apply-theme'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+      value: 'SystemUsesLightTheme'
+      type: REG_DWORD
+      data: '0'
+      option: 'apply-theme'
+  - !registryValue:
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'Wallpaper'
+      type: REG_EXPAND_SZ
+      data: '%SystemRoot%\RapidScripts\Wallpapers\desktop.jpg'
+      option: 'apply-theme'
+  - !registryValue:
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'WallpaperStyle'
+      type: REG_SZ
+      data: '10'
+      option: 'apply-theme'
+  - !registryValue:
+      path: 'HKCU\Control Panel\Desktop'
+      value: 'TileWallpaper'
+      type: REG_SZ
+      data: '0'
+      option: 'apply-theme'
+
+  # === Apply RapidOS theme ===
+  - !run:
+      runas: currentUserElevated
+      option: 'apply-theme'
+      exeDir: true
+      oobe: false
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Shell.ps1 -Theme \"$env:SystemRoot\Resources\Themes\RapidOS.theme\" -Lockscreen \"$env:SystemRoot\RapidScripts\Wallpapers\lockscreen.jpg\""'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      value: 'Theme'
+      type: REG_DWORD
+      data: '1'
+      option: 'apply-theme'

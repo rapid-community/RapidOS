@@ -1,16 +1,10 @@
 ---
 title: Svchost service grouping
-description: > 
-  Prevents services from creating their own separate processes, forcing them to stay grouped to save memory. 
-  Doing this for ALL services will break many things (including XboxGipSvc), so this list is SHOULD be stable. We'll see how it works in the future
+description: Prevents services from creating their own separate processes, forcing them to stay grouped to save memory
 actions:
   - !powerShell:
-      exeDir: true
       command: >-
-        .\RapidScripts\EnvSetup.ps1;
-        $regPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\';
-
-        $sysSvcs = @(
+        $old = @(
           'DisplayEnhancementService', 'PcaSvc', 'WdiSystemHost', 'WdiServiceHost',
           'AudioEndpointBuilder', 'DeviceAssociationService', 'NcbService', 'StorSvc',
           'SysMain', 'TextInputManagementService', 'TrkWks', 'hidserv', 'Appinfo',
@@ -24,11 +18,20 @@ actions:
           'WbioSrvc', 'TabletInputService', 'WlanSvc', 'Wecsvc', 'wscsvc'
         );
 
-        $sysSvcs | % {Set-RegistryValue -Path "$regPath$_" -Name 'SvcHostSplitDisable' -Type DWORD -Value 1};
+        $reg = 'HKLM:\SYSTEM\CurrentControlSet\Services\';
+        foreach ($svc in $old) {Edit-Registry -Path ($reg + $svc) -Name 'SvcHostSplitDisable' -Remove}
 
-        $userSvcs = @('CDPUserSvc_*', 'OneSyncSvc_*', 'WpnUserService_*');
-        $userSvcs | % {
-          $p = $_;
-          $matches = Get-Service | ? {$_.Name -like $p};
-          $matches | % {Set-RegistryValue -Path "$regPath$($_.Name)" -Name 'SvcHostSplitDisable' -Type DWORD -Value 1}
-        }
+        $memgb = [double]((Get-Specs -RAM) -replace '[^0-9,.]');
+        if ($memgb -gt 8) {return}
+
+        $svcs = @(
+          'DisplayEnhancementService', 'PcaSvc', 'WdiSystemHost', 'WdiServiceHost',
+          'DeviceAssociationService', 'NcbService', 'StorSvc', 'TrkWks', 'Appinfo',
+          'Schedule', 'TokenBroker', 'UsoSvc', 'WpnService', 'iphlpsvc', 'nsi',
+          'WinHttpAutoProxySvc', 'TimeBrokerSvc', 'lmhosts', 'FontCache', 'wscsvc',
+          'netprofm', 'SstpSvc', 'DispBrokerDesktopSvc', 'CDPSvc', 'EventSystem',
+          'LicenseManager', 'SystemEventsBroker', 'ClipSVC', 'camsvc', 'FDResPub',
+          'SSDPSRV', 'CoreMessagingRegistrar', 'NcdAutoSetup', 'bthserv', 'WbioSrvc',
+          'Wecsvc'
+        );
+        foreach ($svc in $svcs) {Edit-Registry -Path ($reg + $svc) -Name 'SvcHostSplitDisable' -Type DWord -Value 1}

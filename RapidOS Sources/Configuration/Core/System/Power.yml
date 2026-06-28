@@ -2,12 +2,15 @@
 title: Power configuration
 description: Optimizes Balanced power plan for AC performance
 actions:
+  # ==============================
+  # Configure power scheme
+  # ==============================
   # === Delete existing RapidOS power plan if it exists ===
   - !powerShell:
       runas: currentUserElevated
       command: >-
-        $oldScheme = powercfg -list | Select-String -Quiet '12111111-1211-1211-1211-121111111111';
-        if ($oldScheme) {
+        $old = powercfg -list | Select-String -Quiet '12111111-1211-1211-1211-121111111111';
+        if ($old) {
           powercfg -s 381b4222-f694-41f0-9685-ff5bb260df2e *>$null;
 
           if ($LASTEXITCODE -ne 0) {
@@ -23,39 +26,37 @@ actions:
   - !run: {exe: "powercfg", args: "-changename 12111111-1211-1211-1211-121111111111 \"Balanced (RapidOS)\" \"Balanced scheme modified for AC performance; DC unchanged.\""}
   - !run: {exe: "powercfg", args: "-s 12111111-1211-1211-1211-121111111111"}
 
-  # === Increase CPU frequency under load ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PERFINCPOL 2"}
-
-  # === Reduce delay before lowering CPU frequency ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PERFDECPOL 1"}
-
-  # === Trigger performance boost earlier ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PERFINCTHRESHOLD 55"}
-
-  # === Delay lowering performance after load ===
-  - !run: {exe: "powercfg", args: "-setacvalueindex scheme_current SUB_PROCESSOR PERFDECTHRESHOLD 30"}
-
-  # === Tweak CPU сore parking & PCIe power settings based on chassis type ===
+  # === Optimize power configuration ===
   - !powerShell:
       runas: currentUserElevated
-      exeDir: true
       command: |
-        .\RapidScripts\EnvSetup.ps1
-        if (Test-Laptop) {
-          # === Keep 60% of cores unparked ===
-          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES 60
-
-          # === Keep 80% of P-cores active on hybrid CPUs ===
-          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES1 80
-        } else {
-          # === Keep cores unparked ===
-          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES 100
-
-          # === Keep P-cores active on hybrid CPUs ===
-          powercfg -setacvalueindex scheme_current SUB_PROCESSOR CPMINCORES1 100
-
-          # === Disable PCIe power saving for minimum latency ===
-          powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
+        $build = [int](Get-Specs -Build).Split('.')[0]
+        if ($build -ge 22000) {
+          $q = [char]34
+          $m = '[DllImport(' + $q + 'powrprof.dll' + $q + ')] public static extern uint PowerSetUserConfiguredACPowerMode(ref Guid g);'
+          Add-Type -MemberDefinition $m -Name 'Pwr' -Namespace 'Win32'
+          $g = [Guid]'ded574b5-45a0-4f42-8737-46345c09c238'
+          [void][Win32.Pwr]::PowerSetUserConfiguredACPowerMode([ref]$g)
         }
 
-  - !run: {exe: "powercfg", args: "-setactive scheme_current"}
+        if (Test-Laptop) {
+          # === Leave 10% of cores unparked ===
+          powercfg -setacvalueindex 12111111-1211-1211-1211-121111111111 SUB_PROCESSOR CPMINCORES 10
+
+          # === Leave 10% of P-cores active on hybrid CPUs ===
+          powercfg -setacvalueindex 12111111-1211-1211-1211-121111111111 SUB_PROCESSOR CPMINCORES1 10
+
+          # === Use a moderate CPU preference on AC ===
+          powercfg -setacvalueindex 12111111-1211-1211-1211-121111111111 SUB_PROCESSOR PERFEPP 33
+        } else {
+          # === Leave half of the cores unparked ===
+          powercfg -setacvalueindex 12111111-1211-1211-1211-121111111111 SUB_PROCESSOR CPMINCORES 50
+
+          # === Keep all P-cores active on hybrid CPUs ===
+          powercfg -setacvalueindex 12111111-1211-1211-1211-121111111111 SUB_PROCESSOR CPMINCORES1 100
+
+          # === Favor CPU performance over power saving ===
+          powercfg -setacvalueindex 12111111-1211-1211-1211-121111111111 SUB_PROCESSOR PERFEPP 20
+        }
+
+  - !run: {exe: "powercfg", args: "-setactive 12111111-1211-1211-1211-121111111111"}

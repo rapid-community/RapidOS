@@ -6,30 +6,44 @@ actions:
       builds: ['<22000']
       runas: currentUserElevated
       command: >-
-        $regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager';
-        $valueName = 'Preferences';
-
-        $regVal = Get-ItemPropertyValue -Path $regPath -Name $valueName -EA 1;
-        if (!$regVal) {throw};
-        $regVal[48] = 0x01;
-        Set-ItemProperty -Path $regPath -Name $valueName -Value $regVal -Type Binary -Force
+        $path = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager'; $name = 'Preferences';
+        $val = Get-ItemPropertyValue -Path $path -Name $name -EA 0;
+        if (!$val) {
+          (New-Object -ComObject WScript.Shell).Run('taskmgr.exe', 0, $false) *>$null;
+          Start-Sleep -s 3;
+          taskkill /f /im taskmgr.exe *>$null;
+          Start-Sleep -s 1;
+          $val = Get-ItemPropertyValue -Path $path -Name $name -EA 0
+        }
+        $val[48] = 1;
+        Edit-Registry -Path $path -Name $name -Type Binary -Value $val
 
   - !powerShell:
       builds: ['>=22000']
       runas: currentUserElevated
+      oobe: false
       wait: true
       command: >-
         $path = $env:LOCALAPPDATA + '\Microsoft\Windows\TaskManager\settings.json';
-        
         if (!(Test-Path $path)) {
-            $wshell = New-Object -ComObject WScript.Shell;
-            $wshell.Run('taskmgr.exe', 0, $false) *>$null;
-            
-            Start-Sleep -s 3;
-            Stop-Process -Name 'Taskmgr' -Force -EA 0;
-            Start-Sleep -s 1
-        };
+          (New-Object -ComObject WScript.Shell).Run('taskmgr.exe', 0, $false) *>$null;
+          Start-Sleep -s 3;
+          taskkill /f /im taskmgr.exe *>$null;
+          Start-Sleep -s 1
+        }
+        for ($i = 0; $i -lt 3; $i++) {
+          $obj = [IO.File]::ReadAllText($path) | ConvertFrom-Json -EA 0;
+          if ($obj) {
+            $obj | Add-Member -NotePropertyName 'AlwaysOnTop' -NotePropertyValue $true -Force;
+            [IO.File]::WriteAllText($path, ($obj | ConvertTo-Json -Depth 10), [Text.UTF8Encoding]::new($false));
+            break
+          }
+          Start-Sleep -m 500
+        }
 
-        $json = Get-Content -Path $path -Raw | ConvertFrom-Json;
-        $json | Add-Member -NotePropertyName 'AlwaysOnTop' -NotePropertyValue $true -Force;
-        $json | ConvertTo-Json -Depth 10 | Set-Content -Path $path
+  - !registryValue:
+      builds: ['>=22000']
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      value: 'TaskManager'
+      type: REG_DWORD
+      data: '1'

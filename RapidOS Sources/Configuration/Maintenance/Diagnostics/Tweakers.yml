@@ -7,9 +7,5 @@ actions:
   - !powerShell:
       handleExitCodes: {'!0': halt}
       runas: currentUserElevated
-      exeDir: true
-      oobe: false
       wait: true
-      command: |
-        .\RapidScripts\EnvSetup.ps1
-        Tweakers
+      command: Tweakers

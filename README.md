@@ -62,6 +62,7 @@ RapidOS is available for download! Built on the powerful **[AME Beta](https://am
 - **Windows 10 22H2 - `19045`**
 - **Windows 11 22H2 - `22621`**
 - **Windows 11 23H2 - `22631`**
+- **Windows 11 24H2 - `26100`**
 - **Windows 11 25H2 - `26200`**
 
 Any other build **is not** officially supported by RapidOS.
@@ -126,7 +127,7 @@ RapidOS is licensed under the **[GNU Affero General Public License v3.0](https:/
 
 **Love the project?** Show your support by clicking the ⭐ (top right) and joining our community of **[stargazers](https://github.com/rapid-community/RapidOS/stargazers)**!
 
-[![Stargazers repo roster for @rapid-community/RapidOS](https://reporoster.com/stars/dark/rapid-community/RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
+[![Stargazers repo roster for @rapid-community/RapidOS](https://bytecrank.com/nastyox/reporoster/php/stargazersSVG.php?theme=dark&user=rapid-community&repo=RapidOS)](https://github.com/rapid-community/RapidOS/stargazers)
 
 ## 🌊 Join the Rapid Community today!
 

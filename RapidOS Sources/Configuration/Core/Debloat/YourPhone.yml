@@ -3,7 +3,7 @@ title: Remove Your Phone app
 actions:
   - !taskKill: {name: '*Phone*', ignoreErrors: true}
   - !powerShell:
-      option: 'YourPhone'
+      option: 'remove-phone'
       exeDir: true
       wait: true
       command: >-

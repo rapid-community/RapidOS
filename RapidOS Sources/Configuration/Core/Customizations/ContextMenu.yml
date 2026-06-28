@@ -2,15 +2,28 @@
 title: Context Menu configuration
 actions:
   # === Windows 10 classic context menu ===
-  - !registryValue: {path: 'HKCU\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32', value: '', type: REG_SZ, data: '', option: 'classic-context-menu'}
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'
+      value: ''
+      type: REG_SZ
+      data: ''
+      builds: ['>=22000']
+      option: 'classic-context-menu'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      value: 'ClassicContextMenu'
+      type: REG_DWORD
+      data: '1'
+      builds: ['>=22000']
+      option: 'classic-context-menu'
 
   # === Remove "Bitmap image" ===
-  - !registryKey: 
+  - !registryKey:
       path: 'HKCR\.bmp\ShellNew'
       operation: delete
 
   # === Remove "Rich Text Document" ===
-  - !registryKey: 
+  - !registryKey:
       path: 'HKCR\.rtf\ShellNew'
       operation: delete
 
@@ -30,10 +43,10 @@ actions:
   - !registryKey: {path: 'HKCR\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing', operation: delete}
 
   # === Remove "Include in library" ===
-  - !registryKey: 
+  - !registryKey:
       path: 'HKCR\Folder\ShellEx\ContextMenuHandlers\Library Location'
       operation: delete
-  - !registryKey: 
+  - !registryKey:
       path: 'HKLM\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location'
       operation: delete
 

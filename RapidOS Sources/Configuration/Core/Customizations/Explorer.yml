@@ -43,6 +43,13 @@ actions:
       type: REG_DWORD
       data: '100'
 
+  # === Disable Autoplay ===
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers'
+      value: 'DisableAutoplay'
+      type: REG_DWORD
+      data: '1'
+
   # === Remove '- Shortcut' text added onto shortcuts ===
   - !registryValue:
       path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer'
@@ -113,22 +120,19 @@ actions:
 
   # === Create RapidOS Toolbox shortcut ===
   - !powerShell:
-      handleExitCodes: {'!0': halt}
       exeDir: true
       wait: true
-      command: |
-        .\RapidScripts\EnvSetup.ps1
-        $src = 'RapidScripts\RapidOS Toolbox.lnk'
-        
-        copy $src (Join-Path (Get-UserPath) 'RapidOS Toolbox.lnk') -Force
-
-        $users = gci 'Registry::HKU' | ? {$_.Name -match 'S-[0-9-]+(?!.*_)' -and (gci $_.PsPath | ? {$_.Name -match 'Volatile|AME_'})}
-        
-        foreach ($u in $users) {
-            $desk = (Get-ItemProperty ($u.PsPath + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders') -EA 0).Desktop
-            if ($desk) {
-                $prof = (Get-ItemProperty ('Registry::HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\' + $u.PSChildName) -EA 0).ProfileImagePath
-                if ($prof) {$desk = $desk.Replace('%USERPROFILE%', $prof)}
-                if (Test-Path $desk) {copy $src (Join-Path $desk 'RapidOS Toolbox.lnk') -Force}
-            }
+      command: >-
+        $src = 'RapidResources\RapidOS Toolbox.lnk';
+        copy $src ((Get-UserPath) + '\RapidOS Toolbox.lnk') -Force;
+        mkdir ($env:SystemDrive + '\Users\Default\Desktop') -Force *>$null;
+        copy $src ($env:SystemDrive + '\Users\Default\Desktop\RapidOS Toolbox.lnk') -Force;
+        gci 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' -EA 0 | ? {$_.PSChildName -like 'S-1-5-21-*' -and $_.PSChildName -notmatch '_'} | % {
+          $prof = (Get-ItemProperty $_.PSPath -EA 0).ProfileImagePath;
+          if ($prof) {
+            $desk = (Get-ItemProperty ('Registry::HKU\' + $_.PSChildName + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders') -EA 0).Desktop;
+            if ($desk) {$desk = $desk.Replace('%USERPROFILE%', $prof).Replace('%SystemDrive%', $env:SystemDrive)} else {$desk = $prof + '\Desktop'};
+            mkdir $desk -Force *>$null;
+            copy $src ($desk + '\RapidOS Toolbox.lnk') -Force
+          }
         }

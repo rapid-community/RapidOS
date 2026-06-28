@@ -1,134 +1,91 @@
-# ===========================
+# ==============================
 # Diagnostics
-# ===========================
+# ==============================
 function Defender {
     Write-Host "Checking Microsoft Defender..."
-
-    $sysDir = Join-Path -Path $env:WinDir -ChildPath "System32"
     $issues = @()
-    $disabled = $false
 
-    $files = @(
-        (Join-Path $sysDir "smartscreen.exe"),
-        (Join-Path $sysDir "SecurityHealthSystray.exe"),
-        (Join-Path $sysDir "CompatTelRunner.exe")
-    )
-    $missing = $files | ? {!(Test-Path $_ -EA 0)}
-    if ($missing) {
-        $fileNames = $missing | % {Split-Path $_ -Leaf}
-        $issues += "Missing system files: " + ($fileNames -join ", ")
-        $disabled = $true
+    $gpo = @{
+        "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" = "DisableAntiSpyware"
+        "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" = "DisableRealtimeMonitoring", "DisableBehaviorMonitoring", "DisableOnAccessProtection", "DisableScanOnRealtimeEnable"
+    }
+    foreach ($path in $gpo.Keys) {
+        $reg = Get-ItemProperty $path -EA 0
+        $gpo[$path] | % {if ($reg.$_ -eq 1) {$issues += "GPO: $_"}}
     }
 
-    $uiPolicy = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "SettingsPageVisibility" -EA 0
-    if ($uiPolicy -and ($uiPolicy.SettingsPageVisibility -match "hide:windowsdefender")) {
+    "WinDefend", "WdFilter", "WdNisSvc", "WdNisDrv", "WdBoot", "SecurityHealthService", "wscsvc" | % {
+        $r = Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\$_" -Name Start -EA 0
+        if ($r.Start -eq 4) {$issues += "Disabled: $_"}
+    }
+
+    $policy = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "SettingsPageVisibility" -EA 0
+    if ($policy -and ($policy.SettingsPageVisibility -match "hide:windowsdefender")) {
         $issues += "Settings page hidden via UI policy."
-        $disabled = $true
     }
 
-    if (!(Get-CimInstance -ClassName AntiVirusProduct -Namespace root/SecurityCenter2 -EA 0)) {
-        $issues += "Antivirus not registered in SecurityCenter2."
-        $disabled = $true
-    }
-
-    $svcList = "WinDefend", "SecurityHealthService", "wscsvc", "WdFilter"
-    $running = (Get-Service -Name $svcList -EA 0) | ? {$_.Status -eq "Running"} | Select -Expand Name
-    $notRunning = $svcList | ? {$running -notcontains $_}
-    if ($notRunning.Count) {
-        $issues += "Stopped services: " + ($notRunning -join ", ")
-        $disabled = $true
-    }
-
-    $mp = Get-Command Get-MpPreference -EA 0 | % {Get-MpPreference -EA 0}
-    if (!$mp) {
-        $issues += "Unable to retrieve MpPreference."
-        $disabled = $true
-    } elseif ($null -eq $mp.EnableControlledFolderAccess) {
-        $issues += "Controlled Folder Access state unknown."
-        $disabled = $true
-    }
-            
-    $gpo1 = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name "DisableAntiSpyware" -EA 0
-    if ($gpo1 -and ($gpo1.DisableAntiSpyware -eq 1)) {
-        $issues += "AntiSpyware is disabled."
-        $disabled = $true
-    }
-
-    $gpo2 = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" -Name "DisableRealtimeMonitoring", "DisableBehaviorMonitoring" -EA 0
-    if ($gpo2 -and ($gpo2.DisableRealtimeMonitoring -eq 1)) {
-        $issues += "Realtime Monitoring is disabled."
-        $disabled = $true
-    }
-    if ($gpo2 -and ($gpo2.DisableBehaviorMonitoring -eq 1)) {
-        $issues += "Behavior Monitoring is disabled."
-        $disabled = $true
-    }
-
-    if ($disabled) {
-        Write-Host "Microsoft Defender is broken:"
-        $issues | % {Write-Host "- " + $_}
+    if ($issues) {
+        Write-Host "Defender modifications detected:"
+        $issues | % {Write-Host "- $_"}
     } else {
-         Write-Host "Microsoft Defender is enabled."
+        Write-Host "Microsoft Defender is enabled."
     }
 }
 
 function EventLogs {
-    $rapidscripts = Join-Path $env:WinDir "RapidScripts"
-    $outFile = Join-Path $rapidscripts "EventLog.log"
-    $logs = "System","Application","Setup"
-    $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\EventLog"
+    $dir = "$env:SystemRoot\RapidScripts"
+    $out = "$dir\EventLog.log"
+    $logs = "System", "Application", "Setup"
+    $reg = "HKLM:\SYSTEM\CurrentControlSet\Services\EventLog"
 
-    if (!(Test-Path $regPath)) {
+    if (!(Test-Path $reg)) {
         Write-Host "EventLog service not found. Event logging wont work."
         return
     }
-    $startType = Get-ItemProperty -Path $regPath -Name Start -EA 0
-    if ($startType.Start -eq 4) {
-        Set-RegistryValue -Path $regPath -Name Start -Type DWORD -Value 3
-    }; Start-Service EventLog *>$null
+    $start = Get-ItemProperty $reg -Name Start -EA 0
+    if ($start.Start -eq 4) {Edit-Registry -Path $reg -Name Start -Type DWord -Value 3}
+    Start-Service EventLog *>$null
 
     $all = foreach ($log in $logs) {
-        Write-Output ("--- $log ---")
+        "--- $log ---"
         $entry = Get-WinEvent -LogName $log -EA 0 | ? {$_.Level -eq 2}
         if ($entry) {
-            $entry | % {
-                "[" + $_.TimeCreated + "] [" + $log + "] EventID:" + $_.Id + " Source:" + $_.ProviderName + "`r`n" + $_.Message + "`r`n"
-            }
+            $entry | % {"[$($_.TimeCreated)] [$log] EventID:$($_.Id) Source:$($_.ProviderName)`r`n$($_.Message)`r`n"}
         } else {
             "[No error events found]"
         }
     }
-    $all | Out-File -FilePath $outFile -Encoding UTF8
+    $all | Out-File $out -Encoding UTF8
 }
 
 function PendingReboot {
-    $k = @(
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootInProgress",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\PackagesPending",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\PostRebootReporting",
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired"
-    )
-    if ($k | ? {Test-Path $_}) {
+    $wua = New-Object -ComObject Microsoft.Update.SystemInfo -EA 0
+    $pending = ($wua -and $wua.RebootRequired) -or (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -EA 0)
+    if ($wua) {[Runtime.InteropServices.Marshal]::ReleaseComObject($wua) *>$null}
+    if ($pending) {
+        Write-Host "A reboot is pending."
         MessageBox -Message "A reboot is pending, restart your PC to continue." -Title "Attention!"
         exit 1
     }
+    $false
 }
 
 function Specifications {
-    $osInfo = Get-Specs; $osInfo | % {Write-Host $_}
-    $osLine = $osInfo | ? {$_ -match "OS:"}
-    $osBuild = [regex]::Match($osLine, '\(v(\d+)').Groups[1].Value
-    $supportedBuilds = "19045", "22621", "22631", "26100", "26200"
+    $info = Get-Specs; $info | % {Write-Host $_}
+    $os = $info | ? {$_ -match "OS:"}
+    $build = [regex]::Match($os, '\(v(\d+)').Groups[1].Value
+    $builds = "19045", "22621", "22631", "26100", "26200"
 
-    if ($osBuild -notin $supportedBuilds) {
-        Write-Host ("Unsupported Windows build detected ($osBuild).")
-        if (!(MessageBox -Message "Installation cannot proceed. Your Windows version is not supported by RapidOS ($osBuild)." -Title "Attention!" -Type "Error")) {
-            exit 1
-        }
+    $state = if (Test-Path 'HKLM:\SOFTWARE\RapidOS') {'installed'} else {'not installed'}
+    Write-Host "RapidOS: $state"
+
+    if ($build -notin $builds) {
+        Write-Host "Unsupported Windows build detected ($build)."
+        MessageBox -Message "Installation cannot proceed. Your Windows version is not supported by RapidOS ($build)." -Title "Attention!" -Type "Error"
+        exit 1
     }
 
-    if ($osLine -match "Home") {
+    if ($os -match "Home") {
         Write-Host "Windows Home detected."
         if (!(MessageBox -Message "RapidOS is not officially supported on Windows Home. Unstable behavior or errors may occur. Do you want to continue?" -Title "Attention!" -Type "Question" -YesNo)) {
             exit 1
@@ -143,13 +100,13 @@ function Tweakers {
         Windows10Debloater  = "$env:SystemDrive\Temp\Windows10Debloater"
         Win10BloatRemover   = "$env:TEMP\.net\Win10BloatRemover"
         "Bloatware Removal" = {gci "$env:SystemDrive\BRU\Bloatware-Removal*.log" -EA 0}
-        "Ghost Toolbox"     = "$env:WinDir\System32\migwiz\dlmanifests\run.ghost.cmd"
+        "Ghost Toolbox"     = "$env:SystemRoot\System32\migwiz\dlmanifests\run.ghost.cmd"
         "Win 10 Tweaker"    = "HKCU:\SOFTWARE\Win 10 Tweaker"
         BoosterX            = @("$env:ProgramFiles\GameModeX\GameModeX.exe", "HKCU:\SOFTWARE\BoosterX")
         "Defender Control"  = "$env:APPDATA\Defender Control"
         "Defender Switch"   = "$env:ProgramData\DSW"
-        "WinterOS Tweaker"  = {gci "$env:WinDir\WinterOS*" -EA 0}
-        WinCry              = "$env:WinDir\TempCleaner.exe"
+        "WinterOS Tweaker"  = {gci "$env:SystemRoot\WinterOS*" -EA 0}
+        WinCry              = "$env:SystemRoot\TempCleaner.exe"
         WinClean            = "$env:ProgramFiles\WinClean Plus Apps"
         KirbyOS             = "$env:ProgramData\KirbyOS"
         PCNP                = "HKCU:\SOFTWARE\PCNP"
@@ -163,95 +120,77 @@ function Tweakers {
         "Modern Tweaker"    = {(Get-ItemProperty "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" -EA 0).PSObject.Properties.Value -contains "Modern Tweaker"}
         winutil             = {Get-CimInstance -ClassName Win32_PowerPlan -EA 0 | ? {$_.ElementName -match "ChrisTitus"}}
         ChlorideOS          = {Get-Volume -EA 0 | ? {$_.FileSystemLabel -eq "ChlorideOS"}}
-        ZOICWARE            = {Test-Path (Join-Path -Path $env:SystemDrive -ChildPath "_FOLDERMUSTBEONCDRIVE") -EA 0}
+        ZOICWARE            = {Test-Path "$env:SystemDrive\_FOLDERMUSTBEONCDRIVE" -EA 0}
     }
 
-    $osRegex = '\b(\w+OS)\b'
+    $regex = '\b(\w+OS)\b'
     $found = @()
-    $localFound = @()
+    $local = @()
 
-    $osChecks = @{
+    $checks = @{
         registry = {
-            $orgPaths = @(
+            $paths = @(
                 "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion",
                 "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation"
             )
-            $orgPaths | % {
-                if (Test-Path $_) {
-                    $props = Get-ItemProperty -Path $_ -EA 0
-                    if ($_ -eq "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion") {
-                        $orgValue = $props.RegisteredOrganization
-                        if ($orgValue) {
-                            $m = [Regex]::Match($orgValue, $osRegex)
-                            if ($m.Success) {
-                                $localFound += $m.Groups[1].Value
-                            }
+            foreach ($p in $paths) {
+                if (Test-Path $p) {
+                    $props = Get-ItemProperty $p -EA 0
+                    if ($p -eq "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion") {
+                        $val = $props.RegisteredOrganization
+                        if ($val) {
+                            $m = [Regex]::Match($val, $regex)
+                            if ($m.Success) {$local += $m.Groups[1].Value}
                         }
                     }
-                    if ($_ -eq "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation") {
-                        $modelValue = $props.Model
-                        if ($modelValue) {
-                            $m2 = [Regex]::Match($modelValue, $osRegex)
-                            if ($m2.Success) {
-                                $localFound += $m2.Groups[1].Value
-                            }
+                    if ($p -eq "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation") {
+                        $val = $props.Model
+                        if ($val) {
+                            $m = [Regex]::Match($val, $regex)
+                            if ($m.Success) {$local += $m.Groups[1].Value}
                         }
                     }
                 }
-            }
-            return ($localFound | Select -Unique)
+            } return ($local | Select -Unique)
         }
         bcd = {
-            $bcdOutput = bcdedit /enum ALL 2>$null
+            $out = bcdedit /enum ALL 2>$null
             if ($LASTEXITCODE -eq 0) {
-                ($bcdOutput -split [System.Environment]::NewLine) | % {
-                    $mDesc = [Regex]::Match($_, 'description\s+(.*)')
-                    if ($mDesc.Success) {
-                        $desc = $mDesc.Groups[1].Value.Trim()
+                ($out -split [Environment]::NewLine) | % {
+                    $m = [Regex]::Match($_, 'description\s+(.*)')
+                    if ($m.Success) {
+                        $desc = $m.Groups[1].Value.Trim()
                         if ($desc) {
-                            $m = [Regex]::Match($desc, $osRegex)
-                            if ($m.Success) {
-                                $localFound += $m.Groups[1].Value
-                            }
+                            $m2 = [Regex]::Match($desc, $regex)
+                            if ($m2.Success) {$local += $m2.Groups[1].Value}
                         }
                     }
                 }
-                return ($localFound | Select -Unique)
-            }
-            return @()
+                return ($local | Select -Unique)
+            } return @()
         }
         power = {
             $plans = Get-CimInstance -ClassName Win32_PowerPlan -EA 0
             if ($plans) {
                 $plans | % {
                     if ($_.ElementName) {
-                        $m = [Regex]::Match($_.ElementName, $osRegex)
-                        if ($m.Success) {
-                            $localFound += $m.Groups[1].Value
-                        }
+                        $m = [Regex]::Match($_.ElementName, $regex)
+                        if ($m.Success) {$local += $m.Groups[1].Value}
                     }
                 }
-                return ($localFound | Select -Unique)
-            }
-            return @()
+                return ($local | Select -Unique)
+            } return @()
         }
     }
-    $ameCheck = {
-        $basePath = "HKLM:\SOFTWARE\AME\Playbooks\Applied"
-        if (Test-Path $basePath) {
-            $subKeys = gci -Path $basePath -EA 0
-            $subKeys | % {
-                $props = Get-ItemProperty -Path $_.PSPath -EA 0
-                if ($props.Name -and $props.Name -match "\w+") {
-                    return $props.Name
-                }
-            }
+    $ame = {
+        $applied = gci 'HKLM:\SOFTWARE\AME\Playbooks\Applied' -EA 0
+        foreach ($k in $applied) {
+            $name = (Get-ItemProperty $k.PSPath -EA 0).Name
+            if ($name -match '\S') {return [string]$name}
         }
-        return @()
     }
 
-    $tweakers.Keys | % {
-        $name = $_
+    foreach ($name in $tweakers.Keys) {
         $check = $tweakers[$name]
         switch ($check.GetType().Name) {
             ScriptBlock {
@@ -267,37 +206,30 @@ function Tweakers {
             }
         }
     }
-    $detectedOS = @()
-    $osChecks.Keys | % {
-        & $osChecks.$_ | % {$detectedOS += $_}
+    $detected = @()
+    foreach ($key in $checks.Keys) {
+        & $checks.$key | % {$detected += $_}
     }
-    $ameResult = & $ameCheck
-    if ($ameResult) {
-        if ($found -notcontains $ameResult) {
-            $found += $ameResult
-        }
-    }
-    $uniqueOS = $detectedOS | ? {$_ -and $_.Trim()} | Select -Unique
-    $uniqueOS | % {
-        if ($found -notcontains $_) {
-            $found += $_
-        }
+    $amefound = & $ame
+    if ($amefound -and ($found -notcontains $amefound)) {$found += $amefound}
+    $unique = $detected | ? {$_ -and $_.Trim()} | Select -Unique
+    foreach ($os in $unique) {
+        if ($found -notcontains $os) {$found += $os}
     }
     
     $found = $found | ? {$_ -ne "RapidOS"} | Select -Unique
-    
     if ($found.Count) {
         $found | % {Write-Host "Found: $_"}
-        $tweakersList = ($found | Select -Unique) -join ", "
-        if (!(MessageBox -Message "Third-party tweaks detected ($tweakersList). We recommend installing RapidOS on a clean system. Do you want to continue?" -Title "Attention!" -Type "Question" -YesNo)) {
+        $list = ($found | Select -Unique) -join ", "
+        if (!(MessageBox -Message "Third-party tweaks detected ($list). We recommend installing RapidOS on a clean system. Do you want to continue?" -Title "Attention!" -Type "Question" -YesNo)) {
             exit 1
         }
     }
 }
 
-# ===========================
+# ==============================
 # Repairs
-# ===========================
+# ==============================
 function ComponentStore {
     $state = (Repair-WindowsImage -Online -CheckHealth).ImageHealthState
     switch ($state) {
@@ -318,7 +250,9 @@ function ComponentStore {
 }
 
 function ExternalBlocks {
-    # === Remove 3rd-party firewall rules ===
+    # ==============================
+    # Remove 3rd-party firewall rules
+    # ==============================
     Write-Host "Removing third-party firewall rules..."
 
     $rules = Get-NetFirewallRule -DisplayName "Block.MSFT*", "Blocker MicrosoftTelemetry*", "Blocker MicrosoftExtra*", "windowsSpyBlocker*" -EA 0
@@ -329,10 +263,12 @@ function ExternalBlocks {
         Write-Host "No telemetry firewall rules found`n"
     }
 
-    # === Clean 3rd-party hosts' entries ===
+    # ==============================
+    # Clean 3rd-party hosts' entries
+    # ==============================
     Write-Host "Removing third-party hosts..."
 
-    $path = Join-Path -Path $env:WinDir -ChildPath "System32\drivers\etc\hosts"
+    $path = "$env:SystemRoot\System32\drivers\etc\hosts"
     $hosts = Get-Content $path -Force -EA 0
     if (!($hosts | ? {$_ -match "^\s*[^#\s]"})) {
         Write-Host "Hosts file is empty or has no active entries"
@@ -349,8 +285,8 @@ function ExternalBlocks {
         "https://raw.githubusercontent.com/schrebra/Windows.10.DNS.Block.List/main/hosts.txt"
     )
     $list = @()
-    $sources | % {
-        $data = (Invoke-WebRequest -Uri $_ -UseBasicParsing -EA 0).Content
+    foreach ($src in $sources) {
+        $data = (Invoke-WebRequest -Uri $src -UseBasicParsing -EA 0).Content
         if ($data) {$list += $data -split "`r?`n"}
     }
     if (!$list.Count) {
@@ -368,8 +304,7 @@ function ExternalBlocks {
     }
     $clean = @()
     $found = $false
-    $hosts | % {
-        $line = $_
+    foreach ($line in $hosts) {
         $trim = ($line -split "#")[0].Trim()
         if ($trim) {
             $parts = $trim -split "\s+", 2
@@ -388,3 +323,5 @@ function ExternalBlocks {
         Write-Host "No blocked entries found in hosts file"
     }
 }
+
+Export-ModuleMember -Function *

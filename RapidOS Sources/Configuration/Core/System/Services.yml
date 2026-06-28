@@ -21,8 +21,8 @@ actions:
   - !service: {name: 'MSDTC', operation: change, startup: 4}
   - !service: {name: 'PcaSvc', operation: change, startup: 4}
   - !service: {name: 'SEMgrSvc', operation: change, startup: 4}
-  - !service: {name: 'ShellHWDetection', operation: change, startup: 4}
-  - !service: {name: 'SSDPSRV', operation: change, startup: 4}
+  - !service: {name: 'SSDPSRV', operation: change, startup: 3}
+  - !service: {name: 'ShellHWDetection', operation: change, startup: 2}
   - !service: {name: 'TrkWks', operation: change, startup: 4}
 
   # === Restrict telemetry-related services ===
@@ -33,9 +33,7 @@ actions:
   - !service: {name: 'TroubleshootingSvc', operation: change, startup: 4}
   - !service: {name: 'uhssvc', operation: change, startup: 4}
   - !powerShell:
-      exeDir: true
       command: >-
-        .\RapidScripts\EnvSetup.ps1;
         LimitNetwork -Services @(
           'UdkUserSvc',
           'pla',
@@ -48,23 +46,12 @@ actions:
   # Streamline drivers
   # ===========================
   - !powerShell:
-      exeDir: true
       command: >-
-        .\RapidScripts\EnvSetup.ps1;
         if (!(Test-Laptop)) {
           Set-Service "GpuEnergyDrv" -StartupType Disabled *>$null
-        }
+        } $global:LASTEXITCODE = 0
 
   - !service:
       name: 'NetBT'
       operation: change
       startup: '4'
-
-  # === Disable it to be able to change reg values for ShellFeedsTaskbarViewMode/IsFeedsAvailable/TaskbarDa/DeviceRegion ===
-  - !service: 
-      name: 'UCPD'
-      operation: change
-      startup: '4'
-  - !scheduledTask:
-      path: '\Microsoft\Windows\AppxDeploymentClient\UCPD velocity'
-      operation: disable

@@ -1,0 +1,146 @@
+---
+title: Persist user selection
+actions:
+  # === Cleanup previous selection ===
+  - !registryKey: 
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      operation: delete
+  - !registryKey: 
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      operation: delete
+
+  # === Browser ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'remove-edge'
+      type: REG_DWORD
+      data: '1'
+      option: 'remove-edge'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-browser'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-browser'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-brave'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-brave'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-firefox'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-firefox'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-thorium'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-thorium'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-chrome'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-chrome'
+
+  # === System components ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-net3.5'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-net3.5'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-directx'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-directx'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'install-vcredist'
+      type: REG_DWORD
+      data: '1'
+      option: 'install-vcredist'
+
+  # === UWP cleanup ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'remove-teams'
+      type: REG_DWORD
+      data: '1'
+      option: 'remove-teams'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'remove-onedrive'
+      type: REG_DWORD
+      data: '1'
+      option: 'remove-onedrive'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'remove-office'
+      type: REG_DWORD
+      data: '1'
+      option: 'remove-office'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'remove-phone'
+      type: REG_DWORD
+      data: '1'
+      option: 'remove-phone'
+
+  # === Personalization ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'apply-theme'
+      type: REG_DWORD
+      data: '1'
+      option: 'apply-theme'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'modify-templates'
+      type: REG_DWORD
+      data: '1'
+      option: 'modify-templates'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'classic-context-menu'
+      type: REG_DWORD
+      data: '1'
+      option: 'classic-context-menu'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'disable-store-updates'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-store-updates'
+
+  # === Security ===
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'disable-defender'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-defender'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'disable-firewall'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-firewall'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'disable-sync'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-sync'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Options'
+      value: 'disable-location'
+      type: REG_DWORD
+      data: '1'
+      option: 'disable-location'

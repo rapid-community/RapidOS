@@ -11,7 +11,7 @@ echo.
 echo Still want to proceed?
 pause
 
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v "29" /t REG_SZ /d "%WinDir%\RapidScripts\shortcut.ico,0" /f > nul 2>&1
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v "29" /t REG_SZ /d "%SystemRoot%\RapidScripts\shortcut.ico,0" /f > nul 2>&1
 
 echo Shortcut Icon has been removed.
 pause

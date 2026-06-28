@@ -72,7 +72,7 @@ if /i "%userChoice%"=="yes" (
             pause
             exit /b 1
         )
-        powershell -C "Write-Host 'Downloading Microsoft Edge...'; [Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; md -Path $env:temp\edgeinstall -EA 0 *>$null; $Download = join-path $env:temp\edgeinstall MicrosoftEdgeEnterpriseX64.msi; $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'http://go.microsoft.com/fwlink/?LinkID=2093437' -OutFile $Download; Start-Process $Download -ArgumentList '/quiet'; Write-Host 'Installed Microsoft Edge!'"
+        powershell -C "Write-Host 'Downloading Microsoft Edge...'; [Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; md -Path $env:temp\edgeinstall *>$null; $Download = join-path $env:temp\edgeinstall MicrosoftEdgeEnterpriseX64.msi; $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://go.microsoft.com/fwlink/?LinkID=2093437' -OutFile $Download; Start-Process $Download -ArgumentList '/quiet'; Write-Host 'Installed Microsoft Edge!'"
     )
 
     if %webviewInstalled%==0 (

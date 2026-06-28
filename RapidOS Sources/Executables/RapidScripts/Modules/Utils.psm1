@@ -1,392 +1,286 @@
-function Set-RegistryValue {
-    [CmdletBinding(SupportsShouldProcess)]
-    param (
-        [Parameter(Mandatory)][ValidatePattern('(?i)^HK(CU|LM|CR|U|CC):\\')]$Path,
-        [Parameter(Mandatory)][AllowEmptyString()]$Name,
-        [Parameter(Mandatory)][ValidateSet('String','ExpandString','Binary','DWORD','MultiString','QWord','Unknown')]$Type,
-        [Parameter(Mandatory)][AllowNull()][AllowEmptyString()]$Value
-    )
-
-    $hives = @{'HKLM'='LocalMachine'; 'HKCU'='CurrentUser'; 'HKCR'='ClassesRoot'; 'HKU'='Users'; 'HKCC'='CurrentConfig'}
-    $root, $subkey = $Path -split ':\\', 2
-    $regHive = $hives[$root.ToUpper()]
-    $regRoot = [Microsoft.Win32.Registry]::$regHive
-    $regKey = $null
-
-    try {
-        if ($PSCmdlet.ShouldProcess($Path, 'Create registry key if not exists')) {
-            $regKey = $regRoot.OpenSubKey($subkey, $true)
-            if (!$regKey) {$regKey = $regRoot.CreateSubKey($subkey)}
-        } else {
-            $regKey = $regRoot.OpenSubKey($subkey, $false)
-            if (!$regKey) {return}
-        }
-
-        if ($PSCmdlet.ShouldProcess("$Path\$Name", "Set $Type value")) {
-            switch ($Type) {
-                'Binary' {
-                    if ($Value -is [string]) {
-                        $bytes = $Value -split '\s+' | ? {$_ -ne ''} | % {[Convert]::ToByte($_, 16)}
-                        $Value = [byte[]]$bytes
-                    } elseif ($Value -isnot [byte[]]) {$Value = [byte[]]@()}
-                    $regKey.SetValue($Name, $Value, [Microsoft.Win32.RegistryValueKind]::Binary)
-                }
-                'DWORD' {
-                    if ($null -eq $Value -or $Value -eq '') {$Value = 0}
-                    $finalValue = $Value
-                    try {$bytes = [BitConverter]::GetBytes([UInt32]$Value); $finalValue = [BitConverter]::ToInt32($bytes, 0)} catch {$finalValue = [Int32]$Value}
-                    $regKey.SetValue($Name, $finalValue, [Microsoft.Win32.RegistryValueKind]::DWord)
-                }
-                'QWord' {
-                    if ($null -eq $Value -or $Value -eq '') {$Value = 0}
-                    $qwordBytes = [BitConverter]::GetBytes([UInt64]$Value)
-                    $longValue = [BitConverter]::ToInt64($qwordBytes, 0)
-                    $regKey.SetValue($Name, $longValue, [Microsoft.Win32.RegistryValueKind]::QWord)
-                }
-                'MultiString' {
-                    if ($null -eq $Value) {$Value = @()}
-                    elseif ($Value -is [string]) {$Value = @($Value)}
-                    elseif ($Value -isnot [string[]]) {$Value = @([string[]]$Value)}
-                    $regKey.SetValue($Name, [string[]]$Value, [Microsoft.Win32.RegistryValueKind]::MultiString)
-                }
-                'ExpandString' {
-                    $regKey.SetValue($Name, [string]$Value, [Microsoft.Win32.RegistryValueKind]::ExpandString)
-                }
-                'Unknown' {
-                    if ($Value -is [string]) {$Value = [System.Text.Encoding]::UTF8.GetBytes($Value)}
-                    elseif ($Value -isnot [byte[]]) {$Value = [byte[]]@()}
-                    $regKey.SetValue($Name, $Value, [Microsoft.Win32.RegistryValueKind]::Unknown)
-                }
-                default {
-                    if ($null -eq $Value) {$Value = ''}
-                    $regKey.SetValue($Name, [string]$Value, [Microsoft.Win32.RegistryValueKind]::String)
-                }
-            }
-        }
-    }
-    finally {
-        if ($regKey) {$regKey.Dispose()}
-    }
+$script:hives = @{
+    HKLM = @{Root = [Microsoft.Win32.Registry]::LocalMachine; Name = 'HKLM'}
+    HKEY_LOCAL_MACHINE = @{Root = [Microsoft.Win32.Registry]::LocalMachine; Name = 'HKLM'}
+    HKCU = @{Root = [Microsoft.Win32.Registry]::CurrentUser; Name = 'HKCU'}
+    HKEY_CURRENT_USER = @{Root = [Microsoft.Win32.Registry]::CurrentUser; Name = 'HKCU'}
+    HKCR = @{Root = [Microsoft.Win32.Registry]::ClassesRoot; Name = 'HKCR'}
+    HKEY_CLASSES_ROOT = @{Root = [Microsoft.Win32.Registry]::ClassesRoot; Name = 'HKCR'}
+    HKU = @{Root = [Microsoft.Win32.Registry]::Users; Name = 'HKU'}
+    HKEY_USERS = @{Root = [Microsoft.Win32.Registry]::Users; Name = 'HKU'}
+    HKCC = @{Root = [Microsoft.Win32.Registry]::CurrentConfig; Name = 'HKCC'}
+    HKEY_CURRENT_CONFIG = @{Root = [Microsoft.Win32.Registry]::CurrentConfig; Name = 'HKCC'}
 }
 
-function Test-VM {
-Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
+$script:types = @{
+    STRING = 'String'; REG_SZ = 'String'; '1' = 'String'
+    EXPANDSTRING = 'ExpandString'; REG_EXPAND_SZ = 'ExpandString'; '2' = 'ExpandString'
+    BINARY = 'Binary'; REG_BINARY = 'Binary'; '3' = 'Binary'
+    DWORD = 'DWord'; REG_DWORD = 'DWord'; '4' = 'DWord'
+    MULTISTRING = 'MultiString'; REG_MULTI_SZ = 'MultiString'; '7' = 'MultiString'
+    QWORD = 'QWord'; REG_QWORD = 'QWord'; '11' = 'QWord'
+}
 
-public static class VM {
-    [DllImport("kernel32.dll")]
-    public static extern uint GetSystemFirmwareTable(uint signature, uint tableId, IntPtr buffer, uint size);
-    
-    public static bool IsVirtualMachine() {
-        IntPtr buffer = IntPtr.Zero;
+function Edit-Registry {
+    [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'Set')]
+    param (
+        [Parameter(Mandatory, Position = 0)][string]$Path,
+        [Parameter(ParameterSetName = 'Set', Mandatory, Position = 1)]
+        [Parameter(ParameterSetName = 'Remove', Position = 1)][AllowEmptyString()][string]$Name,
+        [Parameter(ParameterSetName = 'Set')][string]$Type = 'String',
+        [Parameter(ParameterSetName = 'Set', Position = 2)][AllowNull()]$Value,
+        [Parameter(ParameterSetName = 'Remove')][switch]$Remove
+    )
+
+    process {
+        $Path = ($Path -replace '^(?i)Registry::', '').Replace('/', '\')
+        $parts = $Path -split '[:\\/]+', 2
+        $rootkey = [string]$parts[0].ToUpperInvariant()
+        $entry = $script:hives[$rootkey]
+        $sub = if ($parts.Count -gt 1) {$parts[1].Trim('\').Replace('/', '\')} else {''}
+
+        if (!$entry -or !$sub) {Write-Error 'ERROR: Invalid key name.'; return}
+
+        $root = $entry.Root
+        $target = if (!$PSBoundParameters.ContainsKey('name')) {$Path} elseif ($Name -eq '') {"$Path\(Default)"} else {"$Path\$Name"}
+
+        $sync = $false; $syncsub = $null
+        if ($rootkey -eq 'HKCU' -or $rootkey -eq 'HKEY_CURRENT_USER') {
+            $probe = [Microsoft.Win32.Registry]::Users.OpenSubKey('AME_UserHive_Default')
+            if ($probe) {
+                $sync = $true
+                $syncsub = if ($sub) {"AME_UserHive_Default\$sub"} else {'AME_UserHive_Default'}
+                $probe.Dispose()
+            }
+        }
+        $syncroot = [Microsoft.Win32.Registry]::Users
+        $key = $null; $synckey = $null; $msg = $null
+
+        if ($Remove) {
+            if (!$PSBoundParameters.ContainsKey('name')) {
+                if ($PSCmdlet.ShouldProcess($Path)) {
+                    try {$root.DeleteSubKeyTree($sub, $false)} catch {}
+                    if ($sync) {try {$syncroot.DeleteSubKeyTree($syncsub, $false)} catch {}}
+                }
+                return
+            }
+
+            try {
+                if ($PSCmdlet.ShouldProcess($target)) {
+                    $key = $root.OpenSubKey($sub, $true); if ($sync) {$synckey = $syncroot.OpenSubKey($syncsub, $true)}
+                    if ($key) {$key.DeleteValue($Name, $false)}; if ($synckey) {$synckey.DeleteValue($Name, $false)}
+                }
+            } catch {$msg = $_.Exception.Message} finally {if ($key) {$key.Dispose()}; if ($synckey) {$synckey.Dispose()}}
+            if ($msg) {Write-Error $msg}
+            return
+        }
+
+        $typename = $script:types[[string]$Type.ToUpperInvariant()]
+        if (!$typename) {Write-Error 'ERROR: Invalid syntax. Specify valid registry type.'; return}
+
+        $kind = $null; $data = $null
+
+        switch ($typename) {
+            'String' {$kind = [Microsoft.Win32.RegistryValueKind]::String; $data = [string]$Value}
+            'ExpandString' {$kind = [Microsoft.Win32.RegistryValueKind]::ExpandString; $data = [string]$Value}
+
+            'MultiString' {
+                $kind = [Microsoft.Win32.RegistryValueKind]::MultiString
+                if ($null -eq $Value) {$data = [string[]]@()}
+                elseif ($Value -is [string[]]) {$data = $Value}
+                elseif ($Value -is [string] -or !($Value -is [Collections.IEnumerable])) {$data = [string[]]@([string]$Value)}
+                else {$data = [string[]]@($Value | % {[string]$_})}
+            }
+
+            'Binary' {
+                $kind = [Microsoft.Win32.RegistryValueKind]::Binary
+                if ($null -eq $Value) {$data = [byte[]]@()}
+                elseif ($Value -is [byte[]]) {$data = $Value}
+                elseif ($Value -is [string]) {
+                    $list = [Collections.Generic.List[byte]]::new()
+                    foreach ($item in ($Value -split '[,\s;:\-]+' | ? {$_})) {
+                        $hex = $item -replace '^(?i)\+?0x', ''
+                        if ($hex -notmatch '^[0-9a-fA-F]+$') {$msg = 'ERROR: Invalid syntax. Specify valid hex value.'; break}
+                        if ($hex.Length % 2) {$hex = '0' + $hex}
+                        for ($i = 0; $i -lt $hex.Length; $i += 2) {$list.Add([Convert]::ToByte($hex.Substring($i, 2), 16))}
+                    }
+                    if (!$msg) {$data = $list.ToArray()}
+                }
+                elseif ($Value -is [Collections.IEnumerable]) {
+                    $list = [Collections.Generic.List[byte]]::new()
+                    try {foreach ($item in $Value) {$list.Add([byte]$item)}; $data = $list.ToArray()}
+                    catch {$msg = 'ERROR: Invalid syntax. Specify valid binary data.'}
+                }
+                else {try {$data = [byte[]]@([byte]$Value)} catch {$msg = 'ERROR: Invalid syntax. Specify valid byte value.'}}
+            }
+
+            default {
+                $isq = $typename -eq 'QWord'
+                $kind = if ($isq) {[Microsoft.Win32.RegistryValueKind]::QWord} else {[Microsoft.Win32.RegistryValueKind]::DWord}
+                $text = if ($null -eq $Value) {'0'} else {([string]$Value).Trim()}
+                if (!$text) {$text = '0'}
+
+                try {
+                    if ($text -match '^([+-]?)0x([0-9a-fA-F]+)$') {
+                        $n = [Convert]::ToUInt64($matches[2], 16)
+                        if ($matches[1] -eq '-') {
+                            if ($isq) {$data = if ($n -eq [uint64]9223372036854775808) {[int64]::MinValue} else {-[int64]$n}}
+                            else {$data = if ($n -eq [uint64]2147483648) {[int32]::MinValue} else {[int32](-[int64]$n)}}
+                        } elseif ($isq) {$data = [BitConverter]::ToInt64([BitConverter]::GetBytes($n), 0)}
+                        else {$data = [BitConverter]::ToInt32([BitConverter]::GetBytes([uint32]$n), 0)}
+                    } elseif ($text.StartsWith('-')) {
+                        if ($isq) {$data = [int64]$text} else {$data = [int32]$text}
+                    } elseif ($isq) {$data = [BitConverter]::ToInt64([BitConverter]::GetBytes([uint64]$text), 0)}
+                    else {$data = [BitConverter]::ToInt32([BitConverter]::GetBytes([uint32]$text), 0)}
+                } catch {$msg = 'ERROR: Invalid syntax. Specify valid numeric value.'}
+            }
+        }
+
+        if ($msg) {Write-Error $msg; return}
+
         try {
-            uint size = GetSystemFirmwareTable(0x52534D42, 0, IntPtr.Zero, 0);
-            if (size == 0) return false;
-            
-            buffer = Marshal.AllocHGlobal((int)size);
-            GetSystemFirmwareTable(0x52534D42, 0, buffer, size);
-            
-            byte[] data = new byte[size];
-            Marshal.Copy(buffer, data, 0, (int)size);
-            string smbios = Encoding.ASCII.GetString(data);
-            
-            string[] vmVendors = {"VMware", "VirtualBox", "KVM", "Xen", "Hyper-V", "qemu"};
-            foreach (string vendor in vmVendors)
-                if (smbios.Contains(vendor)) return true;
-
-            return false;
-        }
-        finally {if (buffer != IntPtr.Zero) Marshal.FreeHGlobal(buffer);}
-    }
-}
-"@
-    return (
-        [VM]::IsVirtualMachine() -or
-        ((Get-CimInstance -ClassName CIM_ComputerSystem).Model -match "Virtual")
-    )
-}
-
-function Test-Internet {
-    $addresses = @("1.1.1.1", "8.8.8.8", "9.9.9.9")
-    $port = 443
-    $timeout = 500
-
-    # === Connection validation ===
-    foreach ($address in $addresses) {
-        $tcp = New-Object System.Net.Sockets.TcpClient
-        try {
-            $connect = $tcp.BeginConnect($address, $port, $null, $null)
-            if ($connect.AsyncWaitHandle.WaitOne($timeout)) {
-                $tcp.EndConnect($connect)
-                $tcp.Close()
-                return $true
+            if ($PSCmdlet.ShouldProcess($target, "Set $typename")) {
+                $key = $root.CreateSubKey($sub, $true)
+                if (!$key) {$msg = "ERROR: Cannot create registry key: $Path"}
+                elseif ($sync) {
+                    $synckey = $syncroot.CreateSubKey($syncsub, $true)
+                    if (!$synckey) {$msg = "ERROR: Cannot create sync registry key: HKU\$syncsub"}
+                }
+                if (!$msg) {$key.SetValue($Name, $data, $kind); if ($synckey) {$synckey.SetValue($Name, $data, $kind)}}
             }
-        } catch {}
-        $tcp.Close()
+        } catch {$msg = $_.Exception.Message} finally {if ($key) {$key.Dispose()}; if ($synckey) {$synckey.Dispose()}}
+
+        if ($msg) {Write-Error $msg}
     }
-    return $false
 }
 
-function MessageBox {
+function Export-RegState {
     param (
-        [string]$Message,
-        [string]$Title,
-        [ValidateSet('Error', 'Warning', 'Information', 'Question')]
-        [string]$Type = 'Warning',
-        [switch]$YesNo
+        [Parameter(Mandatory)][string[]]$Path,
+        [Parameter(Mandatory)][string]$JsonPath
     )
 
-Add-Type @'
-using System;
-using System.Runtime.InteropServices;
+    if (Test-Path $JsonPath) {return}
 
-public static class Alert {
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
-    static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
+    $output = [ordered]@{}
 
-    const uint MB_OK = 0x0;
-    const uint MB_YESNO = 0x4;
-    const uint MB_ICONERROR = 0x10;
-    const uint MB_ICONWARNING = 0x30;
-    const uint MB_ICONINFORMATION = 0x40;
-    const uint MB_ICONQUESTION = 0x20;
-    const uint MB_TOPMOST = 0x40000;
-    const uint MB_SYSTEMMODAL = 0x1000;
+    foreach ($p in $Path) {
+        $clean = ($p -replace '^(?i)Registry::', '').Replace('/', '\')
+        $parts = $clean -split '[:\\/]+', 2
+        $rootkey = [string]$parts[0].ToUpperInvariant()
+        $entry = $script:hives[$rootkey]
+        $sub = if ($parts.Count -gt 1) {$parts[1].Trim('\').Replace('/', '\')} else {''}
 
-    public static int Show(string message, string title, string type, bool yesno) {
-        uint flags = MB_TOPMOST | MB_SYSTEMMODAL | (yesno ? MB_YESNO : MB_OK);
-        switch (type) {
-            case "Error": flags |= MB_ICONERROR; break;
-            case "Information": flags |= MB_ICONINFORMATION; break;
-            case "Question": flags |= MB_ICONQUESTION; break;
-            default: flags |= MB_ICONWARNING; break;
-        }
-        return MessageBox(IntPtr.Zero, message, title, flags);
-    }
-}
-'@
+        if (!$entry -or !$sub) {continue}
+        $handle = $entry.Root.OpenSubKey($sub, $false)
+        if (!$handle) {continue}
 
-    $result = [Alert]::Show($Message, $Title, $Type, $YesNo.IsPresent)
-    if ($YesNo) {return ($result -eq 6)}
-}
+        $fullpath = "$($entry.Name)\$sub"
+        $data = [ordered]@{Values = @(); Keys = @()}
+        $stack = [Collections.Generic.Stack[object]]::new()
+        $stack.Push([pscustomobject]@{Key = $handle; Data = $data})
 
-function CpuInstructions {
-    [CmdletBinding()]
-    param (
-        [switch]$Table,
-        [switch]$Best
-    )
+        while ($stack.Count -gt 0) {
+            $node = $stack.Pop()
+            $values = [Collections.Generic.List[object]]::new()
+            $keys = [Collections.Generic.List[object]]::new()
 
-    # ==============================
-    # Native CPUID/XGETBV loader
-    # ==============================
-    $ns = 'CpuCheck'; $cls = 'CpuIdNative'; $full = "$ns.$cls"
-    $type = $full -as [type]
-    if (!$type) {
-$code = @"
-using System;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
+            try {
+                foreach ($regval in ($node.Key.GetValueNames() | Sort-Object)) {
+                    $kind = $node.Key.GetValueKind($regval).ToString()
+                    $Value = $node.Key.GetValue($regval, $null, [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
 
-namespace $ns {
-    public static class $cls
-    {
-        [DllImport("kernel32.dll", SetLastError=true)]
-        private static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, uint flAllocationType, uint flProtect);
+                    switch ($kind) {
+                        'Binary' {$Value = [byte[]]$Value}
+                        'MultiString' {$Value = [string[]]$Value}
+                        'DWord' {$Value = [BitConverter]::ToUInt32([BitConverter]::GetBytes([int]$Value), 0).ToString([Globalization.CultureInfo]::InvariantCulture)}
+                        'QWord' {$Value = [BitConverter]::ToUInt64([BitConverter]::GetBytes([long]$Value), 0).ToString([Globalization.CultureInfo]::InvariantCulture)}
+                    }
 
-        private const uint MEM_COMMIT = 0x1000;
-        private const uint MEM_RESERVE = 0x2000;
-        private const uint PAGE_EXECUTE_READWRITE = 0x40;
+                    $values.Add([pscustomobject]@{Name = $regval; Type = $kind; Value = $Value})
+                }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void CpuidFn(int eax, int ecx, IntPtr pOut);
+                foreach ($item in ($node.Key.GetSubKeyNames() | Sort-Object)) {
+                    $child = $node.Key.OpenSubKey($item, $false)
+                    if (!$child) {continue}
+                    $childdata = [ordered]@{Values = @(); Keys = @()}
+                    $keys.Add([pscustomobject]@{Name = $item; Data = $childdata})
+                    $stack.Push([pscustomobject]@{Key = $child; Data = $childdata})
+                }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate ulong XgetbvFn();
-
-        private static readonly CpuidFn _cpuid;
-        private static readonly XgetbvFn _xgetbv;
-
-        static $cls()
-        {
-            byte[] codeCpuid;
-            byte[] codeXgetbv;
-
-            if (Environment.Is64BitProcess)
-            {
-                codeCpuid = new byte[] {
-                    0x53, 0x8B, 0xC1, 0x8B, 0xCA, 0x0F, 0xA2,
-                    0x41, 0x89, 0x00, 0x41, 0x89, 0x58, 0x04,
-                    0x41, 0x89, 0x48, 0x08, 0x41, 0x89, 0x50,
-                    0x0C, 0x5B, 0xC3
-                };
-                codeXgetbv = new byte[] {
-                    0x31, 0xC9, 0x0F, 0x01, 0xD0,
-                    0x48, 0xC1, 0xE2, 0x20, 0x48, 0x09, 0xD0, 0xC3
-                };
-            }
-            else
-            {
-                codeCpuid = new byte[] {
-                    0x55, 0x8B, 0xEC, 0x53,
-                    0x8B, 0x45, 0x08, 0x8B, 0x4D, 0x0C,
-                    0x0F, 0xA2, 0x8B, 0x75, 0x10,
-                    0x89, 0x06, 0x89, 0x5E, 0x04,
-                    0x89, 0x4E, 0x08, 0x89, 0x56, 0x0C,
-                    0x5B, 0x8B, 0xE5, 0x5D, 0xC3
-                };
-                codeXgetbv = new byte[] {
-                    0x31, 0xC9, 0x0F, 0x01, 0xD0, 0xC3
-                };
-            }
-
-            IntPtr p1 = VirtualAlloc(IntPtr.Zero, new UIntPtr((uint)codeCpuid.Length),
-                                     MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-            Marshal.Copy(codeCpuid, 0, p1, codeCpuid.Length);
-            _cpuid = (CpuidFn)Marshal.GetDelegateForFunctionPointer(p1, typeof(CpuidFn));
-
-            IntPtr p2 = VirtualAlloc(IntPtr.Zero, new UIntPtr((uint)codeXgetbv.Length),
-                                     MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-            Marshal.Copy(codeXgetbv, 0, p2, codeXgetbv.Length);
-            _xgetbv = (XgetbvFn)Marshal.GetDelegateForFunctionPointer(p2, typeof(XgetbvFn));
+                $node.Data.Values = $values.ToArray(); $node.Data.Keys = $keys.ToArray()
+            } finally {$node.Key.Dispose()}
         }
 
-        public static int[] Cpuid(int eax, int ecx)
-        {
-            int[] buf = new int[4];
-            GCHandle h = GCHandle.Alloc(buf, GCHandleType.Pinned);
-            try {_cpuid(eax, ecx, h.AddrOfPinnedObject());}
-            finally {h.Free();}
-            return buf;
-        }
-
-        public static ulong Xgetbv0()
-        {
-            return _xgetbv();
-        }
-    }
-}
-"@
-        Add-Type -Language CSharp -TypeDefinition $code -EA 0 *>$null
-        $type = $full -as [type]
+        $output[$fullpath] = $data
     }
 
-    if (!$type) {return}
+    if (!$output.Count) {return}
 
-    # ==============================
-    # CPUID logic
-    # ==============================
-    $leaf0 = $type::Cpuid(0,0)
-    $maxLeaf = ($leaf0[0] -band 0xFFFFFFFF)
-
-    $leaf1 = if ($maxLeaf -ge 1) {$type::Cpuid(1,0)} else {@(0,0,0,0)}
-    $ecx1 = ($leaf1[2] -band 0xFFFFFFFF)
-
-    $sse3 = (($ecx1 -band (1 -shl 0)) -ne 0)
-    $sse41 = (($ecx1 -band (1 -shl 19)) -ne 0)
-    $sse42 = (($ecx1 -band (1 -shl 20)) -ne 0)
-    $sse4 = ($sse41 -or $sse42)
-
-    $osxsave = (($ecx1 -band (1 -shl 27)) -ne 0)
-    $avxBit = (($ecx1 -band (1 -shl 28)) -ne 0)
-    $xcr0 = 0
-    if ($osxsave) {$xcr0=$type::Xgetbv0()}
-    $ymmEnable = (($xcr0 -band 0x6) -eq 0x6)
-
-    $leaf7 = if ($maxLeaf -ge 7) {$type::Cpuid(7,0)} else {@(0,0,0,0)}
-    $ebx7 = ($leaf7[1] -band 0xFFFFFFFF)
-    $avx2Bit = (($ebx7 -band (1 -shl 5)) -ne 0)
-
-    $avx = ($avxBit -and $osxsave -and $ymmEnable)
-    $avx2 = ($avx2Bit -and $osxsave -and $ymmEnable)
-
-    # ==============================
-    # Output
-    # ==============================
-    if ($Table) {
-        @(
-            [PSCustomObject]@{Architecture = 'SSE3'; Supported = if ($sse3) {'Yes'} else {'No'}}
-            [PSCustomObject]@{Architecture = 'SSE4'; Supported = if ($sse4) {'Yes'} else {'No'}}
-            [PSCustomObject]@{Architecture = 'AVX';  Supported = if ($avx)  {'Yes'} else {'No'}}
-            [PSCustomObject]@{Architecture = 'AVX2'; Supported = if ($avx2) {'Yes'} else {'No'}}
-        )
-        return
-    }
-
-    if ($Best) {
-        switch ($true) {
-            {$avx2} {return 'AVX2'}
-            {$avx}  {return 'AVX'}
-            {$sse4} {return 'SSE4'}
-            {$sse3} {return 'SSE3'}
-            default {return 'None'}
-        }
-    }
+    $dest = Split-Path $JsonPath -Parent
+    if ($dest) {mkdir -Force $dest *>$null}
+    [IO.File]::WriteAllText($JsonPath, ([pscustomobject]$output | ConvertTo-Json -Depth 99 -Compress), [Text.UTF8Encoding]::new($false))
 }
 
-function ParseGit {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = $true)][string]$Repo,
-        [string]$Token,
-        [switch]$Latest,
-        [string]$Tag,
-        [switch]$Prerelease,
-        [int]$Limit = 0
-    )
+function Import-RegState {
+    param ([Parameter(Mandatory)][string]$JsonPath)
 
-    # $Token = "..."
-    $base = "https://api.github.com/repos/$Repo/releases"
-    if ($Latest -and !$Tag) {$url = "$base/latest"}
-    elseif ($Tag) {$url = "$base/tags/$Tag"}
-    else {$url = $base}
+    if (!(Test-Path $JsonPath)) {Write-Host "Backup not found: $JsonPath" -F Red; return}
 
-    $headers = @{'User-Agent' = 'PowerShell'}
-    if ($Token) {$headers['Authorization'] = "token $Token"}
+    $backup = Get-Content -Path $JsonPath -Encoding UTF8 -Raw | ConvertFrom-Json -EA 1
+    $stack = [Collections.Generic.Stack[object]]::new()
 
-    $data = Invoke-RestMethod -Uri $url -Headers $headers
-
-    if ($Latest -and !($data -is [System.Collections.IEnumerable])) {
-        $releases = @($data)
+    if ($backup.PSObject.Properties['Path'] -and $backup.PSObject.Properties['Data']) {
+        $stack.Push([pscustomobject]@{Path = [string]$backup.Path; Data = $backup.Data})
     } else {
-        $releases = $data
-    }
-    if (!$Prerelease) {
-        $releases = $releases | ? {!$_.prerelease}
-    }
-    if ($Limit -gt 0) {
-        $releases = $releases | Select -First $Limit
+        foreach ($prop in $backup.PSObject.Properties) {$stack.Push([pscustomobject]@{Path = $prop.Name; Data = $prop.Value})}
     }
 
-    return $releases | % {
-        [PSCustomObject]@{
-            Tag    = $_.tag_name
-            Name   = $_.name
-            Date   = $_.published_at
-            Url    = $_.html_url
-            Assets = @($_.assets | % {$_.browser_download_url})
+    while ($stack.Count -gt 0) {
+        $node = $stack.Pop()
+        $clean = ([string]$node.Path -replace '^(?i)Registry::', '').Replace('/', '\')
+        $parts = $clean -split '[:\\/]+', 2
+        $rootkey = [string]$parts[0].ToUpperInvariant()
+        $entry = $script:hives[$rootkey]
+        $sub = if ($parts.Count -gt 1) {$parts[1].Trim('\').Replace('/', '\')} else {''}
+
+        if (!$entry -or !$sub) {Write-Error 'Invalid registry key path.'; return}
+
+        $Path = "$($entry.Name)\$sub"
+        $created = $entry.Root.CreateSubKey($sub, $true)
+        if (!$created) {Write-Error "Could not create registry key: $Path"; return}
+        $created.Dispose()
+
+        $values = @{}; $keys = @{}
+        $data = $node.Data
+
+        if ($data.PSObject.Properties['Values']) {
+            foreach ($item in @($data.Values)) {if ($item) {$values[[string]$item.Name] = [pscustomobject]@{Type = [string]$item.Type; Value = $item.Value}}}
         }
+        if ($data.PSObject.Properties['Keys']) {
+            foreach ($item in @($data.Keys)) {if ($item) {$keys[[string]$item.Name] = $item.Data}}
+        }
+
+        $handle = $entry.Root.OpenSubKey($sub, $true)
+        foreach ($item in $handle.GetSubKeyNames()) {if (!$keys.ContainsKey($item)) {Edit-Registry -Path "$Path\$item" -Remove}}
+        foreach ($regval in $handle.GetValueNames()) {if (!$values.ContainsKey($regval)) {Edit-Registry -Path $Path -Name $regval -Remove}}
+        $handle.Dispose()
+
+        foreach ($regval in ($values.Keys | Sort-Object)) {
+            $Type = [string]$values[$regval].Type
+            $Value = $values[$regval].Value
+
+            switch ($Type) {
+                'Binary' {$Value = if ($null -eq $Value) {[byte[]]@()} else {[byte[]]@($Value)}}
+                'MultiString' {$Value = if ($null -eq $Value) {[string[]]@()} else {[string[]]@($Value)}}
+                'DWord' {$Value = if ($null -eq $Value) {'0'} else {[string]$Value}}
+                'QWord' {$Value = if ($null -eq $Value) {'0'} else {[string]$Value}}
+            }
+
+            Edit-Registry -Path $Path -Name $regval -Type $Type -Value $Value -EA 1
+        }
+
+        foreach ($item in ($keys.Keys | Sort-Object -Descending)) {$stack.Push([pscustomobject]@{Path = "$Path\$item"; Data = $keys[$item]})}
     }
 }
 
-function Test-Laptop {
-    $laptopTypes = @(
-        8,   # Portable
-        9,   # Laptop
-        10,  # Notebook
-        11,  # Hand Held
-        12,  # Docking Station
-        14,  # Sub Notebook
-        13,  # All in One
-        30,  # Tablet
-        31,  # Convertible
-        32   # Detachable
-    )
-
-    $chassisTypes = (Get-CimInstance Win32_SystemEnclosure -EA 0).ChassisTypes
-    ($laptopTypes | ? {$chassisTypes -contains $_}).Count -gt 0
-}
-
-Export-ModuleMember -Function Set-RegistryValue, Test-VM, Test-Internet, MessageBox, CpuInstructions, ParseGit, Test-Laptop
+Export-ModuleMember -Function *

@@ -1,13 +1,16 @@
 #Requires -RunAsAdministrator
 
+param ([switch]$Cleanmgr, [switch]$Manual)
+if (!$Cleanmgr -and !$Manual) {$Cleanmgr = $true; $Manual = $true}
+
 Write-Host "--- System cleanup ---" -F Green
 Write-Host "Removing disk clutter and logs`n"
 
-# ===========================
+# ==============================
 # Configuration
-# ===========================
-$config = [PSCustomObject]@{
-    CleanupSettings = @{
+# ==============================
+$config = @{
+    cleanup = @{
         "Active Setup Temp Folders"         = 2; "BranchCache"                           = 2
         "D3D Shader Cache"                  = 2; "Delivery Optimization Files"           = 2
         "Device Driver Packages"            = 0; "Diagnostic Data Viewer database files" = 0
@@ -23,120 +26,114 @@ $config = [PSCustomObject]@{
         "Windows Error Reporting Files"     = 2; "Windows Reset Log Files"               = 2
         "Windows Upgrade Log Files"         = 2
     }
-    Services = @("bits", "appidsvc", "dps", "wuauserv", "cryptsvc")
-    TempPaths = @("$env:TEMP", "$env:LOCALAPPDATA\Temp", "$env:WinDir\Temp")
-    LogPaths = @(
-        "$env:WinDir\DtcInstall.log",
-        "$env:WinDir\comsetup.log",
-        "$env:WinDir\PFRO.log",
-        "$env:WinDir\Performance\WinSAT\winsat.log",
-        "$env:WinDir\debug\PASSWD.LOG",
-        "$env:WinDir\Logs\SIH\*",
+    svcs = 'bits', 'appidsvc', 'dps', 'wuauserv', 'cryptsvc'
+    temps = "$env:TEMP", "$env:SystemRoot\Temp"
+    logs = @(
+        "$env:SystemRoot\DtcInstall.log",
+        "$env:SystemRoot\comsetup.log",
+        "$env:SystemRoot\PFRO.log",
+        "$env:SystemRoot\Performance\WinSAT\winsat.log",
+        "$env:SystemRoot\debug\PASSWD.LOG",
+        "$env:SystemRoot\Logs\SIH\*",
         "$env:LOCALAPPDATA\Microsoft\CLR_v4.0\UsageTraces\*",
         "$env:LOCALAPPDATA\Microsoft\CLR_v4.0_32\UsageTraces\*",
-        "$env:WinDir\Logs\NetSetup\*",
-        "$env:WinDir\ff*.tmp",
-        "$env:WinDir\System32\SleepStudy\*",
+        "$env:SystemRoot\Logs\NetSetup\*",
+        "$env:SystemRoot\ff*.tmp",
+        "$env:SystemRoot\System32\SleepStudy\*",
         "$env:LOCALAPPDATA\Microsoft\Windows\Explorer\thumbcache_*.db",
         "$env:LOCALAPPDATA\IconCache.db"
     )
-    Timeout = 300
-    RetryLimit = 3
+    timeout = 300
+    retries = 3
 }
 
-# ===========================
+# ==============================
 # Disk Cleanup
-# ===========================
+# ==============================
 function Invoke-DiskCleanup {
     Write-Host "Starting disk cleanup"
     taskkill /f /im cleanmgr.exe *>$null
-    
+
     Write-Host "Setting cleanup keys..." -F DarkGray
-    $config.CleanupSettings.GetEnumerator() | % {
-        $keyPath = Join-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' $_.Key;
-        if (Test-Path $keyPath) {Set-RegistryValue -Path $keyPath -Name "StateFlags0042" -Type DWORD -Value $_.Value} 
+    foreach ($item in $config.cleanup.GetEnumerator()) {
+        Edit-Registry -Path "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\$($item.Key)" -Name 'StateFlags0042' -Type DWord -Value $item.Value
     }
 
     Write-Host "Starting cleanmgr.exe..." -F DarkGray
     $i = 0
-    while ($i -lt $config.RetryLimit) {
-        $cleanupProcess = Start-Process -FilePath "$env:WinDir\system32\cleanmgr.exe" -ArgumentList "/sagerun:42" -PassThru
-Start-Job {Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-public class Win32 {
-    [DllImport("user32.dll")]
-    public static extern bool ShowWindow(IntPtr hWnd,int nCmdShow);
-}
-"@; $SW_HIDE=0; while (Get-Process -Name cleanmgr -EA 0) {Get-Process -Name cleanmgr -EA 0 | % {try {if ($_.MainWindowHandle -ne 0) {[Win32]::ShowWindow($_.MainWindowHandle,$SW_HIDE)*>$null}} catch {}}; Start-Sleep -m 300}} *>$null
-        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-        $lastCpuUsage = 0
-        $lastMemoryUsage = 0
-        while ($cleanupProcess -and !$cleanupProcess.HasExited -and $stopwatch.Elapsed.TotalSeconds -lt $config.Timeout) {
-            Start-Sleep -s 10
-            $process = Get-Process -Id $cleanupProcess.Id -EA 0
-            if ($process) {
-                $cpuUsage = $process.CPU
-                $memoryUsage = $process.WS
-                if ($cpuUsage -eq $lastCpuUsage -and $memoryUsage -eq $lastMemoryUsage) {
-                    Write-Warning "Disk cleanup might be stuck. Terminating process."
-                    if ($cleanupProcess.MainWindowHandle -ne 0) {$cleanupProcess.CloseMainWindow()*>$null; Start-Sleep -s 5}
-                    if (!$cleanupProcess.HasExited) {taskkill /f /pid $cleanupProcess.Id *>$null}
-                    $i++
-                    break
-                }
-                $lastCpuUsage = $cpuUsage
-                $lastMemoryUsage = $memoryUsage
+    while ($i -lt $config.retries) {
+        $proc = Start-Process "$env:SystemRoot\System32\cleanmgr.exe" -ArgumentList '/sagerun:42' -PassThru
+        $hider = Start-Job {
+            Add-Type -Name W32 -Namespace H -MemberDefinition '[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int n);' *>$null
+            while (Get-Process cleanmgr -EA 0) {
+                Get-Process cleanmgr -EA 0 | ? {$_.MainWindowHandle -ne 0} | % {[H.W32]::ShowWindow($_.MainWindowHandle, 0) *>$null}
+                Start-Sleep -m 300
             }
         }
-        if ($cleanupProcess -and $cleanupProcess.HasExited) {
+
+        $timer = [Diagnostics.Stopwatch]::StartNew()
+        $cpu = -1; $mem = -1
+        $stuck = $false
+        while (!$proc.HasExited -and $timer.Elapsed.TotalSeconds -lt $config.timeout) {
+            Start-Sleep -s 10
+            $p = Get-Process -Id $proc.Id -EA 0
+            if (!$p) {break}
+            if ($p.CPU -eq $cpu -and $p.WS -eq $mem) {$stuck = $true; break}
+            $cpu = $p.CPU; $mem = $p.WS
+        }
+        $hider | Remove-Job -Force *>$null
+
+        if ($proc.HasExited) {
             Write-Host "Disk cleanup done."
             return
         }
-        if ($i -ge $config.RetryLimit) {
-            Write-Warning "Disk cleanup failed after $config.RetryLimit attempts. Stopping process."
-            if ($cleanupProcess -and !$cleanupProcess.HasExited) {taskkill /f /pid $cleanupProcess.Id *>$null}
-            return
+
+        if ($stuck) {Write-Warning "Disk cleanup might be stuck. Terminating process."}
+        if ($proc.MainWindowHandle -ne 0) {
+            $proc.CloseMainWindow() *>$null
+            Start-Sleep -s 5
         }
+        if (!$proc.HasExited) {taskkill /f /pid $proc.Id *>$null}
+        if ($stuck) {break}
+        $i++
     }
 }
 
-# ===========================
+# ==============================
 # File Cleanup
-# ===========================
+# ==============================
 function Invoke-FileCleanup {
     Write-Host "`nStarting file cleanup"
-    $config.Services | % {Stop-Service -Name $_ -Force -EA 0}
+    foreach ($svc in $config.svcs) {taskkill /F /FI "SERVICES eq $svc" *>$null}
 
     Write-Host "Cleaning temp files..." -F DarkGray
-    $config.TempPaths | ? {Test-Path $_} | % {gci -Path $_ -Recurse -Force -EA 0 | ? {$_.Name -ne 'AME'} | del -Recurse -Force -EA 0}
+    foreach ($path in $config.temps) {gci $path -Recurse -Force -EA 0 | ? {$_.Name -ne 'AME'} | del -Recurse -Force -EA 0}
 
-    Write-Host "Clearing log files..." -F DarkGray
-    $config.LogPaths | ? {Test-Path $_} | % {del -Path $_ -Recurse -Force -EA 0}
-
-    $config.Services | % {Start-Service -Name $_ -EA 0}
+    Write-Host "Cleaning log files..." -F DarkGray
+    foreach ($path in $config.logs) {del $path -Recurse -Force -EA 0}
 
     Write-Host "File cleanup done."
 }
 
-# ===========================
+# ==============================
 # Entry Point
-# ===========================
-$systemDrive = ($env:SystemDrive).TrimEnd('\') + '\'
-$noCleanmgr = $false 
-$drives = Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3" | Select -Expand DeviceID | % {($_.TrimEnd('\') + '\')} | ? {$_ -ne $systemDrive}
+# ==============================
+if ($Cleanmgr) {
+    $sysdrive = $env:SystemDrive
+    $skip = $false
+    $drives = Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3" | ? {$_.DeviceID -ne $sysdrive} | Select -ExpandProperty DeviceID
 
-# === Check for other installations of Windows ===
-# If other Windows installations are found, skip cleanup to avoid touching another drives, because it can risk modifying unintended data
-foreach ($drive in $drives) {
-    $systemHive = Join-Path $drive 'Windows\System32\config\SYSTEM'
-    if (Test-Path -Path $systemHive -PathType Leaf -EA 0) {
-        Write-Host "Not running Disk Cleanup, other Windows drive found: $drive"
-        $noCleanmgr = $true
-        break
+    # === Check for other installations of Windows ===
+    foreach ($drive in $drives) {
+        $hive = "$drive\Windows\System32\config\SYSTEM"
+        if (Test-Path $hive -PathType Leaf) {
+            Write-Host "Not running Disk Cleanup, other Windows drive found: $drive"
+            $skip = $true
+            break
+        }
     }
-} if (!$noCleanmgr) {Invoke-DiskCleanup}
-
-Invoke-FileCleanup
+    if (!$skip) {Invoke-DiskCleanup}
+}
+if ($Manual) {Invoke-FileCleanup}
 
 Write-Host "`nDone."

@@ -23,7 +23,7 @@ while ($true) {
     switch ($choice) {
         '1' {
             cls
-            & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Install-Vivaldi
+            & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Install-Vivaldi
         }
         '2' {
             cls

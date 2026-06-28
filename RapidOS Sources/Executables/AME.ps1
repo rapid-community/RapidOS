@@ -1,71 +1,37 @@
 #Requires -RunAsAdministrator
-
-param (
-    [switch]$Pin,
-    [switch]$Unpin
-)
+param ([switch]$Pin, [switch]$Unpin)
 
 Add-Type @"
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-
 public class WinAPI {
-    [DllImport("user32.dll")]
-    public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-    [DllImport("user32.dll")]
-    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-    [DllImport("user32.dll")]
-    public static extern int GetWindowTextLength(IntPtr hWnd);
-    [DllImport("user32.dll")]
-    public static extern bool IsWindowVisible(IntPtr hWnd);
-    [DllImport("user32.dll")]
-    public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-    
-    public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-    public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-    public static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-    public const uint SWP_NOMOVE = 0x0002;
-    public const uint SWP_NOSIZE = 0x0001;
-    public const uint SWP_SHOWWINDOW = 0x0040;
+    [DllImport("user32.dll")] public static extern bool EnumWindows(EnumWindowsProc e, IntPtr p);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern int GetWindowText(IntPtr h, StringBuilder s, int c);
+    [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
+    [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr h, IntPtr a, int x, int y, int cx, int cy, uint f);
+    public delegate bool EnumWindowsProc(IntPtr h, IntPtr p);
 }
 "@
 
-$ameWindows = New-Object System.Collections.Generic.List[IntPtr]
-$callback = [WinAPI+EnumWindowsProc] {
-    param ([IntPtr]$hWnd, [IntPtr]$lParam)
-    if ([WinAPI]::IsWindowVisible($hWnd)) {
-        $titleLen = [WinAPI]::GetWindowTextLength($hWnd)
-        if ($titleLen -gt 0) {
-            $sb = New-Object System.Text.StringBuilder($titleLen + 1)
-            [WinAPI]::GetWindowText($hWnd, $sb, $sb.Capacity)
-            if ($sb.ToString() -like "*AME*") {
-                $ameWindows.Add($hWnd)
-            }
-        }
-    }
-    return $true
+$script:handles = [Collections.Generic.List[IntPtr]]::new()
+
+$enum = [WinAPI+EnumWindowsProc] {
+    param($h, $p)
+    if (![WinAPI]::IsWindowVisible($h)) {return $true}
+    $sb = [Text.StringBuilder]::new(256)
+    [void][WinAPI]::GetWindowText($h, $sb, 256)
+    if ($sb.ToString() -notlike '*AME*') {return $true}
+    $script:handles.Add($h)
+    $true
 }
 
-[WinAPI]::EnumWindows($callback, [IntPtr]::Zero) *>$null
+[void][WinAPI]::EnumWindows($enum, [IntPtr]::Zero)
 
-if ($pin) {
-    $hWndInsertAfter = [WinAPI]::HWND_TOPMOST
-    $action = "pinned"
-} elseif ($unpin) {
-    $hWndInsertAfter = [WinAPI]::HWND_NOTOPMOST
-    $action = "unpinned"
+$flag = if ($Pin) {[IntPtr]::new(-1)} else {[IntPtr]::new(-2)}
+foreach ($h in $script:handles) {
+    [void][WinAPI]::SetWindowPos($h, $flag, 0, 0, 0, 0, 0x0003)
 }
 
-$failed = 0
-$ameWindows | % {
-    $success = [WinAPI]::SetWindowPos($_, $hWndInsertAfter, 0, 0, 0, 0, 
-        [WinAPI]::SWP_NOMOVE -bor [WinAPI]::SWP_NOSIZE -bor [WinAPI]::SWP_SHOWWINDOW)
-    if (!$success) {$failed++}
-}
-
-if ($failed -eq 0) {
-    Write-Host "AME Beta windows $action" -F Green
-} else {
-    Write-Warning "Failed to $action AME Beta window"
-}
+$verb = if ($Pin) {'pinned'} else {'unpinned'}
+Write-Host "AME Beta window $verb"

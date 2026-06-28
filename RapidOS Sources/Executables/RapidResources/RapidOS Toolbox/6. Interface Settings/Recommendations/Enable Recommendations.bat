@@ -10,7 +10,7 @@ for /f "tokens=3" %%A in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Current
 
 if %BuildNumber% GEQ 22000 (
     reg delete "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education" /v IsEducationEnvironment /f > nul 2>&1
-    reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v HideRecommendedSection /f > nul 2>&1
+    reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v HideRecommendedSection /f > nul 2>&1
     reg delete "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start" /v HideRecommendedSection /f > nul 2>&1
 ) else (
     echo Likely, you are on Windows 10, Windows 11 is required to run this script.

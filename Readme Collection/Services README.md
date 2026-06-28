@@ -8,8 +8,6 @@
 - **Distributed Transaction Coordinator (MSDTC)** - Disabled: `Startup 4`
 - **Program Compatibility Assistant Service (PcaSvc)** - Disabled: `Startup 4`
 - **Payments and NFC/SE Manager (SEMgrSvc)** - Disabled: `Startup 4`
-- **Shell Hardware Detection (ShellHWDetection)** - Disabled: `Startup 4`
-- **SSDP Discovery (SSDPSRV)** - Disabled: `Startup 4`
 - **Distributed Link Tracking Client (TrkWks)** - Disabled: `Startup 4`
 - **Offline Maps Broker (MapsBroker)** - Manual: `Startup 3`
 

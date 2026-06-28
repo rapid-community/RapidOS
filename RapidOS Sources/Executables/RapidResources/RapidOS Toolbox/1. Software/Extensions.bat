@@ -13,7 +13,7 @@ while ($true) {
     cls
     Write-Host "Media Configuration" -F Yellow
     Write-Host
-    Write-Host "[1] Install HEIF & HEVC"
+    Write-Host "[1] Install HEVC & HEIF"
     Write-Host
     
     $choice = Read-Host -Prompt "Select an option"
@@ -21,7 +21,7 @@ while ($true) {
     switch ($choice) {
         '1' {
             cls
-            & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Install-MediaExtensions
+            & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Install-MediaExtensions
         }
         default {
             Write-Host ""

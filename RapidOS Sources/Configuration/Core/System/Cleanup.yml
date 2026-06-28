@@ -7,4 +7,4 @@ actions:
       exeDir: true
       wait: true
       exe: 'powershell'
-      args: '-EP Bypass -C ".\Cleanup.ps1"'
+      args: '-EP Bypass -File .\Cleanup.ps1 -Cleanmgr'

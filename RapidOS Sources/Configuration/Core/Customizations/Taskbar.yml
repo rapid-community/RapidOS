@@ -6,9 +6,41 @@ actions:
       runas: currentUserElevated
       option: 'modify-templates'
       exeDir: true
+      oobe: false
       wait: true
       exe: 'powershell'
       args: '-EP Bypass -C ".\Shell.ps1 -Cleanup Taskbar"'
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      value: 'Taskbar'
+      type: REG_DWORD
+      data: '1'
+      option: 'modify-templates'
+
+  # === Pin File Explorer for new and already-initialized users ===
+  - !powerShell:
+      runas: currentUserElevated
+      option: 'modify-templates'
+      command: >-
+        $q = [char]34; $r = [char]13; $n = [char]10;
+        $code = 'using System;using System.Runtime.InteropServices;public class C{public struct K{public Guid g;public uint p;}[StructLayout(LayoutKind.Explicit)]public struct V{[FieldOffset(0)]public ushort t;[FieldOffset(8)]public IntPtr v;}[ComImport,Guid(' + $q + '00021401-0000-0000-C000-000000000046' + $q + ')]class S{}[ComImport,Guid(' + $q + '0000010b-0000-0000-C000-000000000046' + $q + '),InterfaceType(1)]interface P{void a();void b();void L([MarshalAs(21)]string f,int m);void S([MarshalAs(21)]string f,bool r);}[ComImport,Guid(' + $q + '886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99' + $q + '),InterfaceType(1)]interface I{void a();void b();void c();void S(ref K k,ref V v);void C();}[DllImport(' + $q + 'kernel32.dll' + $q + ',CharSet=CharSet.Unicode,SetLastError=true)]static extern bool MoveFileEx(string a,string b,int f);public static void M(string s,string d){if(!MoveFileEx(s,d,9))throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());}public static void F(string f){var o=new S();((P)o).L(f,2);var k=new K{g=new Guid(' + $q + '9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3' + $q + '),p=5};var v=new V{t=31,v=Marshal.StringToCoTaskMemUni(' + $q + 'Microsoft.Windows.Explorer' + $q + ')};var i=(I)o;i.S(ref k,ref v);i.C();((P)o).S(f,false);}}'; Add-Type $code;
+        $lnk = $env:ProgramData + '\Microsoft\Windows\Start Menu\Programs\File Explorer.lnk'; mkdir ($lnk | Split-Path) -Force *>$null; $exe = $env:SystemRoot + '\explorer.exe';
+        $sc = (New-Object -ComObject WScript.Shell).CreateShortcut($lnk); $sc.TargetPath = $exe; $sc.WorkingDirectory = $env:SystemRoot; $sc.IconLocation = $exe + ',0'; $sc.Save(); [C]::F($lnk);
+        $loc = '[LocalizedFileNames]' + $r + $n + 'File Explorer.lnk=@%SystemRoot%\system32\shell32.dll,-22067' + $r + $n;
+        $pIni = $env:ProgramData + '\Microsoft\Windows\Start Menu\Programs\desktop.ini'; attrib -s -h $pIni *>$null;
+        [IO.File]::AppendAllText($pIni, $r + $n + $loc, [Text.UTF8Encoding]::new($false));
+        attrib +s +h $pIni *>$null; attrib +s ($env:ProgramData + '\Microsoft\Windows\Start Menu\Programs') *>$null;
+        $xml = '<?xml version=' + $q + '1.0' + $q + ' encoding=' + $q + 'utf-8' + $q + '?><LayoutModificationTemplate xmlns=' + $q + 'http://schemas.microsoft.com/Start/2014/LayoutModification' + $q + ' xmlns:defaultlayout=' + $q + 'http://schemas.microsoft.com/Start/2014/FullDefaultLayout' + $q + ' xmlns:start=' + $q + 'http://schemas.microsoft.com/Start/2014/StartLayout' + $q + ' xmlns:taskbar=' + $q + 'http://schemas.microsoft.com/Start/2014/TaskbarLayout' + $q + ' Version=' + $q + '1' + $q + '><DefaultLayoutOverride LayoutCustomizationRestrictionType=' + $q + 'OnlySpecifiedGroups' + $q + '><StartLayoutCollection><defaultlayout:StartLayout GroupCellWidth=' + $q + '6' + $q + '><start:Group Name=' + $q + 'System' + $q + '><start:DesktopApplicationTile Size=' + $q + '2x2' + $q + ' Column=' + $q + '0' + $q + ' Row=' + $q + '0' + $q + ' DesktopApplicationLinkPath=' + $q + '%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\File Explorer.lnk' + $q + ' /></start:Group></defaultlayout:StartLayout></StartLayoutCollection></DefaultLayoutOverride><CustomTaskbarLayoutCollection PinListPlacement=' + $q + 'Replace' + $q + '><defaultlayout:TaskbarLayout><taskbar:TaskbarPinList><taskbar:DesktopApp DesktopApplicationLinkPath=' + $q + '%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\File Explorer.lnk' + $q + ' /></taskbar:TaskbarPinList></defaultlayout:TaskbarLayout></CustomTaskbarLayoutCollection></LayoutModificationTemplate>';
+        $tbxml = '<?xml version=' + $q + '1.0' + $q + ' encoding=' + $q + 'utf-8' + $q + '?><LayoutModificationTemplate xmlns=' + $q + 'http://schemas.microsoft.com/Start/2014/LayoutModification' + $q + ' xmlns:defaultlayout=' + $q + 'http://schemas.microsoft.com/Start/2014/FullDefaultLayout' + $q + ' xmlns:start=' + $q + 'http://schemas.microsoft.com/Start/2014/StartLayout' + $q + ' xmlns:taskbar=' + $q + 'http://schemas.microsoft.com/Start/2014/TaskbarLayout' + $q + ' Version=' + $q + '1' + $q + '><CustomTaskbarLayoutCollection PinListPlacement=' + $q + 'Replace' + $q + '><defaultlayout:TaskbarLayout><taskbar:TaskbarPinList><taskbar:DesktopApp DesktopApplicationLinkPath=' + $q + '%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\File Explorer.lnk' + $q + ' /></taskbar:TaskbarPinList></defaultlayout:TaskbarLayout></CustomTaskbarLayoutCollection></LayoutModificationTemplate>';
+        function layout([string]$path, [string]$data) {mkdir $path -Force *>$null; del ($path + '\LayoutModification.bin') -Force -EA 0; $temp = $path + '\LayoutModification.xml.tmp'; [IO.File]::WriteAllText($temp, $data, [Text.UTF8Encoding]::new($false)); [C]::M($temp, ($path + '\LayoutModification.xml'))};
+        function ini([string]$path) {mkdir $path -Force *>$null; del ($path + '\File Explorer*.lnk') -Force -EA 0; $ini = $path + '\desktop.ini'; attrib -s -h $ini *>$null; [IO.File]::WriteAllText($ini, $loc, [Text.UTF8Encoding]::new($false)); attrib +s +h $ini *>$null; attrib +s $path *>$null};
+        layout ($env:SystemDrive + '\Users\Default\AppData\Local\Microsoft\Windows\Shell') $xml;
+        ini ($env:SystemDrive + '\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar');
+        Refresh -kill;
+        layout ($env:LOCALAPPDATA + '\Microsoft\Windows\Shell') $tbxml;
+        ini ($env:APPDATA + '\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar');
+        Edit-Registry -Path 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband' -Remove;
+        Refresh;
 
   # === Show 'End task' option ===
   - !registryValue:
@@ -16,6 +48,7 @@ actions:
       value: 'TaskbarEndTask'
       type: REG_DWORD
       data: '1'
+      builds: ['>=22000']
 
   # === Disable Windows Chat icon ===
   - !registryValue:
@@ -26,11 +59,6 @@ actions:
   - !registryValue:
       path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
       value: 'TaskbarMn'
-      type: REG_DWORD
-      data: '0'
-  - !registryValue:
-      path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications'
-      value: 'ConfigureChatAutoInstall'
       type: REG_DWORD
       data: '0'
 

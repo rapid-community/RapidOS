@@ -4,12 +4,19 @@ actions:
   # === Disable Microsoft Defender === 
   - !powerShell:
       option: 'disable-defender'
-      exeDir: true
+      oobe: false
       wait: true
       command: >-
-        .\RapidScripts\EnvSetup.ps1;
-        if (!(MessageBox -Message 'Disabling Windows Defender will leave your system vulnerable to malware and security threats. This action is not recommended. Do you want to proceed at your own risk?' -Title 'Attention!' -Type 'Question' -YesNo)) {exit}
-        & ($env:WinDir + '\RapidScripts\Playbook\Defender.ps1') -disable_av -delayedRestart -silent
+        if (!(MessageBox -Message 'Disabling Windows Defender will leave your system vulnerable to malware and security threats. This action is not recommended. Do you want to proceed at your own risk?' -Title 'Attention!' -Type 'Question' -YesNo)) {exit};
+        & ($env:SystemRoot + '\RapidScripts\Playbook\Defender.ps1') -disable_av -delayedrestart -silent
+
+  - !registryValue:
+      option: 'disable-defender'
+      oobe: only
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      value: 'Defender'
+      type: REG_DWORD
+      data: '1'
 
   # === Disable switching to the Secure Desktop when prompting for elevation ===
   - !registryValue:
@@ -52,12 +59,17 @@ actions:
       type: REG_DWORD
       data: '1'
 
-  # === Do not mark downloaded files from the Internet as unsafe ===
+  # === Do not mark downloaded files from the internet as unsafe ===
   - !registryValue:
       path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments'
       value: 'SaveZoneInformation'
       type: REG_DWORD
       data: '1'
+  - !registryValue:
+      path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations'
+      value: 'LowRiskFileTypes'
+      type: REG_SZ
+      data: '.exe;.bat;.cmd;.vbs;.msi;.reg;.ps1'
 
   # === Sets passwords to never expire ===
   - !run:

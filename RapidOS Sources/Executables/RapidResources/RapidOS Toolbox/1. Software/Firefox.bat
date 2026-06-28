@@ -23,7 +23,7 @@ while ($true) {
     switch ($choice) {
         '1' {
             cls
-            & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Install-Firefox
+            & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Install-Firefox
         }
         '2' {
             $inTweak = $true
@@ -42,7 +42,7 @@ while ($true) {
                 switch ($tweakChoice) {
                     '1' {
                         cls
-                        & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Optimize-Firefox
+                        & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Optimize-Firefox
                         $null = Read-Host "Press Enter to continue"
                     }
                     '2' {

@@ -17,3 +17,11 @@ actions:
       wait: true
       exe: 'powershell'
       args: '-EP Bypass -C ".\Devices.ps1 -Device Configure-DeviceInterrupts"'
+
+  # === Disable audio power saving ===
+  - !run:
+      runas: currentUserElevated
+      exeDir: true
+      wait: true
+      exe: 'powershell'
+      args: '-EP Bypass -C ".\Devices.ps1 -Device Configure-Audio"'

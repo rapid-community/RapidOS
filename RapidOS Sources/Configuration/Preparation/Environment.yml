@@ -6,36 +6,42 @@ actions:
       exeDir: true
       wait: true
       command: >-
-        $w = [Environment]::GetFolderPath('Windows');
-        robocopy 'RapidScripts' ($w + '\RapidScripts') /E /NP /NFL /NDL *>$null;
-        robocopy 'RapidResources\RapidOS Toolbox' ($w + '\RapidOS Toolbox') /E /NP /NFL /NDL *>$null;
-        xcopy 'RapidResources\Themes' ($w + '\Resources\Themes') /E /I /H /Y *>$null;
-        $dest = Join-Path $w 'RapidScripts\Playbook'; [System.IO.Directory]::CreateDirectory($dest) *>$null;
-        $files = [System.IO.Directory]::GetFiles((Get-Location), '*.ps1');
-        foreach ($f in $files) {
-          $target = Join-Path $dest ([System.IO.Path]::GetFileName($f));
-          [System.IO.File]::Copy($f, $target, $true)
-        };
-        if (!(Test-Path ($w + '\RapidScripts\Modules'))) {Write-Host 'Failed to copy modules'; exit 1};
-        $envVars = @{};
-        $envVars.PATH = $w + '\RapidScripts';
-        $envVars.PSModulePath = $w + '\RapidScripts\Modules';
-        foreach ($e in $envVars.GetEnumerator()) {
-          $c = [Environment]::GetEnvironmentVariable($e.Name, 'Machine');
-          if (!$c -or $c -notmatch [regex]::Escape($e.Value)) {[Environment]::SetEnvironmentVariable($e.Name, ($e.Value + ';' + $c), 'Machine')}
-        };
-        if (Test-Path ($w + '\RapidScripts\Modules')) {gci ($w + '\RapidScripts\Modules') -Filter '*.psm1' | ? {Test-Path $_.FullName} | % {ipmo $_.FullName -Force -Global}};
-        $profilePath = $PSHOME + '\profile.ps1';
-        $importCmd = 'if (Test-Path $env:WinDir\RapidScripts\Modules) {gci $env:WinDir\RapidScripts\Modules -Filter *.psm1 | % {ipmo $_.FullName -Force -Global}}';
-        $currentProfile = gc $profilePath -Raw -EA 0;
-        if ([string]::IsNullOrWhiteSpace($currentProfile) -or $currentProfile -ne $importCmd) {
-          sc $profilePath $importCmd -EA 1 -ErrorVariable setError;
-          if ($setError) {Write-Host 'Error writing to profile: $setError'; exit 1};
-          if (!(Test-Path $profilePath) -or [string]::IsNullOrWhiteSpace((gc $profilePath -Raw))) {Write-Host 'File is empty or not created'; exit 1}
-        };
-        $regPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment';
-        $currentPSPath = (Get-ItemProperty -Path $regPath -Name PSModulePath).PSModulePath;
-        if ($currentPSPath -notmatch [regex]::Escape($w + '\RapidScripts\Modules')) {
-          $newPSPath = $w + '\RapidScripts\Modules;' + $currentPSPath;
-          Set-ItemProperty -Path $regPath -Name PSModulePath -Value $newPSPath -EA 1
-        }
+        .\RapidScripts\EnvSetup.ps1;
+        $install = $env:SystemRoot + '\RapidScripts';
+        $dest = $env:ProgramFiles + '\WindowsPowerShell\Modules';
+
+        robocopy 'RapidScripts' $install /E /NP /NFL /NDL *>$null;
+        icacls $install /grant '*S-1-1-0:(OI)(CI)F' /T /C /Q *>$null;
+        icacls ($env:SystemRoot + '\Resources\Themes') /grant '*S-1-1-0:(OI)(CI)RX' /T /C /Q *>$null;
+
+        $k = [Microsoft.Win32.Registry]::LocalMachine.CreateSubKey('SOFTWARE\RapidOS'); $a = $k.GetAccessControl();
+        $a.AddAccessRule([Security.AccessControl.RegistryAccessRule]::new([Security.Principal.SecurityIdentifier]::new('S-1-1-0'), 'FullControl', 'ContainerInherit, ObjectInherit', 'None', 'Allow'));
+        $k.SetAccessControl($a); $k.Close();
+
+        robocopy 'RapidResources\RapidOS Toolbox' ($env:SystemRoot + '\RapidOS Toolbox') /E /NP /NFL /NDL *>$null;
+        copy 'RapidResources\RapidOS.theme' ($env:SystemRoot + '\Resources\Themes') -Force *>$null;
+
+        $playbook = $install + '\Playbook';
+        mkdir $playbook -Force *>$null;
+        gci (pwd) -Filter *.ps1 -File -EA 0 | % {copy $_.FullName ($playbook + '\' + $_.Name) -Force *>$null};
+
+        $src = $install + '\Modules';
+        mkdir $dest -Force *>$null;
+
+        gci $src -Directory -EA 0 | % {robocopy $_.FullName ($dest + '\' + $_.Name) /E /NP /NFL /NDL *>$null};
+        gci $src -File -EA 0 | ? {$_.Extension -in '.psd1','.psm1'} | % {$p = $dest + '\' + $_.BaseName; mkdir $p -Force *>$null; copy $_.FullName ($p + '\' + $_.Name) -Force *>$null};
+
+        $reg = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment';
+        $val = (Get-Item $reg).GetValue('Path', '', 'DoNotExpandEnvironmentNames');
+        if (!($val -split ';' -contains $install)) {if ($val) {$v = $install + ';' + $val} else {$v = $install}; Edit-Registry -Path $reg -Name 'Path' -Type ExpandString -Value $v};
+
+        if (!($env:PATH -split ';' -contains $install)) {if ($env:PATH) {$env:PATH = $install + ';' + $env:PATH} else {$env:PATH = $install}};
+
+        if (!($env:PSModulePath -split ';' -contains $dest)) {if ($env:PSModulePath) {$env:PSModulePath += ';' + $dest} else {$env:PSModulePath = $dest}};
+        if ((Test-Path $src) -and !($env:PSModulePath -split ';' -contains $src)) {if ($env:PSModulePath) {$env:PSModulePath += ';' + $src} else {$env:PSModulePath = $src}};
+
+        $obj = '[System.Runtime.InteropServices.DllImport(' + [char]34 + 'user32.dll' + [char]34 + ', CharSet=System.Runtime.InteropServices.CharSet.Unicode)] public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg, IntPtr wParam, string lParam, uint fuFlags, uint uTimeout, out IntPtr lpResult);';
+        Add-Type -Name 'W32' -Namespace 'H' -MemberDefinition $obj;
+        [H.W32]::SendMessageTimeout(0xffff, 0x1A, [IntPtr]::Zero, 'Environment', 2, 5000, [ref][IntPtr]::Zero) *>$null;
+
+        $global:LASTEXITCODE = 0

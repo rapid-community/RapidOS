@@ -25,6 +25,7 @@ actions:
       exe: 'bcdedit'
       args: '/set debug no'
       showOutput: false
+      ignoreErrors: true
 
   # === Set boot menu timeout to 15 seconds ===
   - !run:

@@ -17,3 +17,9 @@ actions:
       value: 'MouseThreshold2'
       type: REG_DWORD
       data: '0'
+  - !registryValue:
+      path: 'HKCU\Control Panel\Mouse'
+      value: 'RawMouseThrottleDuration'
+      type: REG_DWORD
+      data: '20'
+      builds: ['>=22000']

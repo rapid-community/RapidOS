@@ -14,7 +14,7 @@ actions:
       command: |
         $env:PATH = [Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()
         [AppDomain]::CurrentDomain.GetAssemblies() | ? Location | % {ngen install $_.Location /nologo *>$null}
-        Get-ScheduledTask | ? {$_.TaskName -like '*NGEN*' -and $_.TaskPath -like '*\\.NET Framework*'} | % {
+        Get-ScheduledTask | ? {$_.TaskName -like '*NGEN*' -and $_.TaskPath -like '*\.NET Framework*'} | % {
           if ($_.State -eq 'Disabled') {Enable-ScheduledTask -TaskName $_.TaskName -TaskPath $_.TaskPath *>$null}
           Start-ScheduledTask -TaskName $_.TaskName -TaskPath $_.TaskPath *>$null
         }

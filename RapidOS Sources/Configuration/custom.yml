@@ -2,19 +2,20 @@
 title: Main playbook configuration file
 actions:
   # ===========================
-  # Prepairing stage
+  # Preparing stage
   # ===========================
-  - !status: {status: 'Prepairing...'}
+  - !status: {status: 'Preparing...'}
 
   - !task: {path: 'Preparation\Mount.yml'}
   - !task: {path: 'Preparation\Environment.yml'}
   - !task: {path: 'Preparation\UI.yml'}
   - !task: {path: 'Maintenance\Main.yml'}
-  - !task: {path: 'Preparation\RestorePoint.yml'}
+  - !task: {path: 'Preparation\Selection.yml'}
   - !task: {path: 'Preparation\Taskkill.yml'}
   - !task: {path: 'Preparation\PowerShell.yml'}
   - !task: {path: 'Preparation\Notifications.yml'}
   - !task: {path: 'Core\System\Power.yml'}
+  - !task: {path: 'Core\System\Cleanup.yml'}
 
   # ===========================
   # Software stage
@@ -28,8 +29,8 @@ actions:
   - !task: {path: 'Software\Browsers\Thorium.yml'}
 
   # === Components ===
-  - !task: {path: 'Software\Components\DirectX.yml'}
   - !task: {path: 'Software\Components\NET3.5.yml'}
+  - !task: {path: 'Software\Components\DirectX.yml'}
   - !task: {path: 'Software\Components\VCRedist.yml'}
 
   # ===========================
@@ -74,10 +75,10 @@ actions:
   - !task: {path: 'Core\Customizations\Advertising.yml'}
   - !task: {path: 'Core\Customizations\ContextMenu.yml'}
   - !task: {path: 'Core\Customizations\Explorer.yml'}
-  - !task: {path: 'Core\Customizations\StartMenu.yml'}
   - !task: {path: 'Core\Customizations\Taskbar.yml'}
+  - !task: {path: 'Core\Customizations\StartMenu.yml'}
   - !task: {path: 'Core\Customizations\TaskManager.yml'}
-  - !task: {path: 'Core\Customizations\Themes.yml'}
+  - !task: {path: 'Core\Customizations\Theme.yml'}
   - !task: {path: 'Core\Customizations\VisualEffects.yml'}
 
   # ===========================
@@ -112,5 +113,4 @@ actions:
   - !task: {path: 'Core\System\Updates.yml'}
   - !task: {path: 'Core\System\Notifications.yml'}
   - !task: {path: 'Core\System\Finalize.yml'}
-  - !task: {path: 'Core\System\Cleanup.yml'}
   - !task: {path: 'Preparation\Mount.yml'}

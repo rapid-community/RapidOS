@@ -1,22 +1,35 @@
 ---
 title: Remove Microsoft Edge
 actions:
-  - !run:
+  - !powerShell:
       runas: currentUserElevated
       option: 'remove-edge'
       exeDir: true
       wait: true
-      exe: 'powershell'
-      args: '-EP Bypass -C ".\Software.ps1 -Software Remove-Edge"'
+      command: >-
+        if ('install-browser' -notin (Get-Options) -and !(MessageBox -Message 'No browser is selected, removing Microsoft Edge may leave you without a browser. Do you want to proceed?' -Title 'Attention!' -Type 'Question' -YesNo)) {return};
+        .\Software.ps1 -Software Remove-Edge
 
   # === If removal is not selected, Edge will be optimized ===
-  - !service: {name: 'MicrosoftEdgeElevationService', operation: change, startup: 3, option: '!Edge'}
-  - !service: {name: 'edgeupdate', operation: change, startup: 3, option: '!Edge'}
-  - !service: {name: 'edgeupdatem', operation: change, startup: 3, option: '!Edge'}
+  - !service: {name: 'MicrosoftEdgeElevationService', operation: change, startup: 3, option: '!remove-edge'}
+  - !service: {name: 'edgeupdate', operation: change, startup: 3, option: '!remove-edge'}
+  - !service: {name: 'edgeupdatem', operation: change, startup: 3, option: '!remove-edge'}
   - !run:
       runas: currentUserElevated
-      option: '!remove-edge'
       exeDir: true
       wait: true
       exe: 'powershell'
       args: '-EP Bypass -C ".\Software.ps1 -Software Optimize-Edge"'
+
+  # === Disable Edge autostart for all user profiles ===
+  - !powerShell:
+      runas: currentUserElevated
+      command: >-
+        Invoke-Profile -All -Action {
+          if ($_.ProfileDir -eq $env:USERPROFILE) {return};
+          $run = $_.RegKey + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Run';
+          $approved = $_.RegKey + '\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run';
+          Get-ItemProperty $run -EA 0 | % {$_.PSObject.Properties} | ? {$_.Name -like '*Edge*'} | % {
+            Edit-Registry -Path $approved -Name $_.Name -Type Binary -Value ([byte[]](0x03,0,0,0,0,0,0,0))
+          }
+        }

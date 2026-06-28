@@ -23,7 +23,7 @@ while ($true) {
     switch ($choice) {
         '1' {
             cls
-            & "$env:WinDir\RapidScripts\Playbook\Software.ps1" -Software Install-Thorium
+            & "$env:SystemRoot\RapidScripts\Playbook\Software.ps1" -Software Install-Thorium
         }
         '2' {
             cls

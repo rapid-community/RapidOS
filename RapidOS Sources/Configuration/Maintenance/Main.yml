@@ -13,7 +13,7 @@ actions:
   # RapidOS is being installed on - stock, modified, or tweaked.    #
   # These logs are critical for diagnosing user-reported issues.    #
   # =============================================================== #
-  - !task: {path: 'Maintenance\Diagnostics\PendingReboot.yml'}
+  - !task: {path: 'Maintenance\Diagnostics\PendingReboot.yml', oobe: false}
   - !task: {path: 'Maintenance\Diagnostics\Specifications.yml'}
   - !task: {path: 'Maintenance\Diagnostics\EventLogs.yml'}
   - !task: {path: 'Maintenance\Diagnostics\Tweakers.yml'}
@@ -30,5 +30,5 @@ actions:
   # used or previously tweaked Windows installation.                #
   # =============================================================== #
   - !task: {path: 'Maintenance\Repairs\ComponentStore.yml'}
-  - !task: {path: 'Maintenance\Repairs\ExternalBlocks.yml'}
-  - !task: {path: 'Maintenance\Repairs\Network.yml'}
+  - !task: {path: 'Maintenance\Repairs\ExternalBlocks.yml', oobe: false}
+  - !task: {path: 'Maintenance\Repairs\Network.yml', oobe: false}

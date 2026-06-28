@@ -2,13 +2,44 @@
 title: Start Menu configuration
 actions:
   # === Start Menu cleanup ===
+  - !powerShell:
+      runas: currentUserElevated
+      builds: ['>=22000']
+      oobe: false
+      command: >-
+        $q = [char]34;
+        $arr = @(('{'+$q+'desktopAppId'+$q+':'+$q+'Microsoft.Windows.Explorer'+$q+'}'), ('{'+$q+'packagedAppId'+$q+':'+$q+'windows.immersivecontrolpanel_cw5n1h2txyewy!microsoft.windows.immersivecontrolpanel'+$q+'}'), ('{'+$q+'packagedAppId'+$q+':'+$q+'Microsoft.WindowsStore_8wekyb3d8bbwe!App'+$q+'}'), ('{'+$q+'packagedAppId'+$q+':'+$q+'Microsoft.WindowsTerminal_8wekyb3d8bbwe!App'+$q+'}'));
+        $opts = Get-Options; $sm1 = $env:ProgramData + '\Microsoft\Windows\Start Menu\Programs'; $sm2 = $env:APPDATA + '\Microsoft\Windows\Start Menu\Programs';
+        $links = gci $sm1, $sm2 -Filter '*.lnk' -Recurse -EA 0;
+        function Get-Pin($n, $o, $t, $exes) {$f = ($links | ? {$_.Name -eq $n} | Select -First 1).FullName; if (!$f) {foreach ($exe in $exes) {if ($exe -and (Test-Path $exe)) {$f = $exe; break}}}; if ($f) {if ($f -match '\.exe$') {$lnk = $sm1 + '\' + $n; if (!(Test-Path $lnk)) {$ws = New-Object -ComObject WScript.Shell; $sc = $ws.CreateShortcut($lnk); $sc.TargetPath = $f; $sc.Save()}; $f = $lnk} elseif ($f.StartsWith($sm2)) {$lnk = $sm1 + '\' + $n; copy $f $lnk -Force; $f = $lnk}}; $m = if ($t -eq 'in') {($o -in $opts) -or $f} else {$o -notin $opts}; if ($m -and $f) {$p = $f -replace ('^' + [regex]::Escape(${env:ProgramFiles(x86)})), '%ProgramFiles(x86)%' -replace ('^' + [regex]::Escape($env:ProgramFiles)), '%ProgramFiles%' -replace ('^' + [regex]::Escape($env:LOCALAPPDATA)), '%LOCALAPPDATA%' -replace ('^' + [regex]::Escape($env:SystemRoot)), '%SystemRoot%' -replace ('^' + [regex]::Escape($env:ProgramData)), '%ALLUSERSPROFILE%' -replace ('^' + [regex]::Escape($env:APPDATA)), '%APPDATA%'; '{' + $q + 'desktopAppLink' + $q + ':' + $q + $p.Replace('\', '\\') + $q + '}'}}
+        $uwp = 'Microsoft.WindowsCalculator_8wekyb3d8bbwe!App', 'Microsoft.WindowsNotepad_8wekyb3d8bbwe!App', 'Microsoft.Paint_8wekyb3d8bbwe!App'; $lnk = 'Calculator.lnk', 'Notepad.lnk', 'Paint.lnk';
+        $exes = @($env:SystemRoot + '\System32\calc.exe', $env:SystemRoot + '\System32\notepad.exe', $env:SystemRoot + '\System32\mspaint.exe');
+        for ($i = 0; $i -lt $uwp.Count; $i++) {$pkgName = $uwp[$i].Split('_')[0]; if (Get-AppxPackage -Name $pkgName -EA 0) {$arr += '{' + $q + 'packagedAppId' + $q + ':' + $q + $uwp[$i] + $q + '}'} else {$pin = Get-Pin $lnk[$i] '' 'in' @($exes[$i]); if ($pin) {$arr += $pin}}}
+        $pin = Get-Pin 'Microsoft Edge.lnk' 'remove-edge' 'notin' @($env:ProgramFiles + '\Microsoft\Edge\Application\msedge.exe', ${env:ProgramFiles(x86)} + '\Microsoft\Edge\Application\msedge.exe'); if ($pin) {$arr += $pin};
+        $pin = Get-Pin 'Brave.lnk' 'install-brave' 'in' @($env:ProgramFiles + '\BraveSoftware\Brave-Browser\Application\brave.exe', $env:LOCALAPPDATA + '\BraveSoftware\Brave-Browser\Application\brave.exe'); if ($pin) {$arr += $pin};
+        $pin = Get-Pin 'Firefox.lnk' 'install-firefox' 'in' @($env:ProgramFiles + '\Mozilla Firefox\firefox.exe'); if ($pin) {$arr += $pin};
+        $pin = Get-Pin 'Thorium.lnk' 'install-thorium' 'in' @($env:LOCALAPPDATA + '\Thorium\Application\thorium.exe', $env:ProgramFiles + '\Thorium\thorium.exe'); if ($pin) {$arr += $pin};
+        $pin = Get-Pin 'Google Chrome.lnk' 'install-chrome' 'in' @($env:ProgramFiles + '\Google\Chrome\Application\chrome.exe', $env:LOCALAPPDATA + '\Google\Chrome\Application\chrome.exe'); if ($pin) {$arr += $pin};
+        $defender = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend' -Name Start -EA 0).Start;
+        if ($null -ne $defender -and $defender -ne 4 -and 'disable-defender' -notin $opts) {$arr += '{'+$q+'packagedAppId'+$q+':'+$q+'Microsoft.SecHealthUI_8wekyb3d8bbwe!SecHealthUI'+$q+'}'};
+        $json = '{'+$q+'pinnedList'+$q+':['+($arr -join ',')+']}';
+        Edit-Registry -Path 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start' -Name 'ConfigureStartPins' -Value $json;
+        Edit-Registry -Path 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start' -Name 'ConfigureStartPins_ProviderSet' -Type DWord -Value 1
   - !run:
+      runas: currentUserElevated
       option: 'modify-templates'
       exeDir: true
+      oobe: false
       wait: true
       exe: 'powershell'
       args: '-EP Bypass -C ".\Shell.ps1 -Cleanup StartMenu"'
-  - !appx: {name: '*Microsoft.Windows.StartMenuExperienceHost*', operation: clearCache}
+  - !appx: {name: '*Microsoft.Windows.StartMenuExperienceHost*', operation: clearCache, option: 'modify-templates'}
+  - !registryValue:
+      path: 'HKLM\SOFTWARE\RapidOS\Installation\Deferred'
+      value: 'StartMenu'
+      type: REG_DWORD
+      data: '1'
+      option: 'modify-templates'
 
   # === Ensure more pins than recommendations ===
   - !registryValue:
@@ -16,6 +47,7 @@ actions:
       value: 'Start_Layout'
       type: REG_DWORD
       data: '1'
+      builds: ['>=22000']
 
   # === Hide pinned Documents folder ===
   - !registryValue:

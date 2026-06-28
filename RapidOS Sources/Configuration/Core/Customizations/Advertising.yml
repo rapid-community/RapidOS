@@ -33,7 +33,7 @@ actions:
   - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager', value: 'SoftLandingEnabled', type: REG_DWORD, data: '0'}
 
   # === "Feature discovery and tips across Windows" ===
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudContent', value: 'DisableSoftLanding', type: REG_DWORD, data: '1'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent', value: 'DisableSoftLanding', type: REG_DWORD, data: '1'}
 
   # === "Show recommended websites" ===
   - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'HideRecommendedPersonalizedSites', type: REG_DWORD, data: '1'}
@@ -61,6 +61,7 @@ actions:
 
   # === Remove promotional cards and sign-in prompts 'Home' and 'Accounts' pages ===
   - !run:
+      builds: ['>=22000']
       exeDir: true
       wait: true
       exe: 'powershell'
@@ -110,6 +111,6 @@ actions:
   - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows Security Health\State', value: 'AppAndBrowser_EdgeSmartScreenOff', type: REG_DWORD, data: '0'}
 
   # === Bing pop-up ads ===
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BingChatInstaller.exe', value: 'Debugger', type: REG_SZ, data: '%WinDir%\System32\taskkill.exe'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BGAUpsell.exe', value: 'Debugger', type: REG_SZ, data: '%WinDir%\System32\taskkill.exe'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BCILauncher.exe', value: 'Debugger', type: REG_SZ, data: '%WinDir%\System32\taskkill.exe'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BingChatInstaller.exe', value: 'Debugger', type: REG_SZ, data: '%SystemRoot%\System32\taskkill.exe'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BGAUpsell.exe', value: 'Debugger', type: REG_SZ, data: '%SystemRoot%\System32\taskkill.exe'}
+  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\BCILauncher.exe', value: 'Debugger', type: REG_SZ, data: '%SystemRoot%\System32\taskkill.exe'}

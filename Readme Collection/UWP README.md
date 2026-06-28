@@ -12,15 +12,23 @@
 - **Quick Assist**
 - **Get Started**
 - **Microsoft Solitaire Collection**
-- **Microsoft Teams**
 - **People**
 - **Skype**
 - **To Do**
+- **Dev Home**
+- **Feedback Hub**
+- **3D Viewer**
+- **Mixed Reality Portal**
+- **Paint**
 - **Wallet**
 - **Whiteboard**
 - **Maps**
 - **Parental Controls**
-- **Mail**
+- **Power BI**
+- **Power Automate**
+- **Secure Assessment Browser**
+- **Movies & TV**
+- **Xbox Game Bar** (except AMD Dual-CCD processors with 3D-Cache)
 
 ## Custom Features:
 

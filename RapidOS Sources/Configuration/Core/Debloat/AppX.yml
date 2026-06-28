@@ -33,11 +33,11 @@ actions:
           # === System / Tools ===
           'Microsoft.Windows.DevHome',
           'Microsoft.WindowsFeedbackHub',
-          # 'Microsoft.GetHelp',
           'Microsoft.Getstarted',
           'MicrosoftCorporationII.QuickAssist',
           'Microsoft.Windows.ParentalControls',
           'Microsoft.Microsoft3DViewer',
+          'MicrosoftCorporationII.MicrosoftFamily',
 
           # === Preinstalled apps ===
           'Microsoft.MSPaint',
@@ -50,33 +50,27 @@ actions:
           # === Bing / News / Ads ===
           'Microsoft.Advertising',
           'Microsoft.BingNews',
-          # 'Microsoft.BingSearch',
           'Microsoft.BingWeather',
 
           # === Maps ===
-          'Microsoft.WindowsMaps',
-
-          # === Family / Education ===
-          'MicrosoftCorporationII.MicrosoftFamily'
+          'Microsoft.WindowsMaps'
         )
-  
+
   # === Xbox Gamebar ===
   - !powerShell:
       runas: currentUserElevated
       exeDir: true
       wait: true
       command: >-
-        .\RapidScripts\EnvSetup.ps1;
-        $cpuLine = Get-Specs | ? {$_ -match 'CPU:'};
+        $cpu = Get-Specs -CPU;
         $dualCCD = @('7900X3D', '7950X3D', '9900X3D', '9950X3D');
 
-        if ($cpuLine -and ($dualCCD | ? {$cpuLine -match $_})) {
-            Write-Host 'AMD Dual-CCD processor with 3D-Cache found'
+        if ($cpu -and ($dualCCD | ? {$cpu -match $_})) {
+          Write-Host 'AMD Dual-CCD processor with 3D-Cache found'
         } else {
-            Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage
-            Get-AppxPackage *Microsoft.Edge.GameAssist* | Remove-AppxPackage
-            Set-RegistryValue -Path 'HKCU:\SOFTWARE\Microsoft\GameBar' -Name 'ShowStartupPanel' -Type DWORD -Value 0;
-            Write-Host 'Xbox Game Bar removed'
+          .\AppX.ps1 -Packages @('Microsoft.XboxGamingOverlay', 'Microsoft.Edge.GameAssist');
+          Edit-Registry -Path 'HKCU\SOFTWARE\Microsoft\GameBar' -Name 'ShowStartupPanel' -Type DWord -Value 0;
+          Write-Host 'Xbox Game Bar removed'
         }
 
   # === Additional AppX operations ===

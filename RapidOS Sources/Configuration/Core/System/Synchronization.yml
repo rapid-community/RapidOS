@@ -107,12 +107,12 @@ actions:
       path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\mobsync.exe'
       value: 'Debugger'
       type: REG_SZ
-      data: '%WinDir%\System32\taskkill.exe'
+      data: '%SystemRoot%\System32\taskkill.exe'
       option: 'disable-sync'
 
   # === Disables the OneSyncSvc service (responsible for syncing mail, contacts, calendar, and other user data) ===
   - !service: 
       name: 'OneSyncSvc'
       operation: change
-      startup: '4'
+      startup: 4
       option: 'disable-sync'

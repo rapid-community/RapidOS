@@ -9,8 +9,13 @@ powershell -c "$f='%~f0'; $lines=Get-Content $f; $idx=$lines.IndexOf(':PS'); iex
 exit /b
 
 :PS
-Import-RegState -JsonPath "$env:WinDir\RapidScripts\MMCSS.json"
+$backup = "$env:SystemRoot\RapidScripts\MMCSS.json"
+if (Test-Path $backup) {
+    Import-RegState -JsonPath $backup
+    Write-Host "MMCSS has been successfully reverted."
+} else {
+    Write-Error "MMCSS backup not found."
+}
 
-Write-Host "MMCSS has been successfully reverted."
 pause
 exit

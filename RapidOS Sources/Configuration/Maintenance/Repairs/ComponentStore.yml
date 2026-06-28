@@ -5,8 +5,12 @@ actions:
   - !powerShell:
       handleExitCodes: {'!0': halt}
       runas: currentUserElevated
-      exeDir: true
       wait: true
-      command: |
-        .\RapidScripts\EnvSetup.ps1
-        ComponentStore
+      oobe: false
+      command: ComponentStore
+  
+  - !powerShell:
+      runas: currentUserElevated
+      wait: true
+      oobe: only
+      command: ComponentStore

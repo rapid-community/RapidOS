@@ -4,8 +4,5 @@ description: Performs system specifications check, detects LTSC/Enterprise IoT v
 actions:
   - !powerShell:
       handleExitCodes: {'!0': halt}
-      exeDir: true
       wait: true
-      command: |
-        .\RapidScripts\EnvSetup.ps1
-        Specifications
+      command: Specifications

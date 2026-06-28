@@ -4,8 +4,7 @@ description: Mounts or unmounts the default user hive to propagate settings to t
 actions:
   - !powerShell:
       wait: true
-      oobe: false
       command: |
         $hive = 'HKU\AME_UserHive_Default'
-        $path = 'C:\Users\Default\NTUSER.DAT'
+        $path = $env:SystemDrive + '\Users\Default\NTUSER.DAT'
         if (Test-Path $hive) {reg unload $hive} else {reg load $hive $path}
